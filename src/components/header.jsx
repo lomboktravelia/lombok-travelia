@@ -38,7 +38,7 @@ const Header = () => {
 
       <NavbarContent className="hidden md:flex gap-4" justify="end">
         <NavbarItem>
-          <Link href="/home" legacyBehavior>
+          <Link href="/" legacyBehavior>
             <a className="text-gray-600 hover:text-green-600">Home</a>
           </Link>
         </NavbarItem>
