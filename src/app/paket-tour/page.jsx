@@ -6,7 +6,7 @@ export default function PaketTour() {
       <header className="text-center py-10">
         <h1 className="text-4xl font-bold">Daftar Paket Tour Lengkap</h1>
       </header>
-      <section className="w-full max-w-4xl mx-auto mt-10">
+      <section className="w-full max-w-4xl mx-auto mt-10 px-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h3 className="text-xl font-bold">Paket Reguler</h3>

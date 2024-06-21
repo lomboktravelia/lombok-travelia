@@ -49,5 +49,9 @@ body {
   flex: 1; /* Mengisi seluruh ruang tersedia */
   max-width: 100%; /* Lebar maksimum sesuai dengan ukuran viewport */
   margin: 0 auto; /* Pusatkan container */
-  padding: 0 1rem; /* Ruang bantal di sekitar konten */
+  padding: 0 0; /* Ruang bantal di sekitar konten */
+}
+
+.debug{
+  background-color: aquamarine;
 }
