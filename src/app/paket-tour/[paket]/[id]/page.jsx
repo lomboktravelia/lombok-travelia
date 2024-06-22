@@ -1,9 +1,7 @@
 'use client'
-import { useNavigation } from 'next/navigation'; // Menggunakan useNavigation untuk Server Component
 
-export default function PaketTourDetail() {
-  const navigation = useNavigation(); // Menggunakan useNavigation di sini
-  const { id } = navigation.query;
+export default function PaketTourDetail({ params }) {
+  const { id } = params;
 
   if (!id) {
     return (
