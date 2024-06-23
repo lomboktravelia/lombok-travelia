@@ -8,7 +8,7 @@ export default function Home() {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/data?table=paket tour")
+    fetch("/api/data?table=paket_tour")
       .then((res) => res.json())
       .then(({data}) => {
         setData(data);
