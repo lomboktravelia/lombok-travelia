@@ -11,7 +11,7 @@ const Footer = () => {
               <img src="assets/images/facebook-icon.svg" alt="Facebook" className="w-6 h-6" />
             </a>
             <a href="https://www.instagram.com/syahrul11_amri" target="_blank" rel="noopener noreferrer">
-              <img src="/instagram-icon.svg" alt="Instagram" className="w-6 h-6" />
+              <img src="assets/images/instagram-icon.svg" alt="Instagram" className="w-6 h-6" />
             </a>
             <a href="https://wa.me/83143052787" target="_blank" rel="noopener noreferrer">
               <img src="assets/images/whatsapp-icon.svg" alt="WhatsApp" className="w-6 h-6" />
