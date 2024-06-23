@@ -2,9 +2,9 @@ import Link from 'next/link';
 
 export default function PaketTour() {
   return (
-    <div className="min-h-screen bg-gray-100 py-8">
+    <div className="min-h-screen bg-gray-100 py-8 text-black">
       <header className="text-center py-10">
-        <h1 className="text-4xl font-bold">Daftar Paket Tour Lengkap</h1>
+        <h1 className="text-4xl font-bold px-3">Daftar Paket Tour Lengkap</h1>
       </header>
       <section className="w-full max-w-4xl mx-auto mt-10 px-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

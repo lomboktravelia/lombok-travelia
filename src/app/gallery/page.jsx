@@ -4,8 +4,8 @@ import Link from 'next/link';
 export default function Gallery() {
   return (
     <div>
-      <section className="text-center py-20">
-        <div className="flex flex-col mx-auto justify-center items-center">
+      <section className="text-center py-20 bg-gray-100">
+        <div className="flex flex-col mx-auto justify-center items-center text-black">
           <h2 className="text-4xl font-bold mb-8">GALERI</h2>
           <h3 className="text-2xl mb-4">Lombok Travelia</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-5 w-full max-w-[1450px]">

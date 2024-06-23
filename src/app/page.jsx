@@ -10,7 +10,7 @@ export default function Home() {
   useEffect(() => {
     fetch("/api/data?table=paket tour")
       .then((res) => res.json())
-      .then((data) => {
+      .then(({data}) => {
         setData(data);
         setLoading(false);
       });
@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <div className="bg-white">
       <section className="text-center py-20 bg-slate-300">
-        <h1 className="text-5xl font-bold text-green-600">
+        <h1 className="text-5xl font-bold text-green-600 px-10">
           Explore Lombok with Lombok Travelia
         </h1>
         <p className="text-gray-600 mt-4">

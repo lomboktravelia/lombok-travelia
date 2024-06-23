@@ -3,7 +3,7 @@ import Link from 'next/link';
 export default function ContactUs() {
   return (
     <div>
-      <section className="text-center py-20">
+      <section className="text-center py-20 bg-gray-100 text-black">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold mb-8">Hubungi Kami</h2>
           <h3 className="text-2xl mb-4">Sistem Pemesanan Dan Pembayaran</h3>
