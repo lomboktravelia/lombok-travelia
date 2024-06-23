@@ -18,7 +18,7 @@ const Header = () => {
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
       maxWidth="2xl"
-      className="bg-white shadow-md"
+      className="bg-white shadow-md text-black"
     >
       <NavbarContent className="md:hidden" justify="start">
         <NavbarMenuToggle
