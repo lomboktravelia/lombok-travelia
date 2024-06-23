@@ -1,18 +1,15 @@
-import pg from "pg";
-
-const { Pool } = pg;
-
-const pool = new Pool({
-  connectionString: process.env.CONNECTION_STRING,
-  ssl: {
-    rejectUnauthorized: false,
-    sslmode: "require",
-  },
-});
+import pool from "@/utils/dbConfig";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const table = searchParams.get("table");
-  const { rows } = await pool.query(`SELECT * FROM "${table}"`);
-  return Response.json(rows);
+  try {
+    const table = searchParams.get("table");
+    const { rows } = await pool.query(`SELECT * FROM "${table}"`);
+    return Response.json({
+      status: 200,
+      data: rows,
+    });
+  } catch (error) {
+    return Response.json({ error: error.message });
+  }
 }

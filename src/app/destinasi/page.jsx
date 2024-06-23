@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Destinasi() {
   return (
-    <div className="min-h-screen bg-gray-100 py-8">
+    <div className="min-h-screen bg-gray-100 py-8 text-black">
       <header className="text-center py-10">
         <h1 className="text-4xl font-bold">Daftar Destinasi Tour Lengkap</h1>
       </header>
