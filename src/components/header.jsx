@@ -9,9 +9,24 @@ import {
   NavbarContent,
   NavbarItem,
 } from "@nextui-org/react";
+import { UserContext } from "@/utils/userContext";
+import { useContext } from "react";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [currentUser, setCurrentUser] = useContext(UserContext);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    event.preventDefault();
+    const response = await fetch(`/api/logout`, {
+      method: "POST",
+    });
+    if (response.ok) {
+      location.reload();
+    }
+  };
 
   return (
     <Navbar
@@ -63,23 +78,41 @@ const Header = () => {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/login" legacyBehavior>
-            <a className="bg-green-600 text-white px-4 py-2 rounded">Login</a>
-          </Link>
+          {currentUser ? (
+            <button
+              className="bg-green-600 text-white px-4 py-2 rounded"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          ) : (
+            <Link href="/login" legacyBehavior>
+              <a className="bg-green-600 text-white px-4 py-2 rounded">Login</a>
+            </Link>
+          )}
         </NavbarItem>
       </NavbarContent>
 
       <NavbarContent className="md:hidden" justify="end">
         <NavbarItem>
-          <Link href="/login" legacyBehavior>
-            <a className="bg-green-600 text-white px-4 py-2 rounded">Login</a>
-          </Link>
+          {currentUser ? (
+            <button
+              className="bg-green-600 text-white px-4 py-2 rounded"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          ) : (
+            <Link href="/login" legacyBehavior>
+              <a className="bg-green-600 text-white px-4 py-2 rounded">Login</a>
+            </Link>
+          )}
         </NavbarItem>
       </NavbarContent>
 
       <NavbarMenu>
         <NavbarMenuItem>
-          <Link href="/home" legacyBehavior>
+          <Link href="/" legacyBehavior>
             <a className="text-gray-600 hover:text-green-600">Home</a>
           </Link>
         </NavbarMenuItem>

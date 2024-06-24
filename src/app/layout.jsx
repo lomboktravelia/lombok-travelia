@@ -1,6 +1,7 @@
 import Header from "../components/header";
 import Footer from "../components/footer";
 import "./globals.css";
+import { UserProvider } from "@/utils/userContext";
 
 const Layout = ({ children }) => {
   return (
@@ -14,11 +15,13 @@ const Layout = ({ children }) => {
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
-        <Header />
-        <div className="container">
-          <main>{children}</main>
-          <Footer />
-        </div>
+        <UserProvider>
+          <Header />
+          <div className="container">
+            <main>{children}</main>
+            <Footer />
+          </div>
+        </UserProvider>
       </body>
     </html>
   );
