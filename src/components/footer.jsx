@@ -7,7 +7,7 @@ const Footer = () => {
           <h3 className="text-lg font-bold mb-4">LOGO LOMBOK TRAVELIA</h3>
           <p>&copy; 2024 Lombok Travelia ltd. All rights reserved</p>
           <div className="flex justify-center md:justify-start space-x-4 mt-4">
-            <a href="https://www.facebook.com/syahrulamri" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.facebook.com/lomboktravelia" target="_blank" rel="noopener noreferrer">
               <img src="assets/images/facebook-icon.svg" alt="Facebook" className="w-6 h-6" />
             </a>
             <a href="https://www.instagram.com/syahrul11_amri" target="_blank" rel="noopener noreferrer">
