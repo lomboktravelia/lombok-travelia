@@ -16,7 +16,7 @@ export default function PaketTourDetail({ params }) {
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <header className="text-center py-10">
-        <h1 className="text-4xl font-bold">Detail Paket - {id}</h1>
+        <h1 className="text-4xl font-bold">Detail Paket - {decodeURIComponent(id)}</h1>
       </header>
       <section className="w-full max-w-4xl mx-auto mt-10 bg-white shadow-lg rounded-lg p-6">
         <img src={`/assets/images/${id}.jpg`} alt={`Trip ${id}`} className="w-full h-64 object-cover rounded-t-lg" />
