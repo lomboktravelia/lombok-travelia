@@ -55,3 +55,7 @@ body {
 .debug{
   background-color: aquamarine;
 }
+.spinner-custom .nextui-spinner::before {
+  border-top-color: rgb(53, 210, 53) !important;
+  border-right-color: rgb(53, 210, 53) !important;
+}

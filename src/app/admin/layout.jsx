@@ -1,6 +1,6 @@
 import Sidebar from '../../components/sidebar';
-import Dashboard from './page'; // Sesuaikan path ke file page.jsx
-import '../../app/globals.css'; // Pastikan Anda sudah mengatur Tailwind CSS
+import Dashboard from './page'; 
+import '../../app/globals.css';
 
 export default function AdminDashboardLayout() {
   return (

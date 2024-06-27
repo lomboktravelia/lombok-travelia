@@ -28,7 +28,7 @@ export default function Home() {
   if (isLoading)
     return (
       <main className="min-h-screen bg-white dark:bg-black flex justify-center items-center">
-        <Spinner />
+        <Spinner style={{ borderTopColor: '#35D235', borderRightColor: '#35D235' }} />
       </main>
     );
 
@@ -74,40 +74,40 @@ export default function Home() {
       <section className="py-20 text-black">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-8">
-            Layanan Lombok Travelia
+            Keunggulan Layanan Lombok Travelia
           </h2>
           <div className="flex flex-wrap justify-center space-x-8 px-5 gap-5">
-            <div className="text-center">
+            <div className="flex flex-col items-center max-w-xs">
               <img
-                src="/path-to-your-image.jpg"
-                alt="Family Tour"
-                className="w-20 h-20 mx-auto mb-4"
+                src="images/harga-terbaik.png"
+                alt="Harga Terbaik"
+                className="w-20 h-20 mb-4"
               />
-              <h3 className="text-xl font-bold">Family Tour</h3>
-              <p className="text-gray-600">
-                Menyediakan paket untuk family tour
+              <h3 className="text-xl font-bold">Harga Terbaik</h3>
+              <p className="text-gray-600 text-center">
+              Kami menawarkan harga yang kompetitif dan terjangkau tanpa mengorbankan kualitas layanan.
               </p>
             </div>
-            <div className="text-center">
+            <div className="flex flex-col items-center max-w-xs">
               <img
-                src="/path-to-your-image.jpg"
-                alt="Group Tour"
-                className="w-20 h-20 mx-auto mb-4"
+                src="images/mudah-cepat.png"
+                alt="Mudah & Cepat"
+                className="w-20 h-20 mb-4"
               />
-              <h3 className="text-xl font-bold">Group Tour</h3>
-              <p className="text-gray-600">
-                Menyediakan paket untuk group tour
+              <h3 className="text-xl font-bold mb-2">Mudah & Cepat</h3>
+              <p className="text-gray-600 text-center">
+              Proses pemesanan yang sederhana dan cepat adalah prioritas kami. Dengan platform yang user-friendly dan kemudahan akses.
               </p>
             </div>
-            <div className="text-center">
+            <div className="flex flex-col items-center max-w-xs">
               <img
-                src="/path-to-your-image.jpg"
-                alt="Honeymoon Tour"
-                className="w-20 h-20 mx-auto mb-4"
+                src="images/pilihan-tour.png"
+                alt="Pilihan Tour Terbaik"
+                className="w-20 h-20 mb-4"
               />
-              <h3 className="text-xl font-bold">Honeymoon Tour</h3>
-              <p className="text-gray-600">
-                Menyediakan paket untuk honeymoon tour
+              <h3 className="text-xl font-bold mb-2">Pilihan Tour Terbaik</h3>
+              <p className="text-gray-600 text-center">
+              Tersedia beragam pilihan tur yang disesuaikan dengan berbagai minat dan preferensi. Mulai dari wisata alam yang menakjubkan.
               </p>
             </div>
           </div>
