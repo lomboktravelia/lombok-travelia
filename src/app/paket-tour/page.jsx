@@ -9,7 +9,7 @@ export default function PaketTour() {
       <section className="w-full max-w-4xl mx-auto mt-10 px-5">
         <div className="text-center mb-10">
           <div className="bg-blue-500 text-white px-6 py-3 rounded-full shadow-md inline-flex items-center justify-center space-x-2 cursor-pointer hover:bg-blue-600 transition-colors">
-            <Link href="https://wa.me/083143052787?text=Halo,%20saya%20ingin%20custom%20paket%20tour" passHref>
+            <Link href="https://wa.me/623143052787?text=Halo,%20saya%20ingin%20custom%20paket%20tour" passHref>
               <div className="flex items-center space-x-2">
                 <span>Perlu KONSULTASI atau ingin CUSTOM PAKET TOUR? Klik disini</span>
                 <span className="bg-white text-blue-500 px-3 py-1 rounded-full">CUSTOM PAKET</span>
