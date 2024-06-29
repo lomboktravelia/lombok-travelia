@@ -1,100 +1,50 @@
-
-// import { Bar } from 'react-chartjs-2';
-// import 'chart.js/auto';
+import React from 'react';
+import AdminLayout from './layout';
 import Link from 'next/link';
 
-
-const Dashboard = () => {
-  const paketTourData = {
-    labels: ['Paket 1', 'Paket 2', 'Paket 3', 'Paket 4', 'Paket 5', 'Paket 6'],
-    datasets: [
-      {
-        label: 'Paket Wisata Paling Sering di Order',
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-      },
-    ],
-  };
-
-  const bulanData = {
-    labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-    datasets: [
-      {
-        label: 'Bulan Paling Banyak Transaksi',
-        data: [3, 2, 2, 6, 7, 4, 3, 7, 6, 8, 9, 10],
-        backgroundColor: 'rgba(153, 102, 255, 0.6)',
-      },
-    ],
-  };
-
+const AdminPage = () => {
   return (
-    <div className="flex">
-      <aside className="w-1/4 bg-gray-100 h-screen p-5">
-        <div className="mb-8">
-          <img src="/path-to-logo.png" alt="Lombok Travelia" className="w-32 mx-auto" />
-          <h2 className="text-center mt-4">Kim S.Y</h2>
-          <p className="text-center text-gray-600">Admin</p>
-        </div>
-        <nav className="space-y-4">
-          <Link href="/admin/dashboard" passHref legacyBehavior>
-            <a className="block text-blue-600">Dashboard</a>
-          </Link>
-          <Link href="/admin/paket-tour" passHref legacyBehavior>
-            <a className="block text-gray-600 hover:text-blue-600">Paket Tour</a>
-          </Link>
-          <Link href="/admin/destinasi" passHref legacyBehavior>
-            <a className="block text-gray-600 hover:text-blue-600">Destinasi</a>
-          </Link>
-          <Link href="/admin/gallery" passHref legacyBehavior>
-            <a className="block text-gray-600 hover:text-blue-600">Gallery</a>
-          </Link>
-          <Link href="/admin/pesanan" passHref legacyBehavior>
-            <a className="block text-gray-600 hover:text-blue-600">Pesanan</a>
-          </Link>
-          <Link href="/admin/saldo" passHref legacyBehavior>
-            <a className="block text-gray-600 hover:text-blue-600">Saldo</a>
-          </Link>
-          <Link href="/admin/pengguna" passHref legacyBehavior>
-            <a className="block text-gray-600 hover:text-blue-600">Pengguna</a>
-          </Link>
-        </nav>
-      </aside>
-      <main className="w-3/4 p-10">
-        <div className="grid grid-cols-3 gap-6 mb-8">
-          <div className="bg-green-600 text-white p-4 rounded">
-            <h3 className="text-lg">6</h3>
-            <p>Total Paket Tour</p>
+    <AdminLayout showSidebar={true}>
+      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+      <div className="grid grid-cols-2 gap-4">
+        <Link href="/admin/dashboard" passHref>
+          <div className="block p-4 bg-blue-500 text-white rounded shadow-md hover:bg-blue-600">
+            Dashboard
           </div>
-          <div className="bg-green-600 text-white p-4 rounded">
-            <h3 className="text-lg">10</h3>
-            <p>Total Destinasi</p>
+        </Link>
+        <Link href="/admin/paket-tour" passHref>
+          <div className="block p-4 bg-green-500 text-white rounded shadow-md hover:bg-green-600">
+            Paket Tour
           </div>
-          <div className="bg-green-600 text-white p-4 rounded">
-            <h3 className="text-lg">2000</h3>
-            <p>Total Pengguna</p>
+        </Link>
+        <Link href="/admin/destinasi" passHref>
+          <div className="block p-4 bg-yellow-500 text-white rounded shadow-md hover:bg-yellow-600">
+            Destinasi
           </div>
-          <div className="bg-green-600 text-white p-4 rounded">
-            <h3 className="text-lg">Rp.9,000,000</h3>
-            <p>Total Saldo</p>
+        </Link>
+        <Link href="/admin/gallery" passHref>
+          <div className="block p-4 bg-purple-500 text-white rounded shadow-md hover:bg-purple-600">
+            Gallery
           </div>
-          <div className="bg-green-600 text-white p-4 rounded">
-            <h3 className="text-lg">8</h3>
-            <p>Total Pesanan</p>
+        </Link>
+        <Link href="/admin/pesanan" passHref>
+          <div className="block p-4 bg-red-500 text-white rounded shadow-md hover:bg-red-600">
+            Pesanan
           </div>
-        {/* </div>
-        <div className="grid grid-cols-2 gap-6">
-          <div className="bg-gray-200 p-6 rounded">
-            <h3 className="text-lg mb-4">Statistik Paket Wisata Paling Sering di Order</h3>
-            <Bar data={paketTourData} />
+        </Link>
+        <Link href="/admin/saldo" passHref>
+          <div className="block p-4 bg-indigo-500 text-white rounded shadow-md hover:bg-indigo-600">
+            Saldo
           </div>
-          <div className="bg-gray-200 p-6 rounded">
-            <h3 className="text-lg mb-4">Bulan Paling Banyak Transaksi</h3>
-            <Bar data={bulanData} />
-          </div> */}
-        </div>
-      </main>
-    </div>
+        </Link>
+        <Link href="/admin/pengguna" passHref>
+          <div className="block p-4 bg-pink-500 text-white rounded shadow-md hover:bg-pink-600">
+            Pengguna
+          </div>
+        </Link>
+      </div>
+    </AdminLayout>
   );
 };
 
-export default Dashboard;
+export default AdminPage;

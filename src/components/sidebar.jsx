@@ -1,37 +1,59 @@
+import React from 'react';
 import Link from 'next/link';
 
 const Sidebar = () => {
   return (
-    <aside className="w-1/4 bg-gray-100 h-screen p-5">
+    <div className="bg-gray-800 h-screen p-4 text-white">
       <div className="mb-8">
-        <img src="/path-to-logo.png" alt="Lombok Travelia" className="w-32 mx-auto" />
+        <img src="/images/profile.png" alt="Profile" className="rounded-full w-24 mx-auto" />
         <h2 className="text-center mt-4">Kim S.Y</h2>
-        <p className="text-center text-gray-600">Admin</p>
+        <p className="text-center">Admin</p>
       </div>
-      <nav className="space-y-4">
-        <Link href="/admin/dashboard" passHref legacyBehavior>
-          <a className="block text-blue-600">Dashboard</a>
-        </Link>
-        <Link href="/admin/paket-tour" passHref legacyBehavior>
-          <a className="block text-gray-600 hover:text-blue-600">Paket Tour</a>
-        </Link>
-        <Link href="/admin/destinasi" passHref legacyBehavior>
-          <a className="block text-gray-600 hover:text-blue-600">Destinasi</a>
-        </Link>
-        <Link href="/admin/gallery" passHref legacyBehavior>
-          <a className="block text-gray-600 hover:text-blue-600">Gallery</a>
-        </Link>
-        <Link href="/admin/pesanan" passHref legacyBehavior>
-          <a className="block text-gray-600 hover:text-blue-600">Pesanan</a>
-        </Link>
-        <Link href="/admin/saldo" passHref legacyBehavior>
-          <a className="block text-gray-600 hover:text-blue-600">Saldo</a>
-        </Link>
-        <Link href="/admin/pengguna" passHref legacyBehavior>
-          <a className="block text-gray-600 hover:text-blue-600">Pengguna</a>
-        </Link>
+      <nav>
+        <ul>
+          <li className="mb-4">
+            <Link href="/admin" legacyBehavior>
+              <a>Home</a>
+            </Link>
+          </li>
+          <li className="mb-4">
+            <Link href="/admin/dashboard" legacyBehavior>
+              <a>Dashboard</a>
+            </Link>
+          </li>
+          <li className="mb-4">
+            <Link href="/admin/paket-tour" legacyBehavior>
+              <a>Paket Tour</a>
+            </Link>
+          </li>
+          <li className="mb-4">
+            <Link href="/admin/destinasi" legacyBehavior>
+              <a>Destinasi</a>
+            </Link>
+          </li>
+          <li className="mb-4">
+            <Link href="/admin/gallery" legacyBehavior>
+              <a>Gallery</a>
+            </Link>
+          </li>
+          <li className="mb-4">
+            <Link href="/admin/pesanan" legacyBehavior>
+              <a>Pesanan</a>
+            </Link>
+          </li>
+          <li className="mb-4">
+            <Link href="/admin/saldo" legacyBehavior>
+              <a>Saldo</a>
+            </Link>
+          </li>
+          <li className="mb-4">
+            <Link href="/admin/pengguna" legacyBehavior>
+              <a>Pengguna</a>
+            </Link>
+          </li>
+        </ul>
       </nav>
-    </aside>
+    </div>
   );
 };
 

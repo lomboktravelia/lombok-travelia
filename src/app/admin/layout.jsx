@@ -1,16 +1,22 @@
-import Sidebar from '../../components/sidebar';
-import Dashboard from './page'; 
-import '../../app/globals.css';
+import React from 'react';
+import Sidebar from '../../components/sidebar'; 
 
-export default function AdminDashboardLayout() {
+const AdminLayout = ({ children, showSidebar }) => {
+  console.log('Render AdminLayout'); // Debugging
   return (
-    <html lang="en">
-      <body className="flex">
-        <Sidebar />
-        <main className="flex-grow p-10 bg-white">
-          <Dashboard />
+    <div className="flex">
+      {showSidebar && (
+        <div className="flex-initial">
+          <Sidebar />
+        </div>
+      )}
+      <div className="flex-1">
+        <main className="p-4">
+          {children}
         </main>
-      </body>
-    </html>
+      </div>
+    </div>
   );
-}
+};
+
+export default AdminLayout;
