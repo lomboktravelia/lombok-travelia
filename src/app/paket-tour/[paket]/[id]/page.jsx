@@ -5,8 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faUndoAlt } from '@fortawesome/free-solid-svg-icons';
 
 const destinationsData = [
-  { name: 'Gili Trawangan', price: 1500000 },
-  { name: 'Malimbu', price: 1200000 },
+  { name: 'Gili Trawangan', price: 500000 },
+  { name: 'Malimbu', price: 500000 },
+  { name: 'Pantai Pink', price: 50000 },
   // Tambahkan destinasi lain dengan harga mereka
 ];
 
@@ -125,4 +126,4 @@ export default function PaketTourDetail({ params }) {
       </section>
     </div>
   );
-}
+} 
