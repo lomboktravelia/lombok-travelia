@@ -40,9 +40,9 @@ export async function POST(request) {
     const data = {id_user, nama, email};
     const token = await new SignJWT(data)
       .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime('1m')
+      .setExpirationTime(`${process.env.EXPIRE_TIME}s`)
       .sign(key);
-    const expires = new Date(Date.now() + 60 * 1000); // 60 seconds
+    const expires = new Date(Date.now() + process.env.EXPIRE_TIME * 1000); // 60 second
     cookies().set(
       "session",
       token,
