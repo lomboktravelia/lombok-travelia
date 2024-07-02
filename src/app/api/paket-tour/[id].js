@@ -37,6 +37,15 @@ export default async function handler(req, res) {
     } else {
       res.status(404).json({ message: 'Paket tour not found' });
     }
+  } else if (req.method === 'DELETE') {
+    const query = 'DELETE FROM paket_tour WHERE id_tour = ?';
+
+    try {
+      await db.query(query, [id]);
+      res.status(200).json({ message: 'Paket tour deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to delete paket tour' });
+    }
   } else {
     res.status(405).json({ message: 'Method not allowed' });
   }

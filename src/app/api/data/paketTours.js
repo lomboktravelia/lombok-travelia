@@ -8,6 +8,7 @@ export const paketTours = [
       include: 'Lorem Ipsum Dolor Sit Amet',
       exclude: 'Lorem Ipsum Dolor Sit Amet',
       picture: 'arsenal.jpg',
+      jenis_paket: 'Paket Reguler',
     },
     // Tambahkan data lain jika diperlukan
   ];
