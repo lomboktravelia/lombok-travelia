@@ -1,7 +1,9 @@
 "use client";
-import { useRouter } from 'next/router';
+
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import PackageForm from '@/components/packageForm';
+import AdminLayout from '../../../layout';
 
 export default function EditPackageTour() {
   const router = useRouter();
@@ -31,10 +33,11 @@ export default function EditPackageTour() {
   if (!packageData) return <div>Loading...</div>;
 
   return (
-    <div className="container mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Edit Paket Tour</h1>
-      <PackageForm onSubmit={handleSubmit} initialData={packageData} />
-    </div>
+    <AdminLayout showSidebar={true}>
+      <div className="container mx-auto">
+        <h1 className="text-2xl font-bold mb-4">Edit Paket Tour</h1>
+        <PackageForm onSubmit={handleSubmit} initialData={packageData} />
+      </div>
+    </AdminLayout>
   );
 }
-

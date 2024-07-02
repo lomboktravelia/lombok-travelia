@@ -31,6 +31,8 @@ export default async function handler(req, res) {
     const query = 'SELECT * FROM paket_tour';
     const [results] = await db.query(query);
     res.status(200).json(results);
+  } else if (req.method === 'DELETE') {
+    res.status(405).json({ message: 'Method not allowed' });
   } else {
     res.status(405).json({ message: 'Method not allowed' });
   }
