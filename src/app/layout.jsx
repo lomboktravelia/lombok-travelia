@@ -9,7 +9,8 @@ import { usePathname } from "next/navigation";
 const Layout = ({ children }) => {
   const pathname = usePathname();
 
-  const showHeader = pathname !== "/login" && pathname !== "/sign-up";
+  const showHeader = pathname !== "/login" && pathname !== "/sign-up" && pathname !== "/admin" && pathname !== "/admin/dashboard" 
+  && pathname !== "/admin/paket-tour" && pathname !== "/admin/destinasi" && pathname !== "/admin/gallery" && pathname !== "/admin/pesanan";
 
   return (
     <html lang="en">
