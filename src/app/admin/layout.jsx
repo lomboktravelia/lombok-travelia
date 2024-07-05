@@ -1,12 +1,11 @@
 import React from 'react';
-import Sidebar from '../../components/sidebar'; 
+import Sidebar from '../../components/sidebar';
 
 const AdminLayout = ({ children, showSidebar }) => {
-  console.log('Render AdminLayout'); // Debugging
   return (
     <div className="flex">
       {showSidebar && (
-        <div className="flex-initial">
+        <div className="w-48"> {}
           <Sidebar />
         </div>
       )}
