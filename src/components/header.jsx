@@ -36,6 +36,10 @@ const Header = () => {
     { href: "/contact-us", label: "Contact Us" },
   ];
 
+  if (currentUser?.role === 'admin') {
+    navItems.push({ href: "/admin", label: "Admin" });
+  }
+
   return (
     <Navbar
       isMenuOpen={isMenuOpen}

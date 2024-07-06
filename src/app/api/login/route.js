@@ -36,8 +36,8 @@ export async function POST(request) {
   const passwordMatches = await bcrypt.compare(password, user.password);
 
   if (passwordMatches) {
-    const { id_user, nama, email } = user;
-    const data = {id_user, nama, email};
+    const { id_user, nama, email, role } = user;
+    const data = {id_user, nama, email, role};
     const token = await new SignJWT(data)
       .setProtectedHeader({ alg: "HS256" })
       .setExpirationTime('1m')
