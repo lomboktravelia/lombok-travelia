@@ -69,14 +69,14 @@ export default function PackageTour() {
   useEffect(() => {
     async function fetchPackages() {
       const res = await fetch('/api/paket-tour');
-      const data = await res.json();
+      const {data} = await res.json();
       setPackages(data);
     }
     fetchPackages();
   }, []);
 
   const handleDelete = async (id) => {
-    const res = await fetch(`/api/paket-tour/${id}`, {
+    const res = await fetch(`/api/paket-tour?id=${id}`, {
       method: 'DELETE',
     });
 

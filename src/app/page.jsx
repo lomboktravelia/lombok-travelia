@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Spinner } from "@nextui-org/react";
 import { UserContext } from "@/utils/userContext";
 import { useContext } from "react";
+import Image from "next/image";
 
 export default function Home() {
   const [currentUser, setCurrentUser] = useContext(UserContext);
@@ -19,11 +20,15 @@ export default function Home() {
   useEffect(() => {
     fetch("/api/data?table=paket_tour")
       .then((res) => res.json())
-      .then(({ data }) => {
+      .then(({data} ) => {
         setData(data);
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   if (isLoading)
     return (
@@ -56,15 +61,21 @@ export default function Home() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {data.map((item, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-xl font-bold mb-4">{item.nama_paket}</h3>
-                <p className="text-gray-600 mb-4">{item.deskripsi}</p>
-                <Link
-                  href={`/paket-tour/paket/${item.nama_paket}`}
-                  className="text-green-600 hover:text-green-800"
-                >
-                  Readmore &rarr;
-                </Link>
+              <div key={index} className="flex flex-col bg-white p-6 rounded-lg shadow-md gap-5">
+                <div className="rounded-lg overflow-hidden h-[250px] w-full">
+                  <Image alt="Paket Tour" src={item.picture? item.picture:'images/wisata-1.jpeg'} width={400} height={300} className="object-cover h-full w-full"></Image>
+                </div>
+                <h3 className="text-xl font-bold">{item.nama_paket}</h3>
+                <div className="flex flex-col justify-between gap-5 w-full">
+                  <p className="text-gray-600">{item.deskripsi.length > 300 ? `${item.deskripsi.substring(0, 300)}...` : item.deskripsi}</p>
+                  <Link
+                    href={`/paket-tour/paket/${item.nama_paket}`}
+                    className="text-green-600 hover:text-green-800"
+                  >
+                    Readmore &rarr;
+                  </Link>
+
+                </div>
               </div>
             ))}
           </div>
