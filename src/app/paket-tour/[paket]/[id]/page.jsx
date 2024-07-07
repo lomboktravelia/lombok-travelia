@@ -1,6 +1,8 @@
-'use client'
+'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '@/utils/userContext';
+import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faUndoAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -15,6 +17,22 @@ export default function PaketTourDetail({ params }) {
   const { id } = params;
   const [selectedDestinations, setSelectedDestinations] = useState(destinationsData);
   const [removedDestinations, setRemovedDestinations] = useState([]);
+  const [currentUser, setCurrentUser] = useContext(UserContext);
+  const [hasOrdered, setHasOrdered] = useState(false);
+  const [rating, setRating] = useState('');
+  const [deskripsi, setDeskripsi] = useState('');
+  const router = useRouter();
+
+  useEffect(() => {
+    if (currentUser) {
+      // Cek apakah user sudah pernah memesan paket ini
+      fetch(`/api/check-order?user=${currentUser.id_user}&tour=${id}`)
+        .then((res) => res.json())
+        .then(({ success }) => {
+          setHasOrdered(success);
+        });
+    }
+  }, [currentUser, id]);
 
   if (!id) {
     return (
@@ -48,6 +66,27 @@ export default function PaketTourDetail({ params }) {
       currency: 'IDR',
       minimumFractionDigits: 0
     }).format(number);
+  };
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+
+    const response = await fetch('/api/review', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id_tour: id,
+        id_order: "", // Ambil id_order yang relevan dari hasil validasi
+        rating,
+        deskripsi,
+      }),
+    });
+
+    if (response.ok) {
+      // Refresh halaman atau tampilkan notifikasi sukses
+    }
   };
 
   return (
@@ -123,7 +162,42 @@ export default function PaketTourDetail({ params }) {
           <button className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300 ease-in-out">Pesan Sekarang</button>
           <button className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded transition duration-300 ease-in-out">Konsultasi WA</button>
         </div>
+        {hasOrdered && (
+          <div className="mt-6">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Beri Review</h2>
+            <form onSubmit={handleSubmitReview}>
+              <div className="mt-4">
+                <label className="block text-gray-700 dark:text-gray-300">Rating</label>
+                <input
+                  type="number"
+                  value={rating}
+                  onChange={(e) => setRating(e.target.value)}
+                  min="1"
+                  max="5"
+                  className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+                  required
+                />
+              </div>
+              <div className="mt-4">
+                <label className="block text-gray-700 dark:text-gray-300">Deskripsi</label>
+                <textarea
+                  value={deskripsi}
+                  onChange={(e) => setDeskripsi(e.target.value)}
+                  rows="4"
+                  className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
+                  required
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                className="mt-4 bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300 ease-in-out"
+              >
+                Submit Review
+              </button>
+            </form>
+          </div>
+        )}
       </section>
     </div>
   );
-} 
+}
