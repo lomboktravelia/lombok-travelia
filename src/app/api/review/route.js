@@ -8,14 +8,16 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    const id_review = 'rev' + Date.now(); // Generate a unique id_review
+
     try {
       const client = await pool.connect();
       const query = `
-        INSERT INTO reviews (id_tour, id_order, rating, deskripsi)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO review (id_review, id_tour, id_order, rating, deskripsi, _created_date)
+        VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)
         RETURNING *
       `;
-      const result = await client.query(query, [id_tour, id_order, rating, deskripsi]);
+      const result = await client.query(query, [id_review, id_tour, id_order, rating, deskripsi]);
       client.release();
 
       return res.status(201).json(result.rows[0]);

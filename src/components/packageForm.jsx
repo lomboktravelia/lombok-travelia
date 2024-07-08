@@ -3,7 +3,7 @@ import { storage } from '@/utils/firebaseConfig';
 import { Button, Spinner } from '@nextui-org/react';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FiUpload } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 
@@ -71,9 +71,59 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    // Validasi harga sebagai angka
+    if (isNaN(formData.harga)) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Harga harus berupa angka.",
+      });
+      return;
+    }
+
+    // Validasi durasi sebagai angka
+    if (isNaN(formData.durasi)) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Durasi harus berupa angka.",
+      });
+      return;
+    }
+
+    try {
+      // Kirim data ke fungsi onSubmit (pastikan fungsi ini sudah terdefinisi dengan benar)
+      await onSubmit(formData);
+
+      // Notifikasi paket tour berhasil ditambahkan
+      Swal.fire({
+        icon: "success",
+        title: "Sukses!",
+        text: "Paket Tour berhasil ditambahkan.",
+      });
+
+      // Atur ulang form setelah berhasil submit
+      setFormData({
+        nama_paket: '',
+        jenis_paket: '',
+        deskripsi: '',
+        daerah_wisata: '',
+        harga: '',
+        durasi: '',
+        availability: 'true',
+        itinerary: '',
+        include: '',
+        exclude: '',
+        picture: '/images/gili-trawangan-1.jpg',
+      });
+      setFile(null);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      // Tambahkan logika notifikasi atau tindakan lain jika ada kesalahan dalam pengiriman data
+    }
   };
 
   return (
@@ -106,13 +156,13 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
       <div className='flex flex-col gap-3'>
         <label className="block mb-2">Picture</label>
         <div className='relative w-full h-72 rounded-md overflow-hidden'>
-        <Image alt="Picture" src={formData.picture} height={1000} width={1000} className='w-full h-full object-cover object-center'></Image>
-        {isUploading && (
-              <div className="absolute inset-0 bg-black/60 flex flex-col justify-center items-center">
-                <Spinner></Spinner>
-                <h1 className="text-white">{uploadingStatus}</h1>
-              </div>
-            )}
+          <Image alt="Picture" src={formData.picture} height={1000} width={1000} className='w-full h-full object-cover object-center'></Image>
+          {isUploading && (
+            <div className="absolute inset-0 bg-black/60 flex flex-col justify-center items-center">
+              <Spinner></Spinner>
+              <h1 className="text-white">{uploadingStatus}</h1>
+            </div>
+          )}
         </div>
         <div className='flex'>
           <input
@@ -167,10 +217,10 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
       </div>
       <div>
         <label className="block mb-2">Availability</label>
-       <select name="availability" id="availability" value={formData.availability} onChange={handleChange} className='w-full p-2 border border-gray-300 rounded'>
-        <option value="true">Iya</option>
-        <option value="false">Tidak</option>
-       </select>
+        <select name="availability" id="availability" value={formData.availability} onChange={handleChange} className='w-full p-2 border border-gray-300 rounded'>
+          <option value="true">Iya</option>
+          <option value="false">Tidak</option>
+        </select>
       </div>
       <div>
         <label className="block mb-2">Itinerary</label>
@@ -208,5 +258,3 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     </form>
   );
 }
-
-
