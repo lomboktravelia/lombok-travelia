@@ -10,7 +10,7 @@ const core = new midtransClient.CoreApi({
 
 export async function POST(request) {
   try {
-    const { body } = await request.json();
+    const body = await request.json();
     const { order_id, transaction_status, fraud_status } = body;
 
     // Lakukan tindakan berdasarkan status pembayaran
