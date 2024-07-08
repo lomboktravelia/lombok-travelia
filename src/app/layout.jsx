@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
 import Header from "../components/header";
 import Footer from "../components/footer";
 import "./globals.css";
 import { UserProvider } from "@/utils/userContext";
 import { usePathname } from "next/navigation";
+import Script from 'next/script';
 
 const Layout = ({ children }) => {
   const pathname = usePathname();
@@ -21,6 +22,10 @@ const Layout = ({ children }) => {
           content="Explore Lombok with Lombok Travelia"
         />
         <link rel="icon" href="/favicon.ico" />
+        <Script
+          src="https://app.sandbox.midtrans.com/snap/snap.js"
+          data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
+        />
       </head>
       <body>
         <UserProvider>
