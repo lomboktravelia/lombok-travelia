@@ -5,6 +5,7 @@ import { UserContext } from '@/utils/userContext';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faUndoAlt } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2';
 
 const destinationsData = [
   { name: 'Gili Trawangan', price: 500000 },
@@ -27,9 +28,17 @@ export default function PaketTourDetail({ params }) {
     if (currentUser) {
       // Cek apakah user sudah pernah memesan paket ini
       fetch(`/api/check-order?user=${currentUser.id_user}&tour=${id}`)
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
         .then(({ success }) => {
           setHasOrdered(success);
+        })
+        .catch((error) => {
+          console.error('There was an error fetching the order status:', error);
         });
     }
   }, [currentUser, id]);
@@ -86,6 +95,63 @@ export default function PaketTourDetail({ params }) {
 
     if (response.ok) {
       // Refresh halaman atau tampilkan notifikasi sukses
+    }
+  };
+
+  const handleOrder = async () => {
+    if (!currentUser) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Login Required',
+        text: 'Please login to place an order.',
+      });
+      return;
+    }
+
+    const orderId = `ORDER-${Date.now()}`;
+    const response = await fetch('/api/payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: currentUser.id_user,
+        orderId,
+        totalAmount: totalCost,
+      }),
+    });
+
+    if (response.ok) {
+      const { token } = await response.json();
+      window.snap.pay(token, {
+        onSuccess: function (result) {
+          // Handle success
+          console.log('Payment success:', result);
+          Swal.fire({
+            icon: 'success',
+            title: 'Payment Successful',
+            text: 'Thank you for your order!',
+          });
+        },
+        onPending: function (result) {
+          // Handle pending
+          console.log('Payment pending:', result);
+        },
+        onError: function (result) {
+          // Handle error
+          console.log('Payment error:', result);
+        },
+        onClose: function () {
+          // Handle close
+          console.log('Payment popup closed without finishing payment');
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Payment Failed',
+        text: 'Unable to process the payment. Please try again later.',
+      });
     }
   };
 
@@ -159,7 +225,12 @@ export default function PaketTourDetail({ params }) {
           </ul>
         </div>
         <div className="mt-6 flex space-x-4">
-          <button className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300 ease-in-out">Pesan Sekarang</button>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300 ease-in-out"
+            onClick={handleOrder}
+          >
+            Pesan Sekarang
+          </button>
           <button className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded transition duration-300 ease-in-out">Konsultasi WA</button>
         </div>
         {hasOrdered && (
@@ -201,6 +272,8 @@ export default function PaketTourDetail({ params }) {
     </div>
   );
 }
+
+
 
 /*
 'use client';
