@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import DestinationForm from '@/components/destinationForm';
-import AdminLayout from '../../layout';
+import AdminLayout from '../../../layout';
 
 export default function EditDestination({ params }) {
   const router = useRouter();
