@@ -1,56 +1,4 @@
-/*'use client';
-
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import DestinationForm from '../../../../../components/destinationForm';
-
-const EditDestinationPage = () => {
-  const params = useParams();
-  const { id } = params;
-
-  const [destination, setDestination] = useState(null);
-
-  useEffect(() => {
-    if (id) {
-      // Fetch data destinasi dari API
-      fetch(`/api/destinasi/${id}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setDestination(data);
-        });
-    }
-  }, [id]);
-
-  const handleEditDestination = async (updatedDestination) => {
-    try {
-      const response = await fetch(`/api/destinasi/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedDestination)
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log('Updated Destination:', data);
-      } else {
-        console.error('Failed to update destination:', data.error);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  if (!destination) return <div>Loading...</div>;
-
-  return <DestinationForm destination={destination} onSubmit={handleEditDestination} />;
-};
-
-export default EditDestinationPage; */
-
-'use client';
+/* 'use client';
 
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -87,3 +35,61 @@ const EditDestinationPage = () => {
 
 export default EditDestinationPage;
 
+*/
+
+"use client";
+
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import DestinationForm from '@/components/destinationForm';
+import AdminLayout from '../../layout';
+
+export default function EditDestination({ params }) {
+  const router = useRouter();
+  const [initialData, setInitialData] = useState(null);
+
+  useEffect(() => {
+    async function fetchDestination() {
+      const res = await fetch(`/api/destinasi?id=${params.id}`);
+      const { data } = await res.json();
+      setInitialData(data);
+    }
+
+    fetchDestination();
+  }, [params.id]);
+
+  const handleSubmit = async (formData) => {
+    try {
+      const response = await fetch(`/api/destinasi?id=${params.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Gagal mengupdate destinasi');
+      }
+
+      // Redirect to admin destination page after successful submit
+      router.push('/admin/destinasi');
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // Handle error if necessary
+    }
+  };
+
+  return (
+    <AdminLayout showSidebar={true}>
+      <div className="container mx-auto p-6">
+        <h1 className="text-2xl font-bold mb-4">Edit Destinasi</h1>
+        {initialData ? (
+          <DestinationForm onSubmit={handleSubmit} initialData={initialData} />
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
+    </AdminLayout>
+  );
+}
