@@ -46,6 +46,18 @@ export default function ContactUs() {
               className="rounded-lg shadow-md"
             ></iframe>
           </div>
+          <div className="flex flex-col items-center mb-8">
+            <p className="text-2xl font-semibold text-gray-800 mb-6">Video rekomendasi seputar destinasi wisata di Lombok:</p>
+            <iframe
+              width="560"
+              height="315"
+              src="https://www.youtube.com/embed/DKDde_jKaTM"
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
         </div>
       </section>
     </div>

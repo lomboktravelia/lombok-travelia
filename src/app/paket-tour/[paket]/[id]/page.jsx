@@ -109,16 +109,18 @@ export default function PaketTourDetail({ params }) {
     }
 
     const orderId = `ORDER-${Date.now()}`;
+    const orderData = {
+      id_user: currentUser.id_user,
+      id_tour: id,
+      total_cost: totalCost,
+    };
+
     const response = await fetch('/api/payment', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        userId: currentUser.id_user,
-        orderId,
-        totalAmount: totalCost,
-      }),
+      body: JSON.stringify(orderData),
     });
 
     if (response.ok) {
@@ -212,66 +214,72 @@ export default function PaketTourDetail({ params }) {
         <div className="mt-6">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Include Paket</h2>
           <ul className="list-disc ml-6 mt-2 text-gray-700 dark:text-gray-300">
-            <li>Akomodasi Selama Di Lombok</li>
-            <li>Hotel AC 2 Malam</li>
-            <li>... and so on</li>
+            <li>Hotel</li>
+            <li>Transportasi</li>
+            <li>Makan</li>
           </ul>
         </div>
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Not Include</h2>
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Excludes Paket</h2>
           <ul className="list-disc ml-6 mt-2 text-gray-700 dark:text-gray-300">
-            <li>Tiket Pesawat PP</li>
-            <li>... and so on</li>
+            <li>Asuransi Perjalanan</li>
+            <li>Pengeluaran Pribadi</li>
           </ul>
         </div>
-        <div className="mt-6 flex space-x-4">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300 ease-in-out"
-            onClick={handleOrder}
-          >
-            Pesan Sekarang
-          </button>
-          <button className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded transition duration-300 ease-in-out">Konsultasi WA</button>
-        </div>
-        {hasOrdered && (
-          <div className="mt-6">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Beri Review</h2>
-            <form onSubmit={handleSubmitReview}>
-              <div className="mt-4">
-                <label className="block text-gray-700 dark:text-gray-300">Rating</label>
-                <input
-                  type="number"
-                  value={rating}
-                  onChange={(e) => setRating(e.target.value)}
-                  min="1"
-                  max="5"
-                  className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
-                  required
-                />
-              </div>
-              <div className="mt-4">
-                <label className="block text-gray-700 dark:text-gray-300">Deskripsi</label>
-                <textarea
-                  value={deskripsi}
-                  onChange={(e) => setDeskripsi(e.target.value)}
-                  rows="4"
-                  className="w-full p-2 mt-2 border border-gray-300 rounded-lg"
-                  required
-                ></textarea>
-              </div>
-              <button
-                type="submit"
-                className="mt-4 bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300 ease-in-out"
-              >
-                Submit Review
-              </button>
-            </form>
-          </div>
-        )}
+        <button
+          onClick={handleOrder}
+          className="mt-6 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition duration-300 ease-in-out"
+        >
+          Pesan Sekarang
+        </button>
+        <button
+          onClick={() => {
+            const packageName = decodeURIComponent(id);
+            const message = `Halo, Saya ingin konsultasi paket ${packageName} apakah anda dapat membantu saya?`;
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/6285338717747?text=${encodedMessage}`, '_blank');
+          }}
+          className="mt-6 w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition duration-300 ease-in-out"
+        >
+          Konsultasi WA
+        </button>
       </section>
+      {hasOrdered && (
+        <section className="w-full max-w-4xl mx-auto mt-10 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Tulis Ulasan</h2>
+          <form onSubmit={handleSubmitReview}>
+            <div className="mt-4">
+              <label className="block text-gray-700 dark:text-gray-300">Rating:</label>
+              <input
+                type="number"
+                min="1"
+                max="5"
+                value={rating}
+                onChange={(e) => setRating(e.target.value)}
+                className="w-full px-3 py-2 mt-1 border rounded"
+              />
+            </div>
+            <div className="mt-4">
+              <label className="block text-gray-700 dark:text-gray-300">Deskripsi:</label>
+              <textarea
+                value={deskripsi}
+                onChange={(e) => setDeskripsi(e.target.value)}
+                className="w-full px-3 py-2 mt-1 border rounded"
+              />
+            </div>
+            <button
+              type="submit"
+              className="mt-6 w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition duration-300 ease-in-out"
+            >
+              Kirim Ulasan
+            </button>
+          </form>
+        </section>
+      )}
     </div>
   );
 }
+
 
 
 
