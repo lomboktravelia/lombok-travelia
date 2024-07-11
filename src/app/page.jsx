@@ -26,10 +26,6 @@ export default function Home() {
       });
   }, []);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   if (isLoading)
     return (
       <main className="min-h-screen bg-white dark:bg-black flex justify-center items-center">
@@ -61,13 +57,15 @@ export default function Home() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {data.map((item, index) => (
-              <div key={index} className="flex flex-col bg-white p-6 rounded-lg shadow-md gap-5">
-                <div className="rounded-lg overflow-hidden h-[250px] w-full">
+              <div key={index} className="flex flex-col bg-white p-5 rounded-lg shadow-md gap-5 h-[550px]">
+                <div className="rounded-lg overflow-hidden h-3/5 w-full">
                   <Image alt="Paket Tour" src={item.picture? item.picture:'images/wisata-1.jpeg'} width={400} height={300} className="object-cover h-full w-full"></Image>
                 </div>
-                <h3 className="text-xl font-bold">{item.nama_paket}</h3>
-                <div className="flex flex-col justify-between gap-5 w-full">
-                  <p className="text-gray-600">{item.deskripsi.length > 300 ? `${item.deskripsi.substring(0, 300)}...` : item.deskripsi}</p>
+                <div className="w-full">
+                   <h3 className="text-xl font-bold truncate">{item.nama_paket}</h3>
+                </div>
+                <div className="flex flex-col justify-between gap-5 w-full h-2/5">
+                  <p className="text-gray-600 text-justify">{item.deskripsi.length > 200 ? `${item.deskripsi.substring(0, 210)}...` : item.deskripsi}</p>
                   <Link
                     href={`/paket-tour/paket/${item.nama_paket}`}
                     className="text-green-600 hover:text-green-800"
