@@ -47,7 +47,6 @@ const EditPicture = ({params}) => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(id);
     const fetchPicture = async () => {
       const response = await fetch(`/api/gallery/${id}`);
       const data = await response.json();
