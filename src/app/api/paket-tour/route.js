@@ -21,8 +21,8 @@ export async function POST(request) {
     
     const idPicture = nanoid(20);
     const query2 = {
-      text: 'INSERT INTO picture (id_tour, id_picture, id_destinasi, image_url) VALUES ($1, $2, $3, $4) RETURNING image_url',
-      values: [idTour, idPicture, "", picture]
+      text: 'INSERT INTO picture (id_tour, id_picture, image_url) VALUES ($1, $2, $3) RETURNING image_url',
+      values: [idTour, idPicture, picture]
     }
 
     const result2 = await pool.query(query2);
@@ -49,8 +49,24 @@ export async function POST(request) {
   } 
 }
 
-export async function GET(){
-  try {
+export async function GET(request){
+  try {  
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if(id){
+      const query = 'SELECT * FROM paket_tour WHERE id_tour = $1';
+      const {rows: paket} = await pool.query(query, [id]);
+      const query2 = 'SELECT * FROM picture WHERE id_tour = $1';
+      const {rows: picture} = await pool.query(query2, [id]);
+      console.log(picture);
+      return NextResponse.json({
+        status: 200,
+        data: {
+          ...paket,
+          picture: picture.length > 0? picture[0].image_url : null
+        }
+      }, {status: 200});
+    } 
     const query = 'SELECT * FROM paket_tour';
     const {rows: paket} = await pool.query(query);
     return NextResponse.json({

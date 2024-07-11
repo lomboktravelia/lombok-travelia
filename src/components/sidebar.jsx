@@ -12,7 +12,7 @@ const Sidebar = () => {
   const isActive = (pathname, href) => pathname === href;
 
   return (
-    <div className="bg-gray-800 h-screen p-4 text-white">
+    <div className="bg-gray-800 p-4 text-white h-full">
       <div className="mb-8">
         <img src="/images/profile.jpg" alt="Profile" className="rounded-full w-10 mx-auto" />
         <h2 className="text-center mt-4">Kim S.Y</h2>

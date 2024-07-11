@@ -9,6 +9,7 @@ export default function AddPackageTour() {
 
   const handleSubmit = async (formData) => {
     try {
+      console.log(formData);
       const response = await fetch('/api/paket-tour', {
         method: 'POST',
         headers: {
