@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function Gallery() {
+function GalleryComponent() {
   const [pictures, setPictures] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -69,5 +69,13 @@ export default function Gallery() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function Gallery() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GalleryComponent />
+    </Suspense>
   );
 }
