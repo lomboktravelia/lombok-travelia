@@ -4,15 +4,20 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FaHome, FaTachometerAlt, FaBox, FaMapMarkedAlt, FaImages, FaClipboardList, FaWallet, FaUsers } from 'react-icons/fa';
-
+import { FaArrowLeft } from "react-icons/fa";
 const Sidebar = () => {
   const pathname = usePathname();
   
   // Fungsi untuk memeriksa apakah link aktif
   const isActive = (pathname, href) => pathname === href;
+  const [isHover, setIsHover] = React.useState(false);
 
   return (
     <div className="bg-gray-800 p-4 text-white h-full">
+      <div className='p-1 hover:underline mb-3 flex justify-start items-center gap-2' onMouseEnter={()=>setIsHover(true)} onMouseLeave={()=>setIsHover(false)}>
+      <FaArrowLeft className={`h-3 w-3 ${isHover ? 'rotate-0' : 'rotate-45'} transition-all duration-300`}/>
+       <Link href="/" className=''>Back</Link>
+      </div>
       <div className="mb-8">
         <img src="/images/profile.jpg" alt="Profile" className="rounded-full w-10 mx-auto" />
         <h2 className="text-center mt-4">Kim S.Y</h2>

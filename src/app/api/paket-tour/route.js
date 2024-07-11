@@ -53,26 +53,29 @@ export async function GET(request){
   try {  
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
+    console.log(id);
     if(id){
       const query = 'SELECT * FROM paket_tour WHERE id_tour = $1';
       const {rows: paket} = await pool.query(query, [id]);
       const query2 = 'SELECT * FROM picture WHERE id_tour = $1';
       const {rows: picture} = await pool.query(query2, [id]);
-      console.log(picture);
+      console.log(paket);
       return NextResponse.json({
         status: 200,
         data: {
-          ...paket,
+          ...paket[0],
           picture: picture.length > 0? picture[0].image_url : null
         }
       }, {status: 200});
-    } 
-    const query = 'SELECT * FROM paket_tour';
-    const {rows: paket} = await pool.query(query);
-    return NextResponse.json({
-      status: 200,
-      data: paket,
-  }, {status: 200});
+    } else{
+      console.log("masuk");
+      const query = 'SELECT * FROM paket_tour';
+      const {rows: paket} = await pool.query(query);
+      return NextResponse.json({
+        status: 200,
+        data: paket,
+      }, {status: 200});
+    }
   } catch (error) {
     console.log(error)
     return NextResponse.json({
@@ -102,6 +105,59 @@ export async function DELETE(request) {
     status: 200,
     deletedData: result.rows[0]
   })
+}
+
+export async function PUT(request){
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id"); 
+    if(!id){
+      return NextResponse.json({
+        status: 403,
+        message: 'Bad Request',
+      })
+    }
+    
+    const {nama_paket, jenis_paket, deskripsi, daerah_wisata, harga, durasi, availability, itinerary, include, exclude, picture} = await request.json()
+    const query = {
+      text: 'UPDATE paket_tour SET nama_paket = $1, jenis_paket = $2, deskripsi = $3, harga = $4, durasi = $5, is_available = $6 WHERE id_tour = $7 RETURNING *',
+      values: [nama_paket,jenis_paket, deskripsi, harga, durasi, availability, id]
+    }
+
+    const result = await pool.query(query);
+    if(!result.rowCount){
+      return NextResponse.json({
+        status: 403,
+        message: "Failed to update data"
+      })
+    } 
+    const query2 = {
+      text: 'UPDATE picture SET image_url = $1 WHERE id_tour = $2 RETURNING *',
+      values: [picture, id]
+    }
+    
+    const result2 = await pool.query(query2);
+    if(!result2.rowCount){
+      return NextResponse.json({
+        status: 403,
+        message: "Failed to update picture"
+      })
+    }
+
+    return NextResponse.json({
+      status: 200,
+      updatedData: {
+        ...result.rows[0],
+        picture: result2.rows.length > 0? result2.rows[0].image_url : null
+      }
+    })
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({
+      status: 500,
+      message: "Internal Server Error"
+    })
+  }
 }
 
 // export default async function handler(req, res) {

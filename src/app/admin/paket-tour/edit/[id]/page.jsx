@@ -19,8 +19,7 @@ export default function EditPackageTour({params}) {
             throw new Error('Failed to fetch data');
           }
           const { data } = await res.json();
-          console.log(data[0]);
-          setPackageData(data[0]);
+          setPackageData(data);
         } else {
           throw new Error('ID parameter not found');
         }
@@ -36,7 +35,7 @@ export default function EditPackageTour({params}) {
 
   const handleSubmit = async (formData) => {
     try {
-      const res = await fetch(`/api/paket-tour/${id}`, {
+      const res = await fetch(`/api/paket-tour?id=${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
