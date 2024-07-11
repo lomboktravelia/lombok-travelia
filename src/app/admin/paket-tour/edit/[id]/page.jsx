@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import PackageForm from '@/components/packageForm';
 import AdminLayout from '../../../layout';
 
-export default function EditPackageTour() {
+export default function EditPackageTour({params}) {
   const router = useRouter();
-  const { id } = router.query; // Destructure id from router.query
+  const { id } = params;// Destructure id from router.query
   const [packageData, setPackageData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -14,11 +14,11 @@ export default function EditPackageTour() {
     async function fetchData() {
       try {
         if (id) {
-          const res = await fetch(`/api/paket-tour/${id}`);
+          const res = await fetch(`/api/paket-tour?id=${id}`);
           if (!res.ok) {
             throw new Error('Failed to fetch data');
           }
-          const data = await res.json();
+          const { data } = await res.json();
           setPackageData(data);
         } else {
           throw new Error('ID parameter not found');
@@ -35,7 +35,7 @@ export default function EditPackageTour() {
 
   const handleSubmit = async (formData) => {
     try {
-      const res = await fetch(`/api/paket-tour/${id}`, {
+      const res = await fetch(`/api/paket-tour?id=${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

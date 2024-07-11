@@ -37,12 +37,12 @@ export default EditGalleryPage; */
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import GalleryForm from '@/components/galleryForm';
 import AdminLayout from '../../../layout';
 
-const EditPicture = () => {
-  const { id } = useParams();
+const EditPicture = ({params}) => {
+  const { id } = params;
   const [picture, setPicture] = useState(null);
   const router = useRouter();
 
