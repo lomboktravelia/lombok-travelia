@@ -5,12 +5,12 @@ const AdminLayout = ({ children, showSidebar }) => {
   return (
     <div className="flex">
       {showSidebar && (
-        <div className="w-48"> {}
+        <div className="w-48"> 
           <Sidebar />
         </div>
       )}
       <div className="flex-1">
-        <main className="p-4">
+        <main className="p-3">
           {children}
         </main>
       </div>
