@@ -52,7 +52,6 @@ export async function GET(request){
   try {  
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    console.log(id);
     if(id){
       const query = 'SELECT * FROM paket_tour WHERE id_tour = $1';
       const {rows: paket} = await pool.query(query, [id]);
@@ -67,7 +66,6 @@ export async function GET(request){
         }
       }, {status: 200});
     } else{
-      console.log("masuk");
       const query = 'SELECT * FROM paket_tour';
       const {rows: paket} = await pool.query(query);
       return NextResponse.json({

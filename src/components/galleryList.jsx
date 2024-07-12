@@ -74,7 +74,7 @@ const GalleryList = ({ galleries = [], onDelete, onPageChange, currentPage, tota
           Tambah Galeri
         </button>
       </Link>
-      <table className="min-w-full bg-white border border-gray-200">
+      <table className="min-w-full bg-white rounded-lg border border-gray-200">
         <thead>
           <tr>
             <th className="py-2 px-4 border-b">ID Gallery</th>
@@ -86,25 +86,27 @@ const GalleryList = ({ galleries = [], onDelete, onPageChange, currentPage, tota
           {galleries.map((gallery) => (
             <tr key={gallery.id_gallery}>
               <td className="py-2 px-4 border-b">{gallery.id_gallery}</td>
-              <td className="py-2 px-4 border-b">
+              <td className="py-2 px-4 border-b justify-center items-center flex">
                 <img
                   src={gallery.image_url}
                   alt={`Gallery ${gallery.id_gallery}`}
                   className="h-16 w-16 object-cover rounded-full"
                 />
               </td>
-              <td className="py-2 px-4 border-b flex items-center">
-                <Link href={`/admin/gallery/edit/${gallery.id_gallery}`}>
-                  <FaEdit className="text-blue-500 cursor-pointer mr-4" />
-                </Link>
-                <FaTrash
-                  onClick={() => {
-                    if (confirm('Yakin Hapus Data?')) {
-                      onDelete(gallery.id_gallery);
-                    }
-                  }}
-                  className="text-red-500 cursor-pointer"
-                />
+              <td className="py-2 px-4 border-b">
+                <div className='flex gap-3 justify-center items-center'>
+                  <Link href={`/admin/gallery/edit/${gallery.id_gallery}`}>
+                    <FaEdit className="text-blue-500 cursor-pointer mr-4" />
+                  </Link>
+                  <FaTrash
+                    onClick={() => {
+                      if (confirm('Yakin Hapus Data?')) {
+                        onDelete(gallery.id_gallery);
+                      }
+                    }}
+                    className="text-red-500 cursor-pointer"
+                  />
+                </div>
               </td>
             </tr>
           ))}
