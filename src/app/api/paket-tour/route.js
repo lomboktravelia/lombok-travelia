@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import pool from '@/utils/dbConfig';
-// import { v4 as uuidv4 } from 'uuid';
 import { nanoid } from 'nanoid';
 export async function POST(request) {
   try {
