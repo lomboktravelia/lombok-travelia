@@ -61,7 +61,7 @@ const PackageList = ({ packages, onDelete }) => {
           Tambah Paket Tour
         </button>
       </Link>
-      <table className="min-w-full bg-white border border-gray-200">
+      <table className="bg-white border border-gray-200 w-full rounded-lg max-w-[1920px]">
         <thead>
           <tr>
             <th className="py-2 px-4 border-b">Nama Paket Tour</th>
@@ -74,18 +74,21 @@ const PackageList = ({ packages, onDelete }) => {
             <tr key={pkg.id_tour}>
               <td className="py-2 px-4 border-b">{pkg.nama_paket}</td>
               <td className="py-2 px-4 border-b">{pkg.jenis_paket}</td>
-              <td className="py-2 px-4 border-b flex items-center">
-                <Link href={`/admin/paket-tour/edit/${pkg.id_tour}`}>
-                  <FaEdit className="text-blue-500 cursor-pointer mr-4" />
-                </Link>
-                <FaTrash
-                  onClick={() => {
-                    if (confirm('Yakin Hapus Data?')) {
-                      onDelete(pkg.id_tour);
-                    }
-                  }}
-                  className="text-red-500 cursor-pointer"
-                />
+              <td className="py-2 px-4 border-b">
+                <div className='flex gap-3 justify-center items-center'>
+                  <Link href={`/admin/paket-tour/edit/${pkg.id_tour}`}>
+                    <FaEdit className="text-blue-500 cursor-pointer mr-4" />
+                  </Link>
+                  <FaTrash
+                    onClick={() => {
+                      if (confirm('Yakin Hapus Data?')) {
+                        onDelete(pkg.id_tour);
+                      }
+                    }}
+                    className="text-red-500 cursor-pointer"
+                  />
+
+                </div>
               </td>
             </tr>
           ))}

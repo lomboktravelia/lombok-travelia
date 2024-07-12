@@ -13,10 +13,12 @@ const Sidebar = () => {
   const [isHover, setIsHover] = React.useState(false);
 
   return (
-    <div className="bg-gray-800 p-4 text-white h-full">
-      <div className='p-1 hover:underline mb-3 flex justify-start items-center gap-2' onMouseEnter={()=>setIsHover(true)} onMouseLeave={()=>setIsHover(false)}>
-      <FaArrowLeft className={`h-3 w-3 ${isHover ? 'rotate-0' : 'rotate-45'} transition-all duration-300`}/>
-       <Link href="/" className=''>Back</Link>
+    <div className="flex flex-col bg-gray-800 p-4 text-white h-full rounded-md">
+      <div className='p-1 mb-3 flex justify-start items-center'>
+        <div className='flex justify-start items-center gap-2 hover:underline cursor-pointer' onMouseEnter={()=>setIsHover(true)} onMouseLeave={()=>setIsHover(false)}>
+          <FaArrowLeft className={`h-3 w-3 ${isHover ? 'rotate-0' : 'rotate-45'} transition-all duration-300`}/>
+          <Link href="/" className=''>Back</Link>
+        </div>
       </div>
       <div className="mb-8">
         <img src="/images/profile.jpg" alt="Profile" className="rounded-full w-10 mx-auto" />

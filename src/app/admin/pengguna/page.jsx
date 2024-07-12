@@ -99,9 +99,9 @@ const KelolaPengguna = () => {
   return (
     <AdminLayout showSidebar={true}>
       <h1 className="text-2xl font-bold mb-4">Kelola Pengguna</h1>
-      <table className="min-w-full bg-white">
+      <table className="min-w-full bg-white rounded-lg">
         <thead>
-          <tr>
+          <tr className='border-b'>
             <th className="py-2">Nama Pengguna</th>
             <th className="py-2">Email</th>
             <th className="py-2">Aksi</th>
@@ -109,32 +109,21 @@ const KelolaPengguna = () => {
         </thead>
         <tbody>
           {users.map(user => (
-            <tr key={user.id_user}>
-              <td className="border px-4 py-2">{user.nama}</td>
-              <td className="border px-4 py-2">{user.email}</td>
-              <td className="border px-4 py-2">
-                <Link href={{ pathname: '/admin/pengguna/edit', query: { id: user.id_user } }} passHref>
-                  <button className="text-blue-500 mr-4">✏️ Edit</button>
-                </Link>
-                <button onClick={() => deleteUser(user.id_user)} className="text-red-500">🗑️ Hapus</button>
+            <tr key={user.id_user} className='border-b'>
+              <td className="px-4 py-2">{user.nama}</td>
+              <td className="px-4 py-2">{user.email}</td>
+              <td className="px-4 py-2">
+                <div className='flex justify-center items-center gap-3'>
+                  <Link href={{ pathname: '/admin/pengguna/edit', query: { id: user.id_user } }} passHref>
+                    <button className="text-blue-500 mr-4">✏️ Edit</button>
+                  </Link>
+                  <button onClick={() => deleteUser(user.id_user)} className="text-red-500">🗑️ Hapus</button>
+                </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <style jsx>{`
-        table {
-          width: 100%;
-          border-collapse: collapse;
-        }
-        th, td {
-          padding: 10px;
-          border: 1px solid #ddd;
-        }
-        th {
-          background-color: #f4f4f4;
-        }
-      `}</style>
     </AdminLayout>
   );
 };
