@@ -1,4 +1,4 @@
-'use client';
+/* 'use client';
 
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '@/utils/userContext';
@@ -279,29 +279,21 @@ export default function PaketTourDetail({ params }) {
     </div>
   );
 }
+*/
 
 
-
-
-/*
-'use client';
-
+"use client";
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '@/utils/userContext';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faUndoAlt } from '@fortawesome/free-solid-svg-icons';
-
-const destinationsData = [
-  { name: 'Gili Trawangan', price: 500000 },
-  { name: 'Malimbu', price: 500000 },
-  { name: 'Pantai Pink', price: 50000 },
-  // Tambahkan destinasi lain dengan harga mereka
-];
+import Swal from 'sweetalert2';
 
 export default function PaketTourDetail({ params }) {
   const { id } = params;
-  const [selectedDestinations, setSelectedDestinations] = useState(destinationsData);
+  const [tourDetails, setTourDetails] = useState(null);
+  const [selectedDestinations, setSelectedDestinations] = useState([]);
   const [removedDestinations, setRemovedDestinations] = useState([]);
   const [currentUser, setCurrentUser] = useContext(UserContext);
   const [hasOrdered, setHasOrdered] = useState(false);
@@ -310,17 +302,25 @@ export default function PaketTourDetail({ params }) {
   const router = useRouter();
 
   useEffect(() => {
+    // Fetch tour details
+    fetch(`/api/paket-tour/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setTourDetails(data);
+        setSelectedDestinations(data.destinations); // Assuming API response contains a `destinations` field
+      })
+      .catch((error) => console.error('Error fetching tour details:', error));
+
     if (currentUser) {
-      // Cek apakah user sudah pernah memesan paket ini
+      // Check if the user has ordered this tour
       fetch(`/api/check-order?user=${currentUser.id_user}&tour=${id}`)
         .then((res) => res.json())
-        .then(({ success }) => {
-          setHasOrdered(success);
-        });
+        .then(({ success }) => setHasOrdered(success))
+        .catch((error) => console.error('Error fetching order status:', error));
     }
   }, [currentUser, id]);
 
-  if (!id) {
+  if (!id || !tourDetails) {
     return (
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8">
         <header className="text-center py-10">
@@ -331,20 +331,20 @@ export default function PaketTourDetail({ params }) {
   }
 
   const handleRemoveDestination = (destinationName) => {
-    const destinationToRemove = selectedDestinations.find(dest => dest.name === destinationName);
-    const updatedDestinations = selectedDestinations.filter(dest => dest.name !== destinationName);
+    const destinationToRemove = selectedDestinations.find(dest => dest.nama_destinasi === destinationName);
+    const updatedDestinations = selectedDestinations.filter(dest => dest.nama_destinasi !== destinationName);
     setSelectedDestinations(updatedDestinations);
     setRemovedDestinations([...removedDestinations, destinationToRemove]);
   };
 
   const handleRestoreDestination = (destinationName) => {
-    const destinationToRestore = removedDestinations.find(dest => dest.name === destinationName);
-    const updatedRemovedDestinations = removedDestinations.filter(dest => dest.name !== destinationName);
+    const destinationToRestore = removedDestinations.find(dest => dest.nama_destinasi === destinationName);
+    const updatedRemovedDestinations = removedDestinations.filter(dest => dest.nama_destinasi !== destinationName);
     setSelectedDestinations([...selectedDestinations, destinationToRestore]);
     setRemovedDestinations(updatedRemovedDestinations);
   };
 
-  const totalCost = selectedDestinations.reduce((acc, dest) => acc + dest.price, 0);
+  const totalCost = selectedDestinations.reduce((acc, dest) => acc + dest.harga, 0);
 
   const formatRupiah = (number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -352,50 +352,6 @@ export default function PaketTourDetail({ params }) {
       currency: 'IDR',
       minimumFractionDigits: 0
     }).format(number);
-  };
-
-  const handleOrder = async () => {
-    if (!currentUser) {
-      router.push('/login');
-      return;
-    }
-
-    try {
-      const response = await fetch('/api/payment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id_user: currentUser.id_user,
-          id_tour: id,
-          total_cost: totalCost,
-        }),
-      });
-
-      const { token } = await response.json();
-
-      window.snap.pay(token, {
-        onSuccess: function (result) {
-          alert('Pembayaran sukses!');
-          // Lakukan tindakan setelah pembayaran sukses
-        },
-        onPending: function (result) {
-          alert('Menunggu pembayaran...');
-          // Lakukan tindakan jika pembayaran pending
-        },
-        onError: function (result) {
-          alert('Pembayaran gagal!');
-          // Lakukan tindakan jika pembayaran gagal
-        },
-        onClose: function () {
-          alert('Anda menutup pop-up pembayaran tanpa menyelesaikan pembayaran.');
-          // Lakukan tindakan jika pengguna menutup pop-up tanpa menyelesaikan pembayaran
-        }
-      });
-    } catch (error) {
-      console.error('Error during payment:', error);
-    }
   };
 
   const handleSubmitReview = async (e) => {
@@ -416,28 +372,107 @@ export default function PaketTourDetail({ params }) {
 
     if (response.ok) {
       // Refresh halaman atau tampilkan notifikasi sukses
+      Swal.fire({
+        icon: 'success',
+        title: 'Review Submitted',
+        text: 'Thank you for your review!',
+      });
+      setRating('');
+      setDeskripsi('');
+    } else {
+      // Tampilkan pesan kesalahan jika gagal
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to Submit Review',
+        text: 'An error occurred while submitting your review. Please try again later.',
+      });
+    }
+  };
+
+  const handleOrder = async () => {
+    if (!currentUser) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Login Required',
+        text: 'Please login to place an order.',
+      });
+      return;
+    }
+
+    const orderId = `ORDER-${Date.now()}`;
+    const orderData = {
+      id_user: currentUser.id_user,
+      id_tour: id,
+      total_cost: totalCost,
+    };
+
+    const response = await fetch('/api/payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderData),
+    });
+
+    if (response.ok) {
+      const { token } = await response.json();
+      window.snap.pay(token, {
+        onSuccess: function (result) {
+          // Handle success
+          console.log('Payment success:', result);
+          Swal.fire({
+            icon: 'success',
+            title: 'Payment Successful',
+            text: 'Thank you for your order!',
+          });
+          setHasOrdered(true); // Setelah sukses order, ubah status `hasOrdered` menjadi true
+        },
+        onPending: function (result) {
+          // Handle pending
+          console.log('Payment pending:', result);
+        },
+        onError: function (result) {
+          // Handle error
+          console.log('Payment error:', result);
+          Swal.fire({
+            icon: 'error',
+            title: 'Payment Failed',
+            text: 'Unable to process the payment. Please try again later.',
+          });
+        },
+        onClose: function () {
+          // Handle close
+          console.log('Payment popup closed without finishing payment');
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Payment Failed',
+        text: 'Unable to process the payment. Please try again later.',
+      });
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8">
       <header className="text-center py-10">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">Detail Paket - {decodeURIComponent(id)}</h1>
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">Detail Paket - {tourDetails.nama_paket}</h1>
       </header>
       <section className="w-full max-w-4xl mx-auto mt-10 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-        <img src={`/assets/images/${id}.jpg`} alt={`Trip ${id}`} className="w-full h-64 object-cover rounded-t-lg" />
+        <img src={tourDetails.image_url} alt={`Trip ${tourDetails.nama_paket}`} className="w-full h-64 object-cover rounded-t-lg" />
         <div className="mt-6">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Deskripsi</h2>
-          <p className="mt-2 text-gray-700 dark:text-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          <p className="mt-2 text-gray-700 dark:text-gray-300">{tourDetails.deskripsi}</p>
         </div>
         <div className="mt-6">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Daerah Wisata</h2>
           <ul className="list-disc ml-6 mt-2">
             {selectedDestinations.map((destination, index) => (
               <li key={index} className="flex items-center justify-between text-gray-900 dark:text-gray-100">
-                <span>{destination.name} - {formatRupiah(destination.price)}</span>
+                <span>{destination.nama_destinasi} - {formatRupiah(destination.harga)}</span>
                 <button
-                  onClick={() => handleRemoveDestination(destination.name)}
+                  onClick={() => handleRemoveDestination(destination.nama_destinasi)}
                   className="ml-4 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-600 transition duration-300 ease-in-out"
                 >
                   <FontAwesomeIcon icon={faTrashAlt} className="w-5 h-5" />
@@ -452,9 +487,9 @@ export default function PaketTourDetail({ params }) {
             <ul className="list-disc ml-6 mt-2">
               {removedDestinations.map((destination, index) => (
                 <li key={index} className="flex items-center justify-between text-gray-900 dark:text-gray-100">
-                  <span>{destination.name} - {formatRupiah(destination.price)}</span>
+                  <span>{destination.nama_destinasi} - {formatRupiah(destination.harga)}</span>
                   <button
-                    onClick={() => handleRestoreDestination(destination.name)}
+                    onClick={() => handleRestoreDestination(destination.nama_destinasi)}
                     className="ml-4 text-green-500 hover:text-green-700 dark:text-green-400 dark:hover:text-green-600 transition duration-300 ease-in-out"
                   >
                     <FontAwesomeIcon icon={faUndoAlt} className="w-5 h-5" />
@@ -465,59 +500,63 @@ export default function PaketTourDetail({ params }) {
           </div>
         )}
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Total Biaya</h2>
-          <p className="mt-2 text-gray-700 dark:text-gray-300">{formatRupiah(totalCost)}</p>
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Total Cost: {formatRupiah(totalCost)}</h2>
         </div>
-        <div className="mt-6 flex justify-end">
-          <button
-            onClick={handleOrder}
-            className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition duration-300 ease-in-out"
-          >
-            Pesan Sekarang
-          </button>
+        <div className="mt-6">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Order Sekarang</h2>
+          {hasOrdered ? (
+            <p className="text-gray-700 dark:text-gray-300">You have already ordered this tour.</p>
+          ) : (
+            <button
+              onClick={handleOrder}
+              className="mt-4 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 dark:hover:bg-green-700 transition duration-300 ease-in-out"
+            >
+              Order Now
+            </button>
+          )}
         </div>
       </section>
       {hasOrdered && (
         <section className="w-full max-w-4xl mx-auto mt-10 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Tulis Ulasan Anda</h2>
-          <form className="mt-4" onSubmit={handleSubmitReview}>
-            <div className="mb-4">
-              <label htmlFor="rating" className="block text-gray-700 dark:text-gray-300">Rating</label>
-              <select
-                id="rating"
-                value={rating}
-                onChange={(e) => setRating(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm dark:bg-gray-700 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400"
-              >
-                <option value="">Pilih Rating</option>
-                <option value="1">1 - Sangat Buruk</option>
-                <option value="2">2 - Buruk</option>
-                <option value="3">3 - Cukup</option>
-                <option value="4">4 - Bagus</option>
-                <option value="5">5 - Sangat Bagus</option>
-              </select>
-            </div>
-            <div className="mb-4">
-              <label htmlFor="deskripsi" className="block text-gray-700 dark:text-gray-300">Deskripsi</label>
-              <textarea
-                id="deskripsi"
-                value={deskripsi}
-                onChange={(e) => setDeskripsi(e.target.value)}
-                rows="4"
-                className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm dark:bg-gray-700 focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400"
-              ></textarea>
-            </div>
-            <div className="flex justify-end">
+          <div className="mt-6">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Tulis Review</h2>
+            <form onSubmit={handleSubmitReview} className="mt-4">
+              <div className="mb-4">
+                <label htmlFor="rating" className="block text-gray-900 dark:text-gray-100">Rating:</label>
+                <select
+                  id="rating"
+                  value={rating}
+                  onChange={(e) => setRating(e.target.value)}
+                  className="mt-1 block w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring focus:ring-green-200 dark:focus:ring-green-500 focus:border-green-300 dark:focus:border-green-600"
+                  required
+                >
+                  <option value="">Pilih Rating</option>
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <option key={num} value={num}>{num}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-4">
+                <label htmlFor="deskripsi" className="block text-gray-900 dark:text-gray-100">Deskripsi:</label>
+                <textarea
+                  id="deskripsi"
+                  value={deskripsi}
+                  onChange={(e) => setDeskripsi(e.target.value)}
+                  rows="4"
+                  className="mt-1 block w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring focus:ring-green-200 dark:focus:ring-green-500 focus:border-green-300 dark:focus:border-green-600"
+                  required
+                />
+              </div>
               <button
                 type="submit"
-                className="px-6 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition duration-300 ease-in-out"
+                className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:hover:bg-blue-700 transition duration-300 ease-in-out"
               >
-                Kirim Ulasan
+                Submit Review
               </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </section>
       )}
     </div>
   );
-} */
+}

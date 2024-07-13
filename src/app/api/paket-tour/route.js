@@ -52,13 +52,14 @@ export async function GET(request){
   try {  
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    console.log(id);
+    const jenis_paket = searchParams.get("jenis_paket");
+
+
     if(id){
       const query = 'SELECT * FROM paket_tour WHERE id_tour = $1';
       const {rows: paket} = await pool.query(query, [id]);
       const query2 = 'SELECT * FROM picture WHERE id_tour = $1';
       const {rows: picture} = await pool.query(query2, [id]);
-      console.log(paket);
       return NextResponse.json({
         status: 200,
         data: {
@@ -66,8 +67,24 @@ export async function GET(request){
           picture: picture.length > 0? picture[0].image_url : null
         }
       }, {status: 200});
+    } else if (jenis_paket) {
+      const query = 'SELECT * FROM paket_tour WHERE jenis_paket = $1';
+      const { rows: paket } = await pool.query(query, [jenis_paket]);
+      
+      const paketIds = paket.map(p => p.id_tour);
+      const pictureQuery = 'SELECT * FROM picture WHERE id_tour = ANY($1::text[])';
+      const { rows: pictures } = await pool.query(pictureQuery, [paketIds]);
+
+      const paketWithPictures = paket.map(p => ({
+        ...p,
+        picture: pictures.find(pic => pic.id_tour === p.id_tour)?.image_url || null
+      }));
+
+      return NextResponse.json({
+        status: 200,
+        data: paketWithPictures,
+      }, { status: 200 });
     } else{
-      console.log("masuk");
       const query = 'SELECT * FROM paket_tour';
       const {rows: paket} = await pool.query(query);
       return NextResponse.json({
@@ -158,20 +175,3 @@ export async function PUT(request){
     })
   }
 }
-
-// export default async function handler(req, res) {
-//   if (req.method === 'POST') {
-//     const {formData} = await req.json();
-//     return NextResponse.json({
-//       formData,
-//     })
-//   } else if (req.method === 'GET') {
-//     const query = 'SELECT * FROM paket_tour';
-//     const [results] = await db.query(query);
-//     res.status(200).json(results);
-//   } else if (req.method === 'DELETE') {
-//     res.status(405).json({ message: 'Method not allowed' });
-//   } else {
-//     res.status(405).json({ message: 'Method not allowed' });
-//   }
-// }
