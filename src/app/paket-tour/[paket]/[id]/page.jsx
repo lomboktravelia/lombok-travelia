@@ -302,24 +302,37 @@ export default function PaketTourDetail({ params }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch tour details
-    fetch(`/api/paket-tour/${id}`)
-      .then((res) => res.json())
+    fetch(`/api/paket-tour?id=${id}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch tour details');
+        }
+        return res.json();
+      })
       .then((data) => {
         setTourDetails(data);
-        setSelectedDestinations(data.destinations); // Assuming API response contains a `destinations` field
+        setSelectedDestinations(data.destinations || []);
       })
-      .catch((error) => console.error('Error fetching tour details:', error));
-
+      .catch((error) => {
+        console.error('Error fetching tour details:', error);
+      });
+  
     if (currentUser) {
-      // Check if the user has ordered this tour
       fetch(`/api/check-order?user=${currentUser.id_user}&tour=${id}`)
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('Failed to fetch order status');
+          }
+          return res.json();
+        })
         .then(({ success }) => setHasOrdered(success))
-        .catch((error) => console.error('Error fetching order status:', error));
+        .catch((error) => {
+          console.error('Error fetching order status:', error);
+        });
     }
   }, [currentUser, id]);
-
+  
+  // Jika data masih dimuat atau tourDetails belum ada, tampilkan pesan "Loading..."
   if (!id || !tourDetails) {
     return (
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8">
@@ -500,61 +513,58 @@ export default function PaketTourDetail({ params }) {
           </div>
         )}
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Total Cost: {formatRupiah(totalCost)}</h2>
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Total Harga</h2>
+          <p className="mt-2 text-gray-700 dark:text-gray-300">{formatRupiah(totalCost)}</p>
         </div>
-        <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Order Sekarang</h2>
+        <div className="mt-6 flex justify-end">
           {hasOrdered ? (
-            <p className="text-gray-700 dark:text-gray-300">You have already ordered this tour.</p>
+            <button className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75">
+              Pesanan Sudah Dibuat
+            </button>
           ) : (
             <button
               onClick={handleOrder}
-              className="mt-4 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 dark:hover:bg-green-700 transition duration-300 ease-in-out"
+              className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
             >
-              Order Now
+              Pesan Sekarang
             </button>
           )}
         </div>
       </section>
       {hasOrdered && (
         <section className="w-full max-w-4xl mx-auto mt-10 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-          <div className="mt-6">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Tulis Review</h2>
-            <form onSubmit={handleSubmitReview} className="mt-4">
-              <div className="mb-4">
-                <label htmlFor="rating" className="block text-gray-900 dark:text-gray-100">Rating:</label>
-                <select
-                  id="rating"
-                  value={rating}
-                  onChange={(e) => setRating(e.target.value)}
-                  className="mt-1 block w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring focus:ring-green-200 dark:focus:ring-green-500 focus:border-green-300 dark:focus:border-green-600"
-                  required
-                >
-                  <option value="">Pilih Rating</option>
-                  {[1, 2, 3, 4, 5].map((num) => (
-                    <option key={num} value={num}>{num}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-4">
-                <label htmlFor="deskripsi" className="block text-gray-900 dark:text-gray-100">Deskripsi:</label>
-                <textarea
-                  id="deskripsi"
-                  value={deskripsi}
-                  onChange={(e) => setDeskripsi(e.target.value)}
-                  rows="4"
-                  className="mt-1 block w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring focus:ring-green-200 dark:focus:ring-green-500 focus:border-green-300 dark:focus:border-green-600"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 dark:hover:bg-blue-700 transition duration-300 ease-in-out"
-              >
-                Submit Review
-              </button>
-            </form>
-          </div>
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Tambah Review</h2>
+          <form onSubmit={handleSubmitReview} className="mt-4">
+            <div className="mb-4">
+              <label htmlFor="rating" className="block text-gray-700 dark:text-gray-300">Rating (1-5)</label>
+              <input
+                type="number"
+                id="rating"
+                value={rating}
+                onChange={(e) => setRating(e.target.value)}
+                min="1"
+                max="5"
+                required
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="deskripsi" className="block text-gray-700 dark:text-gray-300">Deskripsi</label>
+              <textarea
+                id="deskripsi"
+                value={deskripsi}
+                onChange={(e) => setDeskripsi(e.target.value)}
+                required
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+              />
+            </div>
+            <button
+              type="submit"
+              className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+            >
+              Submit Review
+            </button>
+          </form>
         </section>
       )}
     </div>
