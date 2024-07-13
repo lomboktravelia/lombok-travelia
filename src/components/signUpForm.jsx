@@ -1,26 +1,51 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export function SignUpForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSignUp = async (event) => {
     event.preventDefault();
     setLoading(true);
-    const response = await fetch(`/api/signup`, {
+    fetch(`/api/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
-    });
-    if (response.ok) {
-      const { user } = await response.json();
-      console.log(user);
-    }
-    setLoading(false);
+    })
+      .then((response) => {
+        if (response.ok) {
+          fetch(`/api/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          }).then((response) => {
+            if (response.ok) router.push("/");
+            else
+              return response.json().then((data) => {
+                throw new Error(data.message || "Unknown error occurred");
+              });
+          });
+        } else
+          return response.json().then((data) => {
+            throw new Error(data.message || "Unknown error occurred");
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: error.message,
+        });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -44,6 +69,7 @@ export function SignUpForm() {
             type="text"
             placeholder="Masukkan Nama Lengkap"
             onChange={(e) => setName(e.target.value)}
+            required={true}
           />
         </div>
         <div className="mb-4">
@@ -59,6 +85,7 @@ export function SignUpForm() {
             type="email"
             placeholder="Masukkan Email"
             onChange={(e) => setEmail(e.target.value)}
+            required={true}
           />
         </div>
         <div className="mb-6">
@@ -74,6 +101,7 @@ export function SignUpForm() {
             type="password"
             placeholder="Masukkan Password"
             onChange={(e) => setPassword(e.target.value)}
+            required={true}
           />
         </div>
         <div className="flex items-center justify-between">

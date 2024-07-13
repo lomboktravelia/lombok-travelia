@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -12,15 +13,27 @@ export function LoginForm() {
   const handleLogin = async (event) => {
     event.preventDefault();
     setLoading(true);
-    const response = await fetch(`/api/login`, {
+    fetch(`/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
-    });
-    if (response.ok) {
-      router.push("/");
-    }
-    setLoading(false);
+    })
+      .then((response) => {
+        if (response.ok) router.push("/");
+        else
+          return response.json().then((data) => {
+            throw new Error(data.message || "Unknown error occurred");
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: error.message,
+        });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -30,7 +43,7 @@ export function LoginForm() {
           <div className="text-white text-4xl font-bold">Loading...</div>
         </div>
       )}
-      <form className="w-full max-w-sm"  onSubmit={handleLogin}>
+      <form className="w-full max-w-sm" onSubmit={handleLogin}>
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -44,6 +57,7 @@ export function LoginForm() {
             type="email"
             placeholder="Masukkan Email"
             onChange={(e) => setEmail(e.target.value)}
+            required={true}
           />
         </div>
         <div className="mb-6">
@@ -59,6 +73,7 @@ export function LoginForm() {
             type="password"
             placeholder="Masukkan Password"
             onChange={(e) => setPassword(e.target.value)}
+            required={true}
           />
         </div>
         <div className="flex items-center justify-between">
