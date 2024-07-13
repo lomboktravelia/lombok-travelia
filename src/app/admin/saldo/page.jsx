@@ -24,9 +24,11 @@ const SaldoPage = () => {
       <div className="container mx-auto py-8">
         <h1 className="text-2xl font-bold mb-4">Saldo</h1>
         <div className="flex justify-between mb-8">
-          <div className="p-4 border rounded-lg shadow-lg">
-            <h2 className="text-lg font-semibold">Saldo Tersedia</h2>
-            <p className="text-xl font-bold">Rp {availableBalance.toLocaleString()}</p>
+          <div className=''>
+            <div className="p-4 border rounded-lg shadow-lg">
+              <h2 className="text-lg font-semibold">Saldo Tersedia</h2>
+              <p className="text-xl font-bold">Rp {availableBalance.toLocaleString()}</p>
+            </div>
           </div>
           <div className="p-4 border rounded-lg shadow-lg">
             <h2 className="text-lg font-semibold">Saldo dapat ditarik</h2>
@@ -37,7 +39,7 @@ const SaldoPage = () => {
         </div>
         <h1 className="text-2xl font-bold mb-4">Riwayat Penarikan</h1>
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white">
+          <table className="min-w-full bg-white rounded-lg">
             <thead>
               <tr>
                 <th className="py-2 px-4 border-b">Tanggal & Waktu</th>

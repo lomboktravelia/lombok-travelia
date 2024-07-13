@@ -22,7 +22,7 @@ const PesananPage = () => {
       <div className="container mx-auto py-8">
         <h1 className="text-2xl font-bold mb-4">Riwayat Pesanan</h1>
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white">
+          <table className="min-w-full bg-white rounded-lg">
             <thead>
               <tr>
                 <th className="py-2 px-4 border-b">Tanggal & Waktu</th>
