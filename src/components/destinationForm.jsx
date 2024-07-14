@@ -4,7 +4,7 @@ import { storage } from '@/utils/firebaseConfig';
 import { Button, Spinner } from '@nextui-org/react';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FiUpload } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 
@@ -126,7 +126,7 @@ export default function DestinationForm({ onSubmit, initialData = {} }) {
         >
           <option value="">Pilih Jenis Destinasi</option>
           <option value="Wisata Pantai">Wisata Pantai</option>
-          <option value="Wisata Desa & Air Terjun">Wisata Desa & Air Terjun</option>
+          <option value="Wisata Desa dan Air Terjun">Wisata Desa dan Air Terjun</option>
           <option value="Wisata Budaya">Wisata Budaya</option>
           <option value="Wisata Kuliner">Wisata Kuliner</option>
         </select>

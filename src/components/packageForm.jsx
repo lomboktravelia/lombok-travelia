@@ -3,7 +3,7 @@ import { storage } from '@/utils/firebaseConfig';
 import { Button, Spinner } from '@nextui-org/react';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FiUpload } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 
@@ -25,6 +25,10 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadingStatus, setUploadingStatus] = useState('');
+
+  useEffect(() => {
+    console.log(initialData);
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -156,7 +160,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
       <div className='flex flex-col gap-3'>
         <label className="block mb-2">Picture</label>
         <div className='relative w-full h-72 rounded-md overflow-hidden'>
-          <Image alt="Picture" src={formData.picture} height={1000} width={1000} className='w-full h-full object-cover object-center'></Image>
+          <Image alt="Picture" src={formData.picture? formData.picture:'images/gili-trawangan-1.jpg'} height={1000} width={1000} className='w-full h-full object-cover object-center'></Image>
           {isUploading && (
             <div className="absolute inset-0 bg-black/60 flex flex-col justify-center items-center">
               <Spinner></Spinner>
