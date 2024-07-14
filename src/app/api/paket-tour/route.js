@@ -148,12 +148,24 @@ export async function GET(request) {
 
 export async function DELETE(request) {
   const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+  const id = searchParams.get("id"); 
+
+  const _query = {
+    text: 'DELETE FROM picture WHERE id_tour = $1 RETURNING *',
+    values: [id]
+  }
 
   const query = {
-    text: "DELETE FROM paket_tour WHERE id_tour = $1 RETURNING *",
-    values: [id],
-  };
+    text: 'DELETE FROM paket_tour WHERE id_tour = $1 RETURNING *',
+    values: [id]
+  }
+  const _result = await pool.query(_query);
+  if(!_result.rowCount){
+    return NextResponse.json({
+      status: 403,
+      message: "Failed to delete picture"
+    }, {status: 403})
+  }
   const result = await pool.query(query);
   if (!result.rowCount) {
     return NextResponse.json(
