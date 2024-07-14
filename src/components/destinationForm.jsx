@@ -126,7 +126,7 @@ export default function DestinationForm({ onSubmit, initialData = {} }) {
         >
           <option value="">Pilih Jenis Destinasi</option>
           <option value="Wisata Pantai">Wisata Pantai</option>
-          <option value="Wisata Desa & Air Terjun">Wisata Desa & Air Terjun</option>
+          <option value="Wisata Desa dan Air Terjun">Wisata Desa dan Air Terjun</option>
           <option value="Wisata Budaya">Wisata Budaya</option>
           <option value="Wisata Kuliner">Wisata Kuliner</option>
         </select>
