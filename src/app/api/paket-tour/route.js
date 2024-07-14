@@ -96,7 +96,7 @@ export async function GET(request) {
           status: 200,
           data: {
             ...paket[0],
-            picture: picture,
+            picture: picture.length>0? picture[0].image_url : null,
           },
         },
         { status: 200 }
@@ -148,14 +148,26 @@ export async function GET(request) {
 
 export async function DELETE(request) {
   const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
+  const id = searchParams.get("id"); 
 
   const query = {
-    text: "DELETE FROM paket_tour WHERE id_tour = $1 RETURNING *",
-    values: [id],
-  };
+    text: 'DELETE FROM picture WHERE id_tour = $1 RETURNING *',
+    values: [id]
+  }
+
+  const query2 = {
+    text: 'DELETE FROM paket_tour WHERE id_tour = $1 RETURNING *',
+    values: [id]
+  }
   const result = await pool.query(query);
-  if (!result.rowCount) {
+  if(!result.rowCount){
+    return NextResponse.json({
+      status: 403,
+      message: "Failed to delete picture"
+    }, {status: 403})
+  }
+  const result2 = await pool.query(query2);
+  if (!result2.rowCount) {
     return NextResponse.json(
       {
         status: 403,
@@ -166,7 +178,7 @@ export async function DELETE(request) {
   }
   return NextResponse.json({
     status: 200,
-    deletedData: result.rows[0],
+    deletedData: result2.rows[0],
   });
 }
 

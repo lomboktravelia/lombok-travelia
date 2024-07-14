@@ -4,7 +4,7 @@ import { storage } from '@/utils/firebaseConfig';
 import { Button, Spinner } from '@nextui-org/react';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FiUpload } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 

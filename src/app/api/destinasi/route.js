@@ -89,6 +89,11 @@ export async function DELETE(request) {
     const id = searchParams.get("id");
 
     const query = {
+      text: 'DELETE FROM picture_destination WHERE id_destinasi = $1 RETURNING *',
+      values: [id]
+    };
+
+    const query2 = {
       text: 'DELETE FROM destinasi WHERE id_destinasi = $1 RETURNING *',
       values: [id]
     };
@@ -97,28 +102,22 @@ export async function DELETE(request) {
     if (!result.rowCount) {
       return NextResponse.json({
         status: 403,
-        message: "Failed to delete data"
+        message: "Failed to delete picture"
       }, { status: 403 });
     }
-
-    const query2 = {
-      text: 'DELETE FROM picture_destination WHERE id_destinasi = $1 RETURNING *',
-      values: [id]
-    };
-
     const result2 = await pool.query(query2);
     if (!result2.rowCount) {
       return NextResponse.json({
         status: 403,
-        message: "Failed to delete picture"
+        message: "Failed to delete data"
       }, { status: 403 });
     }
 
     return NextResponse.json({
       status: 200,
       deletedData: {
-        ...result.rows[0],
-        picture: result2.rows.length > 0 ? result2.rows[0] : null
+        ...result2.rows[0],
+        picture: result.rows.length > 0 ? result.rows[0] : null
       }
     });
   } catch (error) {

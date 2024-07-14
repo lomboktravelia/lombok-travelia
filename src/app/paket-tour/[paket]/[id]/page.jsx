@@ -489,7 +489,7 @@ export default function PaketTourDetail({ params }) {
       </header>
       <section className="w-full max-w-4xl mx-auto mt-10 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
         <img
-          src={tourDetails?.picture[0]?.image_url}
+          src={tourDetails?.picture}
           alt={`Trip ${tourDetails.nama_paket}`}
           className="w-full h-64 object-cover rounded-t-lg"
         />
