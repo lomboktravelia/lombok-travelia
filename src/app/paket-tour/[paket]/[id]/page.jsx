@@ -281,14 +281,13 @@ export default function PaketTourDetail({ params }) {
 }
 */
 
-
 "use client";
-import { useState, useEffect, useContext } from 'react';
-import { UserContext } from '@/utils/userContext';
-import { useRouter } from 'next/navigation';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faUndoAlt } from '@fortawesome/free-solid-svg-icons';
-import Swal from 'sweetalert2';
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "@/utils/userContext";
+import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt, faUndoAlt } from "@fortawesome/free-solid-svg-icons";
+import Swal from "sweetalert2";
 
 export default function PaketTourDetail({ params }) {
   const { id } = params;
@@ -297,83 +296,97 @@ export default function PaketTourDetail({ params }) {
   const [removedDestinations, setRemovedDestinations] = useState([]);
   const [currentUser, setCurrentUser] = useContext(UserContext);
   const [hasOrdered, setHasOrdered] = useState(false);
-  const [rating, setRating] = useState('');
-  const [deskripsi, setDeskripsi] = useState('');
+  const [rating, setRating] = useState("");
+  const [deskripsi, setDeskripsi] = useState("");
   const router = useRouter();
 
   useEffect(() => {
     fetch(`/api/paket-tour?id=${id}`)
       .then((res) => {
         if (!res.ok) {
-          throw new Error('Failed to fetch tour details');
+          throw new Error("Failed to fetch tour details");
         }
         return res.json();
       })
       .then((data) => {
-        setTourDetails(data);
+        setTourDetails(data?.data);
+        console.log(data.data);
         setSelectedDestinations(data.destinations || []);
       })
       .catch((error) => {
-        console.error('Error fetching tour details:', error);
+        console.error("Error fetching tour details:", error);
       });
-  
+
     if (currentUser) {
       fetch(`/api/check-order?user=${currentUser.id_user}&tour=${id}`)
         .then((res) => {
           if (!res.ok) {
-            throw new Error('Failed to fetch order status');
+            throw new Error("Failed to fetch order status");
           }
           return res.json();
         })
         .then(({ success }) => setHasOrdered(success))
         .catch((error) => {
-          console.error('Error fetching order status:', error);
+          console.error("Error fetching order status:", error);
         });
     }
   }, [currentUser, id]);
-  
+
   // Jika data masih dimuat atau tourDetails belum ada, tampilkan pesan "Loading..."
   if (!id || !tourDetails) {
     return (
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8">
         <header className="text-center py-10">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">Loading...</h1>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
+            Loading...
+          </h1>
         </header>
       </div>
     );
   }
 
   const handleRemoveDestination = (destinationName) => {
-    const destinationToRemove = selectedDestinations.find(dest => dest.nama_destinasi === destinationName);
-    const updatedDestinations = selectedDestinations.filter(dest => dest.nama_destinasi !== destinationName);
+    const destinationToRemove = selectedDestinations.find(
+      (dest) => dest.nama_destinasi === destinationName
+    );
+    const updatedDestinations = selectedDestinations.filter(
+      (dest) => dest.nama_destinasi !== destinationName
+    );
     setSelectedDestinations(updatedDestinations);
     setRemovedDestinations([...removedDestinations, destinationToRemove]);
   };
 
   const handleRestoreDestination = (destinationName) => {
-    const destinationToRestore = removedDestinations.find(dest => dest.nama_destinasi === destinationName);
-    const updatedRemovedDestinations = removedDestinations.filter(dest => dest.nama_destinasi !== destinationName);
+    const destinationToRestore = removedDestinations.find(
+      (dest) => dest.nama_destinasi === destinationName
+    );
+    const updatedRemovedDestinations = removedDestinations.filter(
+      (dest) => dest.nama_destinasi !== destinationName
+    );
     setSelectedDestinations([...selectedDestinations, destinationToRestore]);
     setRemovedDestinations(updatedRemovedDestinations);
   };
 
-  const totalCost = selectedDestinations.reduce((acc, dest) => acc + dest.harga, 0);
+  const totalCost = selectedDestinations.reduce(
+    (acc, dest) => acc + dest.harga,
+    0
+  );
 
   const formatRupiah = (number) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
     }).format(number);
   };
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
 
-    const response = await fetch('/api/review', {
-      method: 'POST',
+    const response = await fetch("/api/review", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         id_tour: id,
@@ -386,18 +399,18 @@ export default function PaketTourDetail({ params }) {
     if (response.ok) {
       // Refresh halaman atau tampilkan notifikasi sukses
       Swal.fire({
-        icon: 'success',
-        title: 'Review Submitted',
-        text: 'Thank you for your review!',
+        icon: "success",
+        title: "Review Submitted",
+        text: "Thank you for your review!",
       });
-      setRating('');
-      setDeskripsi('');
+      setRating("");
+      setDeskripsi("");
     } else {
       // Tampilkan pesan kesalahan jika gagal
       Swal.fire({
-        icon: 'error',
-        title: 'Failed to Submit Review',
-        text: 'An error occurred while submitting your review. Please try again later.',
+        icon: "error",
+        title: "Failed to Submit Review",
+        text: "An error occurred while submitting your review. Please try again later.",
       });
     }
   };
@@ -405,9 +418,9 @@ export default function PaketTourDetail({ params }) {
   const handleOrder = async () => {
     if (!currentUser) {
       Swal.fire({
-        icon: 'warning',
-        title: 'Login Required',
-        text: 'Please login to place an order.',
+        icon: "warning",
+        title: "Login Required",
+        text: "Please login to place an order.",
       });
       return;
     }
@@ -419,10 +432,10 @@ export default function PaketTourDetail({ params }) {
       total_cost: totalCost,
     };
 
-    const response = await fetch('/api/payment', {
-      method: 'POST',
+    const response = await fetch("/api/payment", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(orderData),
     });
@@ -432,37 +445,37 @@ export default function PaketTourDetail({ params }) {
       window.snap.pay(token, {
         onSuccess: function (result) {
           // Handle success
-          console.log('Payment success:', result);
+          console.log("Payment success:", result);
           Swal.fire({
-            icon: 'success',
-            title: 'Payment Successful',
-            text: 'Thank you for your order!',
+            icon: "success",
+            title: "Payment Successful",
+            text: "Thank you for your order!",
           });
           setHasOrdered(true); // Setelah sukses order, ubah status `hasOrdered` menjadi true
         },
         onPending: function (result) {
           // Handle pending
-          console.log('Payment pending:', result);
+          console.log("Payment pending:", result);
         },
         onError: function (result) {
           // Handle error
-          console.log('Payment error:', result);
+          console.log("Payment error:", result);
           Swal.fire({
-            icon: 'error',
-            title: 'Payment Failed',
-            text: 'Unable to process the payment. Please try again later.',
+            icon: "error",
+            title: "Payment Failed",
+            text: "Unable to process the payment. Please try again later.",
           });
         },
         onClose: function () {
           // Handle close
-          console.log('Payment popup closed without finishing payment');
+          console.log("Payment popup closed without finishing payment");
         },
       });
     } else {
       Swal.fire({
-        icon: 'error',
-        title: 'Payment Failed',
-        text: 'Unable to process the payment. Please try again later.',
+        icon: "error",
+        title: "Payment Failed",
+        text: "Unable to process the payment. Please try again later.",
       });
     }
   };
@@ -470,22 +483,42 @@ export default function PaketTourDetail({ params }) {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8">
       <header className="text-center py-10">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">Detail Paket - {tourDetails.nama_paket}</h1>
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
+          Detail Paket - {tourDetails.nama_paket}
+        </h1>
       </header>
       <section className="w-full max-w-4xl mx-auto mt-10 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-        <img src={tourDetails.image_url} alt={`Trip ${tourDetails.nama_paket}`} className="w-full h-64 object-cover rounded-t-lg" />
+        <img
+          src={tourDetails?.picture[0]?.image_url}
+          alt={`Trip ${tourDetails.nama_paket}`}
+          className="w-full h-64 object-cover rounded-t-lg"
+        />
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Deskripsi</h2>
-          <p className="mt-2 text-gray-700 dark:text-gray-300">{tourDetails.deskripsi}</p>
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            Deskripsi
+          </h2>
+          <p className="mt-2 text-gray-700 dark:text-gray-300">
+            {tourDetails.deskripsi}
+          </p>
         </div>
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Daerah Wisata</h2>
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            Daerah Wisata
+          </h2>
           <ul className="list-disc ml-6 mt-2">
             {selectedDestinations.map((destination, index) => (
-              <li key={index} className="flex items-center justify-between text-gray-900 dark:text-gray-100">
-                <span>{destination.nama_destinasi} - {formatRupiah(destination.harga)}</span>
+              <li
+                key={index}
+                className="flex items-center justify-between text-gray-900 dark:text-gray-100"
+              >
+                <span>
+                  {destination.nama_destinasi} -{" "}
+                  {formatRupiah(destination.harga)}
+                </span>
                 <button
-                  onClick={() => handleRemoveDestination(destination.nama_destinasi)}
+                  onClick={() =>
+                    handleRemoveDestination(destination.nama_destinasi)
+                  }
                   className="ml-4 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-600 transition duration-300 ease-in-out"
                 >
                   <FontAwesomeIcon icon={faTrashAlt} className="w-5 h-5" />
@@ -496,13 +529,23 @@ export default function PaketTourDetail({ params }) {
         </div>
         {removedDestinations.length > 0 && (
           <div className="mt-6">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Destinasi yang Dihapus</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+              Destinasi yang Dihapus
+            </h2>
             <ul className="list-disc ml-6 mt-2">
               {removedDestinations.map((destination, index) => (
-                <li key={index} className="flex items-center justify-between text-gray-900 dark:text-gray-100">
-                  <span>{destination.nama_destinasi} - {formatRupiah(destination.harga)}</span>
+                <li
+                  key={index}
+                  className="flex items-center justify-between text-gray-900 dark:text-gray-100"
+                >
+                  <span>
+                    {destination.nama_destinasi} -{" "}
+                    {formatRupiah(destination.harga)}
+                  </span>
                   <button
-                    onClick={() => handleRestoreDestination(destination.nama_destinasi)}
+                    onClick={() =>
+                      handleRestoreDestination(destination.nama_destinasi)
+                    }
                     className="ml-4 text-green-500 hover:text-green-700 dark:text-green-400 dark:hover:text-green-600 transition duration-300 ease-in-out"
                   >
                     <FontAwesomeIcon icon={faUndoAlt} className="w-5 h-5" />
@@ -513,8 +556,13 @@ export default function PaketTourDetail({ params }) {
           </div>
         )}
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Total Harga</h2>
-          <p className="mt-2 text-gray-700 dark:text-gray-300">{formatRupiah(totalCost)}</p>
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            Total Harga
+          </h2>
+          <p className="mt-2 text-gray-700 dark:text-gray-300">
+            {/* {formatRupiah(totalCost)} */}
+            {formatRupiah(tourDetails?.harga)}
+          </p>
         </div>
         <div className="mt-6 flex justify-end">
           {hasOrdered ? (
@@ -533,10 +581,17 @@ export default function PaketTourDetail({ params }) {
       </section>
       {hasOrdered && (
         <section className="w-full max-w-4xl mx-auto mt-10 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">Tambah Review</h2>
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            Tambah Review
+          </h2>
           <form onSubmit={handleSubmitReview} className="mt-4">
             <div className="mb-4">
-              <label htmlFor="rating" className="block text-gray-700 dark:text-gray-300">Rating (1-5)</label>
+              <label
+                htmlFor="rating"
+                className="block text-gray-700 dark:text-gray-300"
+              >
+                Rating (1-5)
+              </label>
               <input
                 type="number"
                 id="rating"
@@ -549,7 +604,12 @@ export default function PaketTourDetail({ params }) {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="deskripsi" className="block text-gray-700 dark:text-gray-300">Deskripsi</label>
+              <label
+                htmlFor="deskripsi"
+                className="block text-gray-700 dark:text-gray-300"
+              >
+                Deskripsi
+              </label>
               <textarea
                 id="deskripsi"
                 value={deskripsi}
