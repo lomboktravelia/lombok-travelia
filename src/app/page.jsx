@@ -20,7 +20,7 @@ export default function Home() {
   useEffect(() => {
     fetch("/api/data?table=paket_tour")
       .then((res) => res.json())
-      .then(({data} ) => {
+      .then(({ data }) => {
         setData(data);
         setLoading(false);
       });
@@ -29,7 +29,9 @@ export default function Home() {
   if (isLoading)
     return (
       <main className="min-h-screen bg-white dark:bg-black flex justify-center items-center">
-        <Spinner style={{ borderTopColor: '#35D235', borderRightColor: '#35D235' }} />
+        <Spinner
+          style={{ borderTopColor: "#35D235", borderRightColor: "#35D235" }}
+        />
       </main>
     );
 
@@ -56,26 +58,42 @@ export default function Home() {
             Paket Wisata Populer Kami
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {data.map((item, index) => (
-              <div key={index} className="flex flex-col bg-white p-5 rounded-lg shadow-md gap-5 h-[550px]">
-                <div className="rounded-lg overflow-hidden h-3/5 w-full">
-                  <Image alt="Paket Tour" src={item.picture? item.picture:'images/wisata-1.jpeg'} width={400} height={300} className="object-cover h-full w-full"></Image>
+            {data.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className="flex flex-col bg-white p-5 rounded-lg shadow-md gap-5 h-[550px]"
+                >
+                  <div className="rounded-lg overflow-hidden h-3/5 w-full">
+                    <Image
+                      alt="Paket Tour"
+                      src={item.picture ? item.picture : "images/wisata-1.jpeg"}
+                      width={400}
+                      height={300}
+                      className="object-cover h-full w-full"
+                    ></Image>
+                  </div>
+                  <div className="w-full">
+                    <h3 className="text-xl font-bold truncate">
+                      {item.nama_paket}
+                    </h3>
+                  </div>
+                  <div className="flex flex-col justify-between gap-5 w-full h-2/5">
+                    <p className="text-gray-600 text-justify">
+                      {item.deskripsi.length > 200
+                        ? `${item.deskripsi.substring(0, 210)}...`
+                        : item.deskripsi}
+                    </p>
+                    <Link
+                      href={`/paket-tour/paket/${item?.id_tour}`}
+                      className="text-green-600 hover:text-green-800"
+                    >
+                      Readmore &rarr;
+                    </Link>
+                  </div>
                 </div>
-                <div className="w-full">
-                   <h3 className="text-xl font-bold truncate">{item.nama_paket}</h3>
-                </div>
-                <div className="flex flex-col justify-between gap-5 w-full h-2/5">
-                  <p className="text-gray-600 text-justify">{item.deskripsi.length > 200 ? `${item.deskripsi.substring(0, 210)}...` : item.deskripsi}</p>
-                  <Link
-                    href={`/paket-tour/paket/${item.nama_paket}`}
-                    className="text-green-600 hover:text-green-800"
-                  >
-                    Readmore &rarr;
-                  </Link>
-
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -94,7 +112,8 @@ export default function Home() {
               />
               <h3 className="text-xl font-bold">Harga Terbaik</h3>
               <p className="text-gray-600 text-center">
-              Kami menawarkan harga yang kompetitif dan terjangkau tanpa mengorbankan kualitas layanan.
+                Kami menawarkan harga yang kompetitif dan terjangkau tanpa
+                mengorbankan kualitas layanan.
               </p>
             </div>
             <div className="flex flex-col items-center max-w-xs">
@@ -105,7 +124,8 @@ export default function Home() {
               />
               <h3 className="text-xl font-bold mb-2">Mudah & Cepat</h3>
               <p className="text-gray-600 text-center">
-              Proses pemesanan yang sederhana dan cepat adalah prioritas kami. Dengan platform yang user-friendly dan kemudahan akses.
+                Proses pemesanan yang sederhana dan cepat adalah prioritas kami.
+                Dengan platform yang user-friendly dan kemudahan akses.
               </p>
             </div>
             <div className="flex flex-col items-center max-w-xs">
@@ -116,7 +136,8 @@ export default function Home() {
               />
               <h3 className="text-xl font-bold mb-2">Pilihan Tour Terbaik</h3>
               <p className="text-gray-600 text-center">
-              Tersedia beragam pilihan tur yang disesuaikan dengan berbagai minat dan preferensi. Mulai dari wisata alam yang menakjubkan.
+                Tersedia beragam pilihan tur yang disesuaikan dengan berbagai
+                minat dan preferensi. Mulai dari wisata alam yang menakjubkan.
               </p>
             </div>
           </div>
