@@ -1,6 +1,6 @@
 'use client';
 import { storage } from '@/utils/firebaseConfig';
-import { Button, Spinner } from '@nextui-org/react';
+import { Button, Spinner, Select, SelectItem } from '@nextui-org/react';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -12,7 +12,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     nama_paket: initialData.nama_paket || '',
     jenis_paket: initialData.jenis_paket || '',
     deskripsi: initialData.deskripsi || '',
-    daerah_wisata: initialData.daerah_wisata || '',
+    nama_destinasi: initialData.nama_destinasi || [],
     harga: initialData.harga || '',
     durasi: initialData.durasi || '',
     availability: initialData.availability || 'true', 
@@ -25,6 +25,22 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadingStatus, setUploadingStatus] = useState('');
+  const [destinations, setDestinations] = useState([]);
+
+  useEffect(() => {
+    // Fetch data destinasi dari API
+    async function fetchDestinations() {
+      try {
+        const response = await fetch('/api/destinasi'); 
+        const data = await response.json();
+        setDestinations(data.data);
+      } catch (error) {
+        console.error('Error fetching destinations:', error);
+      }
+    }
+
+    fetchDestinations();
+  }, []);
 
   useEffect(() => {
     console.log(initialData);
@@ -34,6 +50,15 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  const handleDestinasiChange = (selectedItems) => {
+    if (Array.isArray(selectedItems)) {
+      setFormData({ ...formData, nama_destinasi: selectedItems.map(item => item.value) });
+    } else {
+      console.error('selectedItems bukan array:', selectedItems);
+    }
+  };
+  
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -114,7 +139,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
         nama_paket: '',
         jenis_paket: '',
         deskripsi: '',
-        daerah_wisata: '',
+        nama_destinasi: [],
         harga: '',
         durasi: '',
         availability: 'true',
@@ -190,14 +215,21 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
         ></textarea>
       </div>
       <div>
-        <label className="block mb-2">Daerah Wisata</label>
-        <input
-          type="text"
-          name="daerah_wisata"
-          value={formData.daerah_wisata}
-          onChange={handleChange}
+      <label className="block mb-2">Nama Destinasi</label>
+        <Select
+          label="Nama Destinasi"
+          selectionMode="multiple"
+          placeholder="Pilih Destinasi"
+          value={formData.nama_destinasi}
+          onChange={(selectedItems) => handleDestinasiChange(selectedItems)}
           className="w-full p-2 border border-gray-300 rounded"
-        />
+        >
+          {destinations.map((destinasi) => (
+            <SelectItem key={destinasi.id_destinasi} value={destinasi.id_destinasi}>
+              {destinasi.nama_destinasi}
+            </SelectItem>
+          ))}
+        </Select>
       </div>
       <div>
         <label className="block mb-2">Harga</label>
