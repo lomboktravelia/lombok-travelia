@@ -58,6 +58,35 @@ export async function POST(request) {
       );
     }
 
+        //Menyimpan destinasi ke tabel paket_tour_destinasi
+        const destinasiQueries = nama_destinasi.map(destinasi => ({
+          text: "INSERT INTO paket_tour_destinasi (id_tour, id_destinasi) VALUES ($1, $2)",
+          values: [idTour, destinasi],
+        }));
+        await Promise.all(destinasiQueries.map(query => pool.query(query)));
+    
+        //Menyimpan itinerary
+        const itineraryQueries = itinerary.map(item => ({
+          text: "INSERT INTO itinerary (id_itinerary, id_tour, deskripsi) VALUES ($1, $2, $3)",
+          values: [nanoid(20), idTour, item],
+        }));
+        await Promise.all(itineraryQueries.map(query => pool.query(query)));
+    
+        //Menyimpan inclusion
+        const inclusionQueries = inclusion.map(item => ({
+          text: "INSERT INTO inclusion (id_inclusion, id_tour, deskripsi) VALUES ($1, $2, $3)",
+          values: [nanoid(20), idTour, item],
+        }));
+        await Promise.all(inclusionQueries.map(query => pool.query(query)));
+    
+        //Menyimpan exclusion
+        const exclusionQueries = exclusion.map(item => ({
+          text: "INSERT INTO exclusion (id_exclusion, id_tour, deskripsi) VALUES ($1, $2, $3)",
+          values: [nanoid(20), idTour, item],
+        }));
+        await Promise.all(exclusionQueries.map(query => pool.query(query)));
+    
+
     return NextResponse.json(
       {
         status: 200,
@@ -91,12 +120,26 @@ export async function GET(request) {
       const { rows: paket } = await pool.query(query, [id]);
       const query2 = "SELECT * FROM picture WHERE id_tour = $1";
       const { rows: picture } = await pool.query(query2, [id]);
+      //tambahan mulai dari sini
+      const query3 = "SELECT id_destinasi FROM paket_tour_destinasi WHERE id_tour = $1";
+      const { rows: destinasi } = await pool.query(query3, [id]);
+      const query4 = "SELECT deskripsi FROM itinerary WHERE id_tour = $1";
+      const { rows: itinerary } = await pool.query(query4, [id]);
+      const query5 = "SELECT deskripsi FROM inclusion WHERE id_tour = $1";
+      const { rows: inclusion } = await pool.query(query5, [id]);
+      const query6 = "SELECT deskripsi FROM exclusion WHERE id_tour = $1";
+      const { rows: exclusion } = await pool.query(query6, [id]);
       return NextResponse.json(
         {
           status: 200,
           data: {
             ...paket[0],
             picture: picture.length>0? picture[0].image_url : null,
+            //tambahan mulai dari sini
+            nama_destinasi: destinasi.map(d => d.id_destinasi),
+            itinerary: itinerary.map(i => i.deskripsi),
+            inclusion: inclusion.map(i => i.deskripsi),
+            exclusion: exclusion.map(e => e.deskripsi),
           },
         },
         { status: 200 }
@@ -159,6 +202,26 @@ export async function DELETE(request) {
     text: 'DELETE FROM paket_tour WHERE id_tour = $1 RETURNING *',
     values: [id]
   }
+//tambahan mulai dari sini
+  const query3 = {
+    text: 'DELETE FROM itinerary WHERE id_tour = $1 RETURNING *',
+    values: [id]
+  }
+
+  const query4 = {
+    text: 'DELETE FROM inclusion WHERE id_tour = $1 RETURNING *',
+    values: [id]
+  }
+
+  const query5 = {
+    text: 'DELETE FROM exclusion WHERE id_tour = $1 RETURNING *',
+    values: [id]
+  }
+
+  const query6 = {
+    text: 'DELETE FROM paket_tour_destinasi WHERE id_tour = $1 RETURNING *',
+    values: [id]
+  }
   const result = await pool.query(query);
   if(!result.rowCount){
     return NextResponse.json({
@@ -176,6 +239,39 @@ export async function DELETE(request) {
       { status: 403 }
     );
   }
+  //tambahan mulai dari sini
+  const result3 = await pool.query(query3);
+  if (!result3.rowCount) {
+    return NextResponse.json({
+      status: 403,
+      message: "Failed to delete itinerary"
+    }, { status: 403 });
+  }
+
+  const result4 = await pool.query(query4);
+  if (!result4.rowCount) {
+    return NextResponse.json({
+      status: 403,
+      message: "Failed to delete inclusion"
+    }, { status: 403 });
+  }
+
+  const result5 = await pool.query(query5);
+  if (!result5.rowCount) {
+    return NextResponse.json({
+      status: 403,
+      message: "Failed to delete exclusion"
+    }, { status: 403 });
+  }
+
+  const result6 = await pool.query(query6);
+  if (!result6.rowCount) {
+    return NextResponse.json({
+      status: 403,
+      message: "Failed to delete package tour destination data"
+    }, { status: 403 });
+  }
+
   return NextResponse.json({
     status: 200,
     deletedData: result2.rows[0],
@@ -238,7 +334,67 @@ export async function PUT(request) {
         message: "Failed to update picture",
       });
     }
-
+//tambahan mulai dari sini
+        // Update destinasi
+        const query3 = {
+          text: "DELETE FROM paket_tour_destinasi WHERE id_tour = $1 RETURNING *",
+          values: [id],
+        };
+        await pool.query(query3);
+    
+        for (const destinasi of nama_destinasi) {
+          const insertDestinasiQuery = {
+            text: 'INSERT INTO paket_tour_destinasi (id_tour, id_destinasi) VALUES ($1, $2)',
+            values: [id, destinasi],
+          };
+          await pool.query(insertDestinasiQuery);
+        }
+    
+        // Update itinerary
+        const query4 = {
+          text: "DELETE FROM itinerary WHERE id_tour = $1 RETURNING *",
+          values: [id],
+        };
+        await pool.query(query4);
+    
+        for (const item of itinerary) {
+          const insertItineraryQuery = {
+            text: 'INSERT INTO itinerary (id_tour, deskripsi) VALUES ($1, $2)',
+            values: [id, item],
+          };
+          await pool.query(insertItineraryQuery);
+        }
+    
+        // Update inclusion
+        const query5 = {
+          text: "DELETE FROM inclusion WHERE id_tour = $1 RETURNING *",
+          values: [id],
+        };
+        await pool.query(query5);
+    
+        for (const item of inclusion) {
+          const insertInclusionQuery = {
+            text: 'INSERT INTO inclusion (id_tour, deskripsi) VALUES ($1, $2)',
+            values: [id, item],
+          };
+          await pool.query(insertInclusionQuery);
+        }
+    
+        // Update exclusion
+        const query6 = {
+          text: "DELETE FROM exclusion WHERE id_tour = $1 RETURNING *",
+          values: [id],
+        };
+        await pool.query(query6);
+    
+        for (const item of exclusion) {
+          const insertExclusionQuery = {
+            text: 'INSERT INTO exclusion (id_tour, deskripsi) VALUES ($1, $2)',
+            values: [id, item],
+          };
+          await pool.query(insertExclusionQuery);
+        }
+    
     return NextResponse.json({
       status: 200,
       updatedData: {
