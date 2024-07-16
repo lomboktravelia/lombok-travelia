@@ -1,6 +1,6 @@
 'use client';
 import { storage } from '@/utils/firebaseConfig';
-import { Button, Spinner, Select, SelectItem } from '@nextui-org/react';
+import { Button, Spinner, Select, SelectItem, Input, Textarea, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -16,9 +16,9 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     harga: initialData.harga || '',
     durasi: initialData.durasi || '',
     availability: initialData.availability || 'true', 
-    itinerary: initialData.itinerary || '',
-    include: initialData.include || '',
-    exclude: initialData.exclude || '',
+    itinerary: initialData.itinerary || [],
+    inclusion: initialData.inclusion || [],
+    exclusion: initialData.exclusion || [],
     picture: initialData.picture || '/images/gili-trawangan-1.jpg',
   });
 
@@ -26,6 +26,9 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadingStatus, setUploadingStatus] = useState('');
   const [destinations, setDestinations] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [newItineraryItem, setNewItineraryItem] = useState('');
+
 
   useEffect(() => {
     // Fetch data destinasi dari API
@@ -100,6 +103,54 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     }
   };
 
+  const handleAddInclusion = () => {
+    if (formData.newInclusion) {
+      setFormData({
+        ...formData,
+        inclusion: [...formData.inclusion, formData.newInclusion],
+        newInclusion: '', 
+      });
+    }
+  };
+
+  const handleAddExclusion = () => {
+    if (formData.newExclusion) {
+      setFormData({
+        ...formData,
+        exclusion: [...formData.exclusion, formData.newExclusion],
+        newExclusion: '', 
+      });
+    }
+  };
+
+  const handleRemoveInclusion = (index) => {
+    const updatedInclusion = [...formData.inclusion];
+    updatedInclusion.splice(index, 1);
+    setFormData({ ...formData, inclusion: updatedInclusion });
+  };
+
+  const handleRemoveExclusion = (index) => {
+    const updatedExclusion = [...formData.exclusion];
+    updatedExclusion.splice(index, 1);
+    setFormData({ ...formData, exclusion: updatedExclusion });
+  };
+  const handleAddItinerary = () => {
+    if (newItineraryItem.trim() !== '') {
+      setFormData({
+        ...formData,
+        itinerary: [...formData.itinerary, newItineraryItem],
+      });
+      setNewItineraryItem('');
+      setShowModal(false);
+    }
+  };
+
+  const handleRemoveItinerary = (index) => {
+    const updatedItinerary = [...formData.itinerary];
+    updatedItinerary.splice(index, 1);
+    setFormData({ ...formData, itinerary: updatedItinerary });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -143,9 +194,9 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
         harga: '',
         durasi: '',
         availability: 'true',
-        itinerary: '',
-        include: '',
-        exclude: '',
+        itinerary: [],
+        inclusion: [],
+        exclusion: [],
         picture: '/images/gili-trawangan-1.jpg',
       });
       setFile(null);
@@ -259,34 +310,77 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
         </select>
       </div>
       <div>
-        <label className="block mb-2">Itinerary</label>
-        <input
-          type="text"
-          name="itinerary"
-          value={formData.itinerary}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
+      <label className="block mb-2">Itinerary</label>
+        <ul className="list-disc pl-5 space-y-2">
+          {formData.itinerary.map((item, index) => (
+            <li key={index} className="flex items-center justify-between">
+              <span>{item}</span>
+              <Button type="button" color="danger" onClick={() => handleRemoveItinerary(index)}>Hapus</Button>
+            </li>
+          ))}
+        </ul>
+        <Button type="button" onClick={() => setShowModal(true)} className="mt-2">Tambah Itinerary</Button>
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+          <ModalContent>
+            <ModalHeader>Add New Itinerary</ModalHeader>
+            <ModalBody>
+              <Textarea
+                name="newItineraryItem"
+                value={newItineraryItem}
+                onChange={(e) => setNewItineraryItem(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </ModalBody>
+            <ModalFooter>
+              <Button color="danger" onClick={() => setShowModal(false)}>Cancel</Button>
+              <Button onClick={handleAddItinerary}>Tambah</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </div>
       <div>
-        <label className="block mb-2">Include</label>
-        <input
-          type="text"
-          name="include"
-          value={formData.include}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
+      <label className="block mb-2">Inclusion</label>
+        <div className="flex gap-2">
+          <Input
+            type="text"
+            name="newInclusion"
+            value={formData.newInclusion}
+            onChange={handleChange}
+            placeholder="Tambah Inclusion"
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+          <Button onClick={handleAddInclusion}>Tambah</Button>
+        </div>
+        <div>
+          {formData.inclusion.map((item, index) => (
+            <div key={index} className="flex justify-between items-center border border-gray-300 rounded p-2">
+              <div>{item}</div>
+              <Button onClick={() => handleRemoveInclusion(index)} className="ml-2" color="error">Hapus</Button>
+            </div>
+          ))}
+        </div>
       </div>
       <div>
-        <label className="block mb-2">Exclude</label>
-        <input
-          type="text"
-          name="exclude"
-          value={formData.exclude}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
+      <label className="block mb-2">Exclusion</label>
+        <div className="flex gap-2">
+          <Input
+            type="text"
+            name="newExclusion"
+            value={formData.newExclusion}
+            onChange={handleChange}
+            placeholder="Tambah Exclusion"
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+          <Button onClick={handleAddExclusion}>Tambah</Button>
+        </div>
+        <div>
+          {formData.exclusion.map((item, index) => (
+            <div key={index} className="flex justify-between items-center border border-gray-300 rounded p-2">
+              <div>{item}</div>
+              <Button onClick={() => handleRemoveExclusion(index)} className="ml-2" color="error">Hapus</Button>
+            </div>
+          ))}
+        </div>
       </div>
       <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
         {initialData.id_tour ? 'Edit' : 'Tambah'}

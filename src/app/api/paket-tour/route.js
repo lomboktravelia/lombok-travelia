@@ -12,8 +12,8 @@ export async function POST(request) {
       durasi,
       availability,
       itinerary,
-      include,
-      exclude,
+      inclusion,
+      exclusion,
       picture,
     } = await request.json();
     const idTour = nanoid(20);
@@ -202,8 +202,8 @@ export async function PUT(request) {
       durasi,
       availability,
       itinerary,
-      include,
-      exclude,
+      inclusion,
+      exclusion,
       picture,
     } = await request.json();
     const query = {
