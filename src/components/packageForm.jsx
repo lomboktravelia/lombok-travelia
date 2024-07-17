@@ -12,7 +12,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     nama_paket: initialData.nama_paket || '',
     jenis_paket: initialData.jenis_paket || '',
     deskripsi: initialData.deskripsi || '',
-    nama_destinasi: initialData.nama_destinasi || [],
+    nama_destinasi: initialData.nama_destinasi?.map((dest) => dest) || [],
     harga: initialData.harga || '',
     durasi: initialData.durasi || '',
     availability: initialData.availability || 'true', 
@@ -22,6 +22,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     picture: initialData.picture || '/images/gili-trawangan-1.jpg',
   });
 
+  const [selectedDestinations, setSelectedDestinations] = useState(new Set(initialData.nama_destinasi));
   const [file, setFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadingStatus, setUploadingStatus] = useState('');
@@ -29,6 +30,17 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
   const [showModal, setShowModal] = useState(false);
   const [newItineraryItem, setNewItineraryItem] = useState('');
 
+  useEffect(() => {
+    setFormData({ ...formData, nama_destinasi: Array.from(selectedDestinations) });
+  }, [selectedDestinations]);
+
+  useEffect(() => {
+    setFormData(initialData);
+  }, [initialData]);
+
+  useEffect(() => {
+    console.log(formData)
+  }, [formData]);
 
   useEffect(() => {
     // Fetch data destinasi dari API
@@ -45,22 +57,21 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     fetchDestinations();
   }, []);
 
-  useEffect(() => {
-    console.log(initialData);
-  }, [initialData]);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleDestinasiChange = (selectedItems) => {
-    if (Array.isArray(selectedItems)) {
-      setFormData({ ...formData, nama_destinasi: selectedItems.map(item => item.value) });
-    } else {
-      console.error('selectedItems bukan array:', selectedItems);
-    }
-  };
+  //useless
+  // const handleDestinasiChange = (selectedItems) => {
+  //   if (Array.isArray(selectedItems)) {
+  //     setFormData({ ...formData, nama_destinasi: selectedItems.map(item => item.value) });
+  //   } else {
+  //     console.error('selectedItems bukan array:', selectedItems);
+  //   }
+  // };
   
 
   const handleFileChange = (e) => {
@@ -236,7 +247,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
       <div className='flex flex-col gap-3'>
         <label className="block mb-2">Picture</label>
         <div className='relative w-full h-72 rounded-md overflow-hidden'>
-          <Image alt="Picture" src={formData.picture? formData.picture:'images/gili-trawangan-1.jpg'} height={1000} width={1000} className='w-full h-full object-cover object-center'></Image>
+          <Image alt="Picture" src={formData.picture? formData.picture : '/images/gili-trawangan-1.jpg'} height={1000} width={1000} className='w-full h-full object-cover object-center'></Image>
           {isUploading && (
             <div className="absolute inset-0 bg-black/60 flex flex-col justify-center items-center">
               <Spinner></Spinner>
@@ -265,15 +276,14 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
           className="w-full p-2 border border-gray-300 rounded"
         ></textarea>
       </div>
-      <div>
-      <label className="block mb-2">Nama Destinasi</label>
+      <div className=''>
         <Select
           label="Nama Destinasi"
           selectionMode="multiple"
           placeholder="Pilih Destinasi"
-          value={formData.nama_destinasi}
-          onChange={(selectedItems) => handleDestinasiChange(selectedItems)}
-          className="w-full p-2 border border-gray-300 rounded"
+          selectedKeys={selectedDestinations}
+          onSelectionChange={setSelectedDestinations}
+          className="w-full rounded"
         >
           {destinations.map((destinasi) => (
             <SelectItem key={destinasi.id_destinasi} value={destinasi.id_destinasi}>
@@ -312,7 +322,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
       <div>
       <label className="block mb-2">Itinerary</label>
         <ul className="list-disc pl-5 space-y-2">
-          {formData.itinerary.map((item, index) => (
+          {formData.itinerary && formData.itinerary.map((item, index) => (
             <li key={index} className="flex items-center justify-between">
               <span>{item}</span>
               <Button type="button" color="danger" onClick={() => handleRemoveItinerary(index)}>Hapus</Button>
@@ -352,7 +362,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
           <Button onClick={handleAddInclusion}>Tambah</Button>
         </div>
         <div>
-          {formData.inclusion.map((item, index) => (
+          {formData.inclusion && formData.inclusion.map((item, index) => (
             <div key={index} className="flex justify-between items-center border border-gray-300 rounded p-2">
               <div>{item}</div>
               <Button onClick={() => handleRemoveInclusion(index)} className="ml-2" color="error">Hapus</Button>
@@ -374,7 +384,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
           <Button onClick={handleAddExclusion}>Tambah</Button>
         </div>
         <div>
-          {formData.exclusion.map((item, index) => (
+          {formData.exclusion && formData.exclusion.map((item, index) => (
             <div key={index} className="flex justify-between items-center border border-gray-300 rounded p-2">
               <div>{item}</div>
               <Button onClick={() => handleRemoveExclusion(index)} className="ml-2" color="error">Hapus</Button>
