@@ -34,13 +34,10 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     setFormData({ ...formData, nama_destinasi: Array.from(selectedDestinations) });
   }, [selectedDestinations]);
 
-  useEffect(() => {
-    setFormData(initialData);
-  }, [initialData]);
-
-  useEffect(() => {
-    console.log(formData)
-  }, [formData]);
+  // don't uncomment this is bug
+  // useEffect(() => { 
+  //   setFormData(initialData);
+  // }, [initialData]);
 
   useEffect(() => {
     // Fetch data destinasi dari API
