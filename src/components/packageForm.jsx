@@ -12,7 +12,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     nama_paket: initialData.nama_paket || '',
     jenis_paket: initialData.jenis_paket || '',
     deskripsi: initialData.deskripsi || '',
-    nama_destinasi: initialData.nama_destinasi.map((dest) => dest) || [],
+    nama_destinasi: initialData.nama_destinasi?.map((dest) => dest) || [],
     harga: initialData.harga || '',
     durasi: initialData.durasi || '',
     availability: initialData.availability || 'true', 
@@ -322,7 +322,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
       <div>
       <label className="block mb-2">Itinerary</label>
         <ul className="list-disc pl-5 space-y-2">
-          {formData.itinerary.map((item, index) => (
+          {formData.itinerary && formData.itinerary.map((item, index) => (
             <li key={index} className="flex items-center justify-between">
               <span>{item}</span>
               <Button type="button" color="danger" onClick={() => handleRemoveItinerary(index)}>Hapus</Button>
@@ -362,7 +362,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
           <Button onClick={handleAddInclusion}>Tambah</Button>
         </div>
         <div>
-          {formData.inclusion.map((item, index) => (
+          {formData.inclusion && formData.inclusion.map((item, index) => (
             <div key={index} className="flex justify-between items-center border border-gray-300 rounded p-2">
               <div>{item}</div>
               <Button onClick={() => handleRemoveInclusion(index)} className="ml-2" color="error">Hapus</Button>
@@ -384,7 +384,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
           <Button onClick={handleAddExclusion}>Tambah</Button>
         </div>
         <div>
-          {formData.exclusion.map((item, index) => (
+          {formData.exclusion && formData.exclusion.map((item, index) => (
             <div key={index} className="flex justify-between items-center border border-gray-300 rounded p-2">
               <div>{item}</div>
               <Button onClick={() => handleRemoveExclusion(index)} className="ml-2" color="error">Hapus</Button>
