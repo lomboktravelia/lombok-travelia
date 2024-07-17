@@ -129,7 +129,6 @@ export async function GET(request) {
       const { rows: inclusion } = await pool.query(query5, [id]);
       const query6 = "SELECT deskripsi FROM exclusion WHERE id_tour = $1";
       const { rows: exclusion } = await pool.query(query6, [id]);
-      console.log(picture)
       return NextResponse.json(
         {
           status: 200,
@@ -350,14 +349,17 @@ export async function PUT(request) {
         await pool.query(query3);
 
         // insert multiple data
-        const destinationsValues = nama_destinasi.map((destinasi) => [destinasi, id]);
-        const insertDestinasiQuery = {
-          text: `INSERT INTO paket_tour_destinasi (id_destinasi, id_tour) 
-          VALUES ${destinationsValues.map((_, index) => `($${index * 2 + 1}, $${index * 2 + 2})`).join(', ')} 
-          RETURNING id_destinasi`,
-          values: destinationsValues.flat(),
-        };
-        const { rows:addedDestination } = await pool.query(insertDestinasiQuery);
+        let addedDestination = {rows:[]};
+        if(nama_destinasi.length > 0) {
+          const destinationsValues = nama_destinasi.map((destinasi) => [destinasi, id]);
+          const insertDestinasiQuery = {
+            text: `INSERT INTO paket_tour_destinasi (id_destinasi, id_tour) 
+            VALUES ${destinationsValues.map((_, index) => `($${index * 2 + 1}, $${index * 2 + 2})`).join(', ')} 
+            RETURNING id_destinasi`,
+            values: destinationsValues.flat(),
+          };
+          addedDestination = await pool.query(insertDestinasiQuery);
+        }
 
         // const insertDestinasiQuery = {
         //   text: 'INSERT INTO paket_tour_destinasi (id_tour, id_destinasi) VALUES ($1, $2)',
@@ -422,7 +424,7 @@ export async function PUT(request) {
       status: 200,
       updatedData: {
         ...result.rows[0],
-        nama_destinasi: addedDestination.map((dest) => dest.id_destinasi),
+        nama_destinasi: addedDestination.rows.length? addedDestination.rows.map((dest) => dest.id_destinasi):[],
         picture: result2.rows.length > 0 ? result2.rows[0].image_url : null,
       },
     });
