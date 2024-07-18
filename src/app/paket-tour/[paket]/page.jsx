@@ -39,7 +39,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-
+import Image from 'next/image';
+import { Button } from '@nextui-org/react';
 
 export default function PaketPage({ params }) {
   const [packages, setPackages] = useState([]);
@@ -60,25 +61,42 @@ export default function PaketPage({ params }) {
   }, [searchParams]);
 
   if (!packages.length) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8">
+        <header className="text-center py-10">
+          <h1 className="text-4xl font-bold text-green-900 dark:text-green-100">
+            Loading...
+          </h1>
+        </header>
+      </div>
+    );
   }
 
   return (
     <div className="flex flex-col p-5">
-      <h1 className="text-2xl font-bold mb-4">Paket {paket.charAt(0).toUpperCase() + paket.slice(1)}</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {packages.map((pkg) => (
-          <Link href={`/paket-tour/${paket}/${pkg.id_tour}`} key={pkg.id_tour}>
-            <div className="border rounded-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-              <img src={pkg.picture} alt={pkg.nama_paket} className="w-full h-48 object-cover" />
-              <div className="p-4">
-                <h2 className="text-xl font-semibold">{pkg.nama_paket}</h2>
-                <p className="text-gray-600">{pkg.daerah_wisata}</p>
-                <p className="text-gray-800 font-bold">Rp {pkg.harga}</p>
+      <h1 className="text-2xl font-bold mb-4 text green-500 text-center text-green-700">Paket {paket.charAt(0).toUpperCase() + paket.slice(1)}</h1>
+      <div className="px-5 md:px-10 lg:px-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {packages.map((pkg) => (
+            <Link href={`/paket-tour/${paket}/${pkg.id_tour}`} key={pkg.id_tour}>
+              <div className="border rounded-md overflow-hidden hover:shadow-lg transition-shadow duration-300 bg-white flex flex-col h-full">
+              <Image src={pkg.picture} alt={pkg.nama_paket} width={400} height={192} className="w-full h-48 object-cover" />
+              <div className="flex flex-col justify-between p-4">
+                <div className="flex-grow">
+                  <h2 className="text-xl font-semibold text-green-900">{pkg.nama_paket}</h2>
+                  <p className="text-green-800">{pkg.nama_destinasi}</p>
+                  <p className="text-blue-800 font-bold">Rp {pkg.harga}</p>
+                </div>
+                <Link href={`/paket-tour/${paket}/${pkg.id_tour}`} passHref>
+                  <Button radius="full" className="mt-4 bg-gradient-to-tr from-green-500 to-yellow-500 text-white shadow-lg hover:from-green-400 hover:to-yellow-400">
+                    Read more
+                  </Button>
+                </Link>
               </div>
             </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
