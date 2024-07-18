@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Spinner } from "@nextui-org/react";
+import { Spinner, Button } from "@nextui-org/react";
 import { UserContext } from "@/utils/userContext";
 import { useContext } from "react";
 import Image from "next/image";
@@ -97,10 +97,15 @@ export default function Home() {
                     </p>
                     <Link
                       href={`/paket-tour/paket/${item?.id_tour}`}
-                      className="text-green-600 hover:text-green-800"
-                    >
-                      Readmore &rarr;
-                    </Link>
+                      passHref
+                      >
+                        <Button
+                          radius="full"
+                          className="bg-gradient-to-tr from-green-500 to-yellow-500 text-white shadow-lg hover:from-green-400 hover:to-yellow-400"
+                        >
+                          Read more
+                        </Button>
+                      </Link>
                   </div>
                 </div>
               );
@@ -116,10 +121,12 @@ export default function Home() {
           </h2>
           <div className="flex flex-wrap justify-center space-x-8 px-5 gap-5">
             <div className="flex flex-col items-center max-w-xs">
-              <img
-                src="images/hargamurahikon.webp"
+            <Image
+                src="/images/hargamurahikon.webp"
                 alt="Harga Terbaik"
-                className="w-20 h-20 mb-4"
+                width={80}
+                height={80}
+                className="mb-4"
               />
               <h3 className="text-xl font-bold">Harga Terbaik</h3>
               <p className="text-gray-800 text-center">
@@ -128,10 +135,12 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-col items-center max-w-xs">
-              <img
-                src="images/waktuikon.webp"
+            <Image
+                src="/images/waktuikon.webp"
                 alt="Mudah & Cepat"
-                className="w-20 h-20 mb-4"
+                width={80}
+                height={80}
+                className="mb-4"
               />
               <h3 className="text-xl font-bold mb-2">Mudah & Cepat</h3>
               <p className="text-gray-800 text-center">
@@ -140,10 +149,12 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-col items-center max-w-xs">
-              <img
-                src="images/kesepakatanikon.webp"
+            <Image
+                src="/images/kesepakatanikon.webp"
                 alt="Pilihan Tour Terbaik"
-                className="w-20 h-20 mb-4"
+                width={80}
+                height={80}
+                className="mb-4"
               />
               <h3 className="text-xl font-bold mb-2">Pilihan Tour Terbaik</h3>
               <p className="text-gray-800 text-center">
