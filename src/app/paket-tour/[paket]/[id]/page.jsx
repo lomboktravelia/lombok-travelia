@@ -288,6 +288,7 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt, faUndoAlt } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
+import Image from 'next/image';
 
 export default function PaketTourDetail({ params }) {
   const { id } = params;
@@ -483,18 +484,20 @@ export default function PaketTourDetail({ params }) {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8">
       <header className="text-center py-10">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
+        <h1 className="text-4xl font-bold text-green-800 dark:text-gray-100">
           Detail Paket - {tourDetails.nama_paket}
         </h1>
       </header>
       <section className="w-full max-w-4xl mx-auto mt-10 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-        <img
+      <Image
           src={tourDetails?.picture}
           alt={`Trip ${tourDetails.nama_paket}`}
+          width={600} 
+          height={256} 
           className="w-full h-64 object-cover rounded-t-lg"
         />
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+          <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
             Deskripsi
           </h2>
           <p className="mt-2 text-gray-700 dark:text-gray-300">
@@ -502,7 +505,7 @@ export default function PaketTourDetail({ params }) {
           </p>
         </div>
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+          <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
             Daerah Wisata
           </h2>
           <ul className="list-disc ml-6 mt-2">
@@ -556,7 +559,7 @@ export default function PaketTourDetail({ params }) {
           </div>
         )}
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+          <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
             Total Harga
           </h2>
           <p className="mt-2 text-gray-700 dark:text-gray-300">

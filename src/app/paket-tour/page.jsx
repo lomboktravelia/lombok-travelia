@@ -117,7 +117,7 @@ export default function PaketTourPage() {
             <div className="p-6">
               <h3 className="text-xl font-bold mb-2 text-green-500">Paket One Day Trip</h3>
               <p className="text-gray-900 mb-4">Wisata sehari penuh dengan beragam destinasi.</p>
-              <Link href="/paket-tour/onedaytrip?jenis_paket=Paket One Day Trip">
+              <Link href="/paket-tour/onedaytrip?jenis_paket=Paket One-Day-Trip">
                 <Button radius="full" className="bg-gradient-to-tr from-green-500 to-yellow-500 text-white shadow-lg">
                   Read more
                 </Button>
