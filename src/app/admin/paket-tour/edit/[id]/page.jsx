@@ -10,9 +10,9 @@ export default function EditPackageTour({params}) {
   const [packageData, setPackageData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   console.log(packageData)
-  // }, [packageData])
+  useEffect(() => {
+    console.log(packageData)
+  }, [packageData])
 
   useEffect(() => {
     async function fetchData() {

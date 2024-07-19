@@ -16,9 +16,9 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     harga: initialData.harga || '',
     durasi: initialData.durasi || '',
     availability: initialData.availability || 'true', 
-    itinerary: initialData.itinerary || [],
-    inclusion: initialData.inclusion || [],
-    exclusion: initialData.exclusion || [],
+    itinerary: initialData.itinerary?.map((item) => item) || [],
+    inclusion: initialData.inclusion?.map((item) => item) || [],
+    exclusion: initialData.exclusion?.map((item) => item) || [],
     picture: initialData.picture || '/images/gili-trawangan-1.jpg',
   });
 
@@ -33,6 +33,10 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
   useEffect(() => {
     setFormData({ ...formData, nama_destinasi: Array.from(selectedDestinations) });
   }, [selectedDestinations]);
+
+  useEffect(() => {
+    console.log(initialData);
+  }, [initialData]);
 
   // don't uncomment this is bug
   // useEffect(() => { 
@@ -345,49 +349,59 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
           </ModalContent>
         </Modal>
       </div>
-      <div>
-      <label className="block mb-2">Inclusion</label>
-        <div className="flex gap-2">
+      <div className='flex flex-col justify-center items-center w-full'>
+        <label className="block mb-2 w-full">Inclusion</label>
+        <div className="flex gap-2 w-full">
           <Input
+            variant="bordered"
             type="text"
             name="newInclusion"
             value={formData.newInclusion}
             onChange={handleChange}
+            size="lg"
             placeholder="Tambah Inclusion"
-            className="w-full p-2 border border-gray-300 rounded"
           />
-          <Button onClick={handleAddInclusion}>Tambah</Button>
+          <Button size='lg' onClick={handleAddInclusion}>Tambah</Button>
         </div>
-        <div>
-          {formData.inclusion && formData.inclusion.map((item, index) => (
-            <div key={index} className="flex justify-between items-center border border-gray-300 rounded p-2">
-              <div>{item}</div>
-              <Button onClick={() => handleRemoveInclusion(index)} className="ml-2" color="error">Hapus</Button>
-            </div>
-          ))}
-        </div>
+        {formData.inclusion.length>0 && (
+          <div className='w-full flex flex-col gap-3 mt-3'>
+            {formData.inclusion && formData.inclusion.map((item, index) => (
+              <div key={index} className="flex justify-between items-center border border-gray-300 rounded-xl py-2 px-3 w-full">
+                <div className='w-full'>
+                  <h1 className='truncate w-[1150px]'>{item}</h1>
+                </div>
+                <Button onClick={() => handleRemoveInclusion(index)} className="ml-2" color="error">Hapus</Button>
+              </div>
+            ))}
+          </div>
+      )}  
       </div>
-      <div>
-      <label className="block mb-2">Exclusion</label>
-        <div className="flex gap-2">
+      <div className='flex flex-col justify-center items-center w-full'>
+        <label className="block mb-2 w-full">Exclusion</label>
+        <div className="flex gap-2 w-full">
           <Input
             type="text"
             name="newExclusion"
             value={formData.newExclusion}
             onChange={handleChange}
+            size="lg"
             placeholder="Tambah Exclusion"
-            className="w-full p-2 border border-gray-300 rounded"
+            variant="bordered"
           />
-          <Button onClick={handleAddExclusion}>Tambah</Button>
+          <Button size='lg' onClick={handleAddExclusion}>Tambah</Button>
         </div>
-        <div>
-          {formData.exclusion && formData.exclusion.map((item, index) => (
-            <div key={index} className="flex justify-between items-center border border-gray-300 rounded p-2">
-              <div>{item}</div>
-              <Button onClick={() => handleRemoveExclusion(index)} className="ml-2" color="error">Hapus</Button>
-            </div>
-          ))}
-        </div>
+        {formData.exclusion.length>0 && (
+          <div className='w-full flex flex-col gap-3 mt-3'>
+            {formData.exclusion && formData.exclusion.map((item, index) => (
+              <div key={index} className="flex justify-between items-center border border-gray-300 rounded-xl py-2 px-3 w-full">
+                <div className='w-full'>
+                  <h1 className='truncate w-[1150px]'>{item}</h1>
+                </div>
+                <Button onClick={() => handleRemoveExclusion(index)} className="ml-2" color="error">Hapus</Button>
+              </div>
+            ))}
+          </div>     
+        )}
       </div>
       <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
         {initialData.id_tour ? 'Edit' : 'Tambah'}
