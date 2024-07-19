@@ -19,7 +19,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     itinerary: initialData.itinerary?.map((item) => item) || [],
     inclusion: initialData.inclusion?.map((item) => item) || [],
     exclusion: initialData.exclusion?.map((item) => item) || [],
-    picture: initialData.picture || '/images/gili-trawangan-1.jpg',
+    picture: initialData.picture? initialData.picture : '/images/gili-trawangan-1.jpg',
   });
 
   const [selectedDestinations, setSelectedDestinations] = useState(new Set(initialData.nama_destinasi));
