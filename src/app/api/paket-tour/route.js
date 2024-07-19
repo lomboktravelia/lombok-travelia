@@ -67,22 +67,22 @@ export async function POST(request) {
     
         //Menyimpan itinerary
         const itineraryQueries = itinerary.map(item => ({
-          text: "INSERT INTO itinerary (id_itinerary, id_tour, deskripsi) VALUES ($1, $2, $3)",
-          values: [nanoid(20), idTour, item],
+          text: "INSERT INTO itinerary (id_tour, deskripsi) VALUES ($1, $2)",
+          values: [idTour, item],
         }));
         await Promise.all(itineraryQueries.map(query => pool.query(query)));
     
         //Menyimpan inclusion
         const inclusionQueries = inclusion.map(item => ({
-          text: "INSERT INTO inclusion (id_inclusion, id_tour, deskripsi) VALUES ($1, $2, $3)",
-          values: [nanoid(20), idTour, item],
+          text: "INSERT INTO inclusion (id_tour, deskripsi) VALUES ($1, $2)",
+          values: [idTour, item],
         }));
         await Promise.all(inclusionQueries.map(query => pool.query(query)));
     
         //Menyimpan exclusion
         const exclusionQueries = exclusion.map(item => ({
-          text: "INSERT INTO exclusion (id_exclusion, id_tour, deskripsi) VALUES ($1, $2, $3)",
-          values: [nanoid(20), idTour, item],
+          text: "INSERT INTO exclusion (id_tour, deskripsi) VALUES ($1, $2)",
+          values: [idTour, item],
         }));
         await Promise.all(exclusionQueries.map(query => pool.query(query)));
     
