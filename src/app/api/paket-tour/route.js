@@ -302,6 +302,7 @@ export async function PUT(request) {
       exclusion,
       picture,
     } = await request.json();
+    console.log(itinerary);
     const query = {
       text: "UPDATE paket_tour SET nama_paket = $1, jenis_paket = $2, deskripsi = $3, harga = $4, durasi = $5, is_available = $6 WHERE id_tour = $7 RETURNING *",
       values: [
@@ -376,55 +377,72 @@ export async function PUT(request) {
         // }
     
         // // Update itinerary
-        // const query4 = {
-        //   text: "DELETE FROM itinerary WHERE id_tour = $1 RETURNING *",
-        //   values: [id],
-        // };
-        // await pool.query(query4);
-    
+        const query4 = {
+          text: "DELETE FROM itinerary WHERE id_tour = $1 RETURNING *",
+          values: [id],
+        };
+        await pool.query(query4);
+
+        let addedItinerary = {rows:[]};
+        if(itinerary.length > 0) {
+          const itineraryValues = itinerary.map((item) => [item, id]);
+          const insertItineraryQuery = {
+            text: `INSERT INTO itinerary (deskripsi, id_tour) 
+            VALUES ${itineraryValues.map((_, index) => `($${index * 2 + 1}, $${index * 2 + 2})`).join(', ')} 
+            RETURNING *`,
+            values: itineraryValues.flat(),
+          };
+          addedItinerary = await pool.query(insertItineraryQuery);
+        }
         // for (const item of itinerary) {
+        //   console.log(item);
         //   const insertItineraryQuery = {
         //     text: 'INSERT INTO itinerary (id_tour, deskripsi) VALUES ($1, $2)',
         //     values: [id, item],
         //   };
-        //   await pool.query(insertItineraryQuery);
+        //   addedItinerary = await pool.query(insertItineraryQuery);
         // }
     
         // // Update inclusion
-        // const query5 = {
-        //   text: "DELETE FROM inclusion WHERE id_tour = $1 RETURNING *",
-        //   values: [id],
-        // };
-        // await pool.query(query5);
-    
-        // for (const item of inclusion) {
-        //   const insertInclusionQuery = {
-        //     text: 'INSERT INTO inclusion (id_tour, deskripsi) VALUES ($1, $2)',
-        //     values: [id, item],
-        //   };
-        //   await pool.query(insertInclusionQuery);
-        // }
+        const query5 = {
+          text: "DELETE FROM inclusion WHERE id_tour = $1 RETURNING *",
+          values: [id],
+        };
+        await pool.query(query5);
+        
+        let addedInclusion = {rows:[]};
+        for (const item of inclusion) {
+          const insertInclusionQuery = {
+            text: 'INSERT INTO inclusion (id_tour, deskripsi) VALUES ($1, $2)',
+            values: [id, item],
+          };
+          addedInclusion = await pool.query(insertInclusionQuery);
+        }
     
         // // Update exclusion
-        // const query6 = {
-        //   text: "DELETE FROM exclusion WHERE id_tour = $1 RETURNING *",
-        //   values: [id],
-        // };
-        // await pool.query(query6);
-    
-        // for (const item of exclusion) {
-        //   const insertExclusionQuery = {
-        //     text: 'INSERT INTO exclusion (id_tour, deskripsi) VALUES ($1, $2)',
-        //     values: [id, item],
-        //   };
-        //   await pool.query(insertExclusionQuery);
-        // }
+        const query6 = {
+          text: "DELETE FROM exclusion WHERE id_tour = $1 RETURNING *",
+          values: [id],
+        };
+        await pool.query(query6);
+        
+        let addedExclusion = {rows:[]};
+        for (const item of exclusion) {
+          const insertExclusionQuery = {
+            text: 'INSERT INTO exclusion (id_tour, deskripsi) VALUES ($1, $2)',
+            values: [id, item],
+          };
+          addedExclusion = await pool.query(insertExclusionQuery);
+        }
     
     return NextResponse.json({
       status: 200,
       updatedData: {
         ...result.rows[0],
         nama_destinasi: addedDestination.rows.length? addedDestination.rows.map((dest) => dest.id_destinasi):[],
+        itinerary: addedItinerary.rows.length? addedItinerary.rows.map((item) => item.deskripsi):[],
+        inclusion: addedInclusion.rows.length? addedInclusion.rows.map((item) => item.deskripsi):[],
+        exclusion: addedExclusion.rows.length? addedExclusion.rows.map((item) => item.deskripsi):[],
         picture: result2.rows.length > 0 ? result2.rows[0].image_url : null,
       },
     });
