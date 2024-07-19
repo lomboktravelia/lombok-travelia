@@ -238,7 +238,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
           <option value="Paket Reguler">Paket Reguler</option>
           <option value="Paket Extraordinary">Paket Extraordinary</option>
           <option value="Paket Honeymoon">Paket Honeymoon</option>
-          <option value="Paket One Day Trip">Paket One Day Trip</option>
+          <option value="Paket One-Day-Trip">Paket One Day Trip</option>
         </select>
       </div>
       <div className='flex flex-col gap-3'>

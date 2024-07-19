@@ -7,23 +7,23 @@ const Footer = () => {
       <div className="bg-green-900 text-white py-8 px-10 rounded-t-xl">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="text-center md:text-left">
-            <h3 className="text-xl sm:text-2xl font-bold text-white">Lombok Travelia</h3>
+            <h3 className="text-xl sm:text-2xl font-bold text-white-800 hover:text-blue-300">Lombok Travelia.</h3>
             <p>&copy; 2024 Lombok Travelia Ltd. All rights reserved</p>
             <div className="flex justify-center md:justify-start space-x-4 mt-4">
               <a href="https://www.facebook.com/lomboktravelia" target="_blank" rel="noopener noreferrer">
-                <FaFacebook className="w-6 h-6 text-blue-500" />
+                <FaFacebook className="w-6 h-6 text-blue-500 hover:text-blue-700" />
               </a>
               <a href="https://www.instagram.com/lombok_travelia" target="_blank" rel="noopener noreferrer">
-                <FaInstagram className="w-6 h-6 text-pink-500" />
+                <FaInstagram className="w-6 h-6 text-pink-500 hover:text-pink-700" />
               </a>
               <a href="https://wa.me/6281916025009" target="_blank" rel="noopener noreferrer">
-                <FaWhatsapp className="w-6 h-6 text-green-500" />
+                <FaWhatsapp className="w-6 h-6 text-green-500 hover:text-green-700" />
               </a>
               <a href="https://x.com/dicoding" target="_blank" rel="noopener noreferrer">
-                <FaTimes className="w-6 h-6 text-black-500" />
+                <FaTimes className="w-6 h-6 text-black-500 hover:text-black-700" />
               </a>
-              <a href="mailto:lomboktravelial@gmail.com" target="_blank" rel="noopener noreferrer">
-                <FaEnvelope className="w-6 h-6 text-yellow-500" />
+              <a href="mailto:lomboktravelia@gmail.com" target="_blank" rel="noopener noreferrer">
+                <FaEnvelope className="w-6 h-6 text-yellow-500 hover:text-yellow-700" />
               </a>
             </div>
           </div>
