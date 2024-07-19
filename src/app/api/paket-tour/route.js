@@ -302,7 +302,6 @@ export async function PUT(request) {
       exclusion,
       picture,
     } = await request.json();
-    console.log(itinerary);
     const query = {
       text: "UPDATE paket_tour SET nama_paket = $1, jenis_paket = $2, deskripsi = $3, harga = $4, durasi = $5, is_available = $6 WHERE id_tour = $7 RETURNING *",
       values: [
@@ -411,10 +410,13 @@ export async function PUT(request) {
         await pool.query(query5);
         
         let addedInclusion = {rows:[]};
-        for (const item of inclusion) {
+        if(inclusion.length > 0) {
+          const inclusionValues = inclusion.map((item) => [item, id]);
           const insertInclusionQuery = {
-            text: 'INSERT INTO inclusion (id_tour, deskripsi) VALUES ($1, $2)',
-            values: [id, item],
+            text: `INSERT INTO inclusion (deskripsi, id_tour) 
+            VALUES ${inclusionValues.map((_, index) => `($${index * 2 + 1}, $${index * 2 + 2})`).join(', ')} 
+            RETURNING *`,
+            values: inclusionValues.flat(),
           };
           addedInclusion = await pool.query(insertInclusionQuery);
         }
@@ -427,10 +429,13 @@ export async function PUT(request) {
         await pool.query(query6);
         
         let addedExclusion = {rows:[]};
-        for (const item of exclusion) {
+        if(exclusion.length > 0) {
+          const exclusionValues = exclusion.map((item) => [item, id]);
           const insertExclusionQuery = {
-            text: 'INSERT INTO exclusion (id_tour, deskripsi) VALUES ($1, $2)',
-            values: [id, item],
+            text: `INSERT INTO exclusion (deskripsi, id_tour) 
+            VALUES ${exclusionValues.map((_, index) => `($${index * 2 + 1}, $${index * 2 + 2})`).join(', ')} 
+            RETURNING *`,
+            values: exclusionValues.flat(),
           };
           addedExclusion = await pool.query(insertExclusionQuery);
         }
