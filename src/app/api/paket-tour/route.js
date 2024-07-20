@@ -120,7 +120,6 @@ export async function GET(request) {
       const { rows: paket } = await pool.query(query, [id]);
       const query2 = "SELECT * FROM picture WHERE id_tour = $1";
       const { rows: picture } = await pool.query(query2, [id]);
-      //tambahan mulai dari sini
       const query3 = "SELECT id_destinasi FROM paket_tour_destinasi WHERE id_tour = $1";
       const { rows: destinasi } = await pool.query(query3, [id]);
       const query4 = "SELECT deskripsi FROM itinerary WHERE id_tour = $1";
@@ -201,7 +200,7 @@ export async function DELETE(request) {
     text: 'DELETE FROM paket_tour WHERE id_tour = $1 RETURNING *',
     values: [id]
   }
-//tambahan mulai dari sini
+
   const query3 = {
     text: 'DELETE FROM itinerary WHERE id_tour = $1 RETURNING *',
     values: [id]
@@ -238,7 +237,7 @@ export async function DELETE(request) {
       { status: 403 }
     );
   }
-  //tambahan mulai dari sini
+  
   const result3 = await pool.query(query3);
   if (!result3.rowCount) {
     return NextResponse.json({
@@ -339,7 +338,7 @@ export async function PUT(request) {
         message: "Failed to update picture",
       });
     }
-//tambahan mulai dari sini
+
         // Update destinasi
         const query3 = {
           text: "DELETE FROM paket_tour_destinasi WHERE id_tour = $1 RETURNING *",
@@ -360,21 +359,7 @@ export async function PUT(request) {
           addedDestination = await pool.query(insertDestinasiQuery);
         }
 
-        // const insertDestinasiQuery = {
-        //   text: 'INSERT INTO paket_tour_destinasi (id_tour, id_destinasi) VALUES ($1, $2)',
-        //   values: [id, id],
-        // };
-        // await pool.query(insertDestinasiQuery);
-    
-        // for (const destinasi of nama_destinasi) {
-        //   const insertDestinasiQuery = {
-        //     text: 'INSERT INTO paket_tour_destinasi (id_tour, id_destinasi) VALUES ($1, $2)',
-        //     values: [id, destinasi],
-        //   };
-        //   await pool.query(insertDestinasiQuery);
-        // }
-    
-        // // Update itinerary
+        // Update itinerary
         const query4 = {
           text: "DELETE FROM itinerary WHERE id_tour = $1 RETURNING *",
           values: [id],
@@ -392,15 +377,7 @@ export async function PUT(request) {
           };
           addedItinerary = await pool.query(insertItineraryQuery);
         }
-        // for (const item of itinerary) {
-        //   console.log(item);
-        //   const insertItineraryQuery = {
-        //     text: 'INSERT INTO itinerary (id_tour, deskripsi) VALUES ($1, $2)',
-        //     values: [id, item],
-        //   };
-        //   addedItinerary = await pool.query(insertItineraryQuery);
-        // }
-    
+     
         // // Update inclusion
         const query5 = {
           text: "DELETE FROM inclusion WHERE id_tour = $1 RETURNING *",
