@@ -38,11 +38,6 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
     console.log(initialData);
   }, [initialData]);
 
-  // don't uncomment this is bug
-  // useEffect(() => { 
-  //   setFormData(initialData);
-  // }, [initialData]);
-
   useEffect(() => {
     // Fetch data destinasi dari API
     async function fetchDestinations() {

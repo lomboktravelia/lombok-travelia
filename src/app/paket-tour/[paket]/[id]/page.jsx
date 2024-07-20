@@ -523,66 +523,156 @@ export default function PaketTourDetail({ params }) {
           className="w-full h-64 object-cover rounded-t-lg"
         />
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
+          <h2 className="text-2xl font-bold text-blue-800 dark:text-gray-100 mb-4">
             Deskripsi
           </h2>
-          <p className="mt-2 text-gray-700 dark:text-gray-300">
+          <p className="mt-2 text-gray-700 dark:text-gray-400">
             {tourDetails.deskripsi}
           </p>
         </div>
         <div className="mt-6">
-            <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
-                Destinasi
-            </h2>
-            <ul className="list-disc ml-6 mt-2">
-            {console.log(selectedDestinations)}
-            {destinationNames.length === 0 ? (
-              <li>Tidak ada destinasi.</li>
-            ) : (
-              destinationNames.map((destination,index) => (
-                <li
-                  key={index} 
-                  className="flex items-center justify-between text-gray-900 dark:text-gray-100"
+        <h2 className="text-2xl font-bold text-blue-800 dark:text-gray-100 mb-4">
+          Destinasi
+        </h2>
+        <ul className="list-none ml-6 mt-2">
+          {destinationNames.length === 0 ? (
+            <li className="text-gray-900 dark:text-gray-300">Tidak ada destinasi.</li>
+          ) : (
+            destinationNames.map((destination, index) => (
+              <li
+                key={index}
+                className="flex items-center space-x-2 text-gray-900 dark:text-gray-300 my-2"
+              >
+                <svg
+                  className="h-5 w-5 text-blue-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  {destination}
-                </li>
-              ))
-            )}
-          </ul>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 2C8.134 2 5 5.134 5 9c0 6.627 7 13 7 13s7-6.373 7-13c0-3.866-3.134-7-7-7zM12 11a2 2 0 100-4 2 2 0 000 4z"
+                  />
+                </svg>
+                <span>{destination}</span>
+              </li>
+            ))
+          )}
+        </ul>
         </div>
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
+          <h2 className="text-2xl font-bold text-blue-800 dark:text-gray-100 mb-4">
             Total Harga
           </h2>
-          <p className="mt-2 text-gray-700 dark:text-gray-300">
-            {/* {formatRupiah(totalCost)} */}
+          <p className="mt-2 text-xl font-bold text-green-800 dark:text-green-300">
             {formatRupiah(tourDetails?.harga)}
           </p>
         </div>
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
+          <h2 className="text-2xl font-bold text-blue-800 dark:text-gray-100 mb-4">
             Itinerary
           </h2>
-          <p className="mt-2 text-gray-700 dark:text-gray-300">
-            {tourDetails.itinerary}
-          </p>
+          <div className="space-y-6">
+            {tourDetails.itinerary.map((item, index) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex items-start space-x-4"
+              >
+                <div className="flex-shrink-0">
+                  <svg
+                    className="h-10 w-10 text-blue-500"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <div className="text-gray-900 dark:text-gray-300">
+                  <p className="font-semibold text-lg mb-2">{`Hari ${index + 1}`}</p>
+                  <p className="whitespace-pre-line">{item}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
-            Inclusion
-          </h2>
-          <p className="mt-2 text-gray-700 dark:text-gray-300">
-            {tourDetails.inclusion}
-          </p>
+        <h2 className="text-2xl font-bold text-blue-800 dark:text-gray-100 mb-4">
+          Inclusion
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {tourDetails.inclusion.map((item, index) => (
+            <div
+              key={index}
+              className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex items-center space-x-4"
+            >
+              <div className="flex-shrink-0">
+                <svg
+                  className="h-6 w-6 text-blue-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <div className="text-gray-900 dark:text-gray-300">
+                {item}
+              </div>
+            </div>
+          ))}
         </div>
+      </div>
+
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
+          <h2 className="text-2xl font-bold text-blue-800 dark:text-gray-100 mb-4">
             Exclusion
           </h2>
-          <p className="mt-2 text-gray-700 dark:text-gray-300">
-            {tourDetails.exclusion}
-          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {tourDetails.exclusion.map((item, index) => (
+              <div
+                key={index}
+                className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 flex items-center space-x-4"
+              >
+                <div className="flex-shrink-0">
+                  <svg
+                    className="h-6 w-6 text-red-500"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </div>
+                <div className="text-gray-900 dark:text-gray-300">
+                  {item}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+
         <div className="mt-6 flex justify-end">
           {hasOrdered ? (
             <button className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75">
