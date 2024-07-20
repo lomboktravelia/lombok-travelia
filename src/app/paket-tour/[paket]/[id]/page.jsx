@@ -394,10 +394,7 @@ export default function PaketTourDetail({ params }) {
     setRemovedDestinations(updatedRemovedDestinations);
   };
 
-  const totalCost = selectedDestinations.reduce(
-    (acc, dest) => acc + dest.harga,
-    0
-  );
+  const totalCost = tourDetails.harga;
 
   const formatRupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -456,7 +453,8 @@ export default function PaketTourDetail({ params }) {
     const orderData = {
       id_user: currentUser.id_user,
       id_tour: id,
-      total_cost: totalCost,
+      amount: totalCost,
+      email: currentUser.email,
     };
 
     const response = await fetch("/api/payment", {
