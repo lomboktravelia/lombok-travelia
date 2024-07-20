@@ -293,6 +293,7 @@ import Image from 'next/image';
 export default function PaketTourDetail({ params }) {
   const { id } = params;
   const [tourDetails, setTourDetails] = useState(null);
+  const [destinations, setDestinations] = useState([]);
   const [selectedDestinations, setSelectedDestinations] = useState([]);
   const [removedDestinations, setRemovedDestinations] = useState([]);
   const [currentUser, setCurrentUser] = useContext(UserContext);
@@ -310,13 +311,29 @@ export default function PaketTourDetail({ params }) {
         return res.json();
       })
       .then((data) => {
+        console.log(data);
         setTourDetails(data?.data);
         console.log(data.data);
-        setSelectedDestinations(data.destinations || []);
+        setSelectedDestinations(data?.data?.nama_destinasi || []);
       })
       .catch((error) => {
         console.error("Error fetching tour details:", error);
       });
+
+      fetch(`/api/destinasi`) // Fetch complete list of destinations
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch destinations");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setDestinations(data.data); // Assuming data.data contains array of destinations
+      })
+      .catch((error) => {
+        console.error("Error fetching destinations:", error);
+      });
+
 
     if (currentUser) {
       fetch(`/api/check-order?user=${currentUser.id_user}&tour=${id}`)
@@ -345,6 +362,15 @@ export default function PaketTourDetail({ params }) {
       </div>
     );
   }
+  // Map destination IDs to their names
+    const destinationNames = selectedDestinations.map((destId) => {
+    const destination = destinations.find((d) => d.id_destinasi === destId);
+    console.log("Mapping ID:", destId, "to destination:", destination);
+    return destination ? destination.nama_destinasi : "Unknown";
+  });
+
+  console.log("Selected Destinations:", selectedDestinations);
+  console.log("Destination Names:", destinationNames);
 
   const handleRemoveDestination = (destinationName) => {
     const destinationToRemove = selectedDestinations.find(
@@ -505,59 +531,25 @@ export default function PaketTourDetail({ params }) {
           </p>
         </div>
         <div className="mt-6">
-          <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
-            Daerah Wisata
-          </h2>
-          <ul className="list-disc ml-6 mt-2">
-            {selectedDestinations.map((destination, index) => (
-              <li
-                key={index}
-                className="flex items-center justify-between text-gray-900 dark:text-gray-100"
-              >
-                <span>
-                  {destination.nama_destinasi} -{" "}
-                  {formatRupiah(destination.harga)}
-                </span>
-                <button
-                  onClick={() =>
-                    handleRemoveDestination(destination.nama_destinasi)
-                  }
-                  className="ml-4 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-600 transition duration-300 ease-in-out"
-                >
-                  <FontAwesomeIcon icon={faTrashAlt} className="w-5 h-5" />
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-        {removedDestinations.length > 0 && (
-          <div className="mt-6">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-              Destinasi yang Dihapus
+            <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
+                Destinasi
             </h2>
             <ul className="list-disc ml-6 mt-2">
-              {removedDestinations.map((destination, index) => (
+            {console.log(selectedDestinations)}
+            {destinationNames.length === 0 ? (
+              <li>Tidak ada destinasi.</li>
+            ) : (
+              destinationNames.map((destination,index) => (
                 <li
-                  key={index}
+                  key={index} 
                   className="flex items-center justify-between text-gray-900 dark:text-gray-100"
                 >
-                  <span>
-                    {destination.nama_destinasi} -{" "}
-                    {formatRupiah(destination.harga)}
-                  </span>
-                  <button
-                    onClick={() =>
-                      handleRestoreDestination(destination.nama_destinasi)
-                    }
-                    className="ml-4 text-green-500 hover:text-green-700 dark:text-green-400 dark:hover:text-green-600 transition duration-300 ease-in-out"
-                  >
-                    <FontAwesomeIcon icon={faUndoAlt} className="w-5 h-5" />
-                  </button>
+                  {destination}
                 </li>
-              ))}
-            </ul>
-          </div>
-        )}
+              ))
+            )}
+          </ul>
+        </div>
         <div className="mt-6">
           <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
             Total Harga
@@ -565,6 +557,30 @@ export default function PaketTourDetail({ params }) {
           <p className="mt-2 text-gray-700 dark:text-gray-300">
             {/* {formatRupiah(totalCost)} */}
             {formatRupiah(tourDetails?.harga)}
+          </p>
+        </div>
+        <div className="mt-6">
+          <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
+            Itinerary
+          </h2>
+          <p className="mt-2 text-gray-700 dark:text-gray-300">
+            {tourDetails.itinerary}
+          </p>
+        </div>
+        <div className="mt-6">
+          <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
+            Inclusion
+          </h2>
+          <p className="mt-2 text-gray-700 dark:text-gray-300">
+            {tourDetails.inclusion}
+          </p>
+        </div>
+        <div className="mt-6">
+          <h2 className="text-2xl font-semibold text-blue-800 dark:text-gray-100">
+            Exclusion
+          </h2>
+          <p className="mt-2 text-gray-700 dark:text-gray-300">
+            {tourDetails.exclusion}
           </p>
         </div>
         <div className="mt-6 flex justify-end">
