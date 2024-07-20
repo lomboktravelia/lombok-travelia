@@ -135,7 +135,6 @@ export async function GET(request) {
           data: {
             ...paket[0],
             picture: picture.length>0? picture[0].image_url : null,
-            //tambahan mulai dari sini
             nama_destinasi: destinasi.map(d => d.id_destinasi),
             itinerary: itinerary.map(i => i.deskripsi),
             inclusion: inclusion.map(i => i.deskripsi),
