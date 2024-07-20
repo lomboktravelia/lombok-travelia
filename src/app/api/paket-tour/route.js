@@ -361,8 +361,21 @@ export async function PUT(request) {
           addedDestination = await pool.query(insertDestinasiQuery);
         }
 
+        // const insertDestinasiQuery = {
+        //   text: 'INSERT INTO paket_tour_destinasi (id_tour, id_destinasi) VALUES ($1, $2)',
+        //   values: [id, id],
+        // };
+        // await pool.query(insertDestinasiQuery);
     
-        // Update itinerary
+        // for (const destinasi of nama_destinasi) {
+        //   const insertDestinasiQuery = {
+        //     text: 'INSERT INTO paket_tour_destinasi (id_tour, id_destinasi) VALUES ($1, $2)',
+        //     values: [id, destinasi],
+        //   };
+        //   await pool.query(insertDestinasiQuery);
+        // }
+    
+        // // Update itinerary
         const query4 = {
           text: "DELETE FROM itinerary WHERE id_tour = $1 RETURNING *",
           values: [id],
@@ -380,6 +393,14 @@ export async function PUT(request) {
           };
           addedItinerary = await pool.query(insertItineraryQuery);
         }
+        // for (const item of itinerary) {
+        //   console.log(item);
+        //   const insertItineraryQuery = {
+        //     text: 'INSERT INTO itinerary (id_tour, deskripsi) VALUES ($1, $2)',
+        //     values: [id, item],
+        //   };
+        //   addedItinerary = await pool.query(insertItineraryQuery);
+        // }
     
         // // Update inclusion
         const query5 = {
