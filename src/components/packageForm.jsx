@@ -59,21 +59,11 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
   }, []);
 
   
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  //useless
-  // const handleDestinasiChange = (selectedItems) => {
-  //   if (Array.isArray(selectedItems)) {
-  //     setFormData({ ...formData, nama_destinasi: selectedItems.map(item => item.value) });
-  //   } else {
-  //     console.error('selectedItems bukan array:', selectedItems);
-  //   }
-  // };
-  
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
