@@ -52,15 +52,18 @@ const snap = new midtransClient.Snap({
 
 export async function POST(request) {
   try {
-    const { id_user, id_tour, email, amount, total_cost } = await request.json();
-    console.log('Request data:', { id_user, id_tour, email, amount, total_cost });
+    const { id_user, id_tour, email, amount } = await request.json();
+    console.log('Request data:', { id_user, id_tour, email, amount });
 
     const orderId = uuidv4();
 
+    // Mengonversi amount ke integer
+    const parsedAmount = parseInt(amount, 10);
+
     // Insert order ke database
     const query = {
-      text: 'INSERT INTO orders (id_orders, id_user, id_tour, email, amount, total_cost, status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      values: [orderId, id_user, id_tour, email, amount, total_cost, 'pending'],
+      text: 'INSERT INTO orders (id_orders, id_user, id_tour, email, amount, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      values: [orderId, id_user, id_tour, email, parsedAmount, 'pending'],
     };
 
     const result = await pool.query(query);
@@ -73,7 +76,7 @@ export async function POST(request) {
 
     const transactionDetails = {
       order_id: orderId,
-      gross_amount: total_cost,
+      gross_amount: parsedAmount,
     };
 
     const customerDetails = {
