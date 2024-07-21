@@ -9,13 +9,17 @@ export function UserProvider({ children }) {
   const pathname = usePathname();
 
   const checkExpiration = async () => {
-    const response = await fetch(`/api/session`);
-    const session = await response.json();
-    if(session){
-      setCurrentUser(session)
-    } else {
-      setCurrentUser(null);
-    }
+    fetch(`/api/session`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data) setCurrentUser(null);
+        else
+          fetch(`/api/users?id_user=${data?.id_user}`)
+            .then((response) => response.json())
+            .then((data) => {
+              setCurrentUser(data?.users[0]);
+            });
+      });
   };
 
   useEffect(() => {
