@@ -7,7 +7,7 @@ export default async function handler(req, res) {
       const result = await client.query(`
         SELECT o.id_orders, o.tanggal_pesan, o.status, o.amount, o.payment_type, u.email
         FROM orders o
-        JOIN users u ON o.id_user = u.id_user
+        JOIN user u ON o.id_user = u.id_user
       `);
       client.release();
       res.status(200).json({ orders: result.rows });

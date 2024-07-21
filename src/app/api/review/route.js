@@ -52,14 +52,12 @@ export async function GET(req) {
       });
     }
 
-    const client = await pool.connect();
     const query = `
-      SELECT * FROM review
-      WHERE id_tour = $1
+      SELECT r.*, o.id_user, u.nama FROM review r LEFT JOIN orders o ON r.id_order = o.id_orders LEFT JOIN public."user" u ON o.id_user = u.id_user
+      WHERE r.id_tour = $1
       ORDER BY _created_date DESC
     `;
-    const result = await client.query(query, [id_tour]);
-    client.release();
+    const result = await pool.query(query, [id_tour]);
 
     return new Response(JSON.stringify({ reviews: result.rows }), {
       status: 200,

@@ -323,7 +323,16 @@ export default function PaketTourDetail({ params }) {
   const [rating, setRating] = useState(0); // Initialize rating with a number
   const [reviews, setReviews] = useState([]);
   const [deskripsi, setDeskripsi] = useState("");
+  const [orderId, setOrderId] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    console.log(reviews)
+  },[reviews])
+
+  useEffect(() => {
+    console.log(currentUser);
+  }, [currentUser]);
 
 
   useEffect(() => {
@@ -373,7 +382,7 @@ export default function PaketTourDetail({ params }) {
         });
     }
 
-    fetch(`/api/reviews?id_tour=${id}`) // Fetch reviews
+    fetch(`/api/review?id_tour=${id}`) // Fetch reviews
       .then((res) => res.json())
       .then((data) => {
         setReviews(data.reviews);
@@ -438,9 +447,10 @@ export default function PaketTourDetail({ params }) {
     }).format(number);
   };
 
+  
+
   const handleSubmitReview = async (e) => {
     e.preventDefault();
-    const orderId = localStorage.getItem('order_id'); // Ambil orderId dari local storage
 
     if (!orderId) {
       Swal.fire({
@@ -458,11 +468,13 @@ export default function PaketTourDetail({ params }) {
       },
       body: JSON.stringify({
         id_tour: id,
-        id_order: "orderId", // Ambil id_order yang relevan dari hasil validasi
+        id_order: orderId, // Ambil id_order yang relevan dari hasil validasi
         rating,
         deskripsi,
       }),
     });
+    const addedRev = await response.json();
+    const _addedRev = { ...addedRev, nama: currentUser.nama };
 
     if (response.ok) {
       // Refresh halaman atau tampilkan notifikasi sukses
@@ -473,6 +485,8 @@ export default function PaketTourDetail({ params }) {
       });
       setRating("");
       setDeskripsi("");
+      setHasOrdered(false);
+      setReviews((prevReviews) => [...prevReviews, _addedRev]);
     } else {
       // Tampilkan pesan kesalahan jika gagal
       const error = await response.json();
@@ -494,15 +508,16 @@ export default function PaketTourDetail({ params }) {
       return;
     }
 
-    const orderId = `ORDER-${Date.now()}`;
-    localStorage.setItem('order_id', orderId); // Simpan orderId di local storage
+
+    // wtf is this
+    // const orderId = `ORDER-${Date.now()}`;
+    // localStorage.setItem('order_id', orderId); // Simpan orderId di local storage
 
     const orderData = {
       id_user: currentUser.id_user,
       id_tour: id,
       amount: totalCost,
       email: currentUser.email,
-      order_id: orderId, // Kirim orderId ke server jika diperlukan
     };
 
     const response = await fetch("/api/payment", {
@@ -514,7 +529,8 @@ export default function PaketTourDetail({ params }) {
     });
 
     if (response.ok) {
-      const { token } = await response.json();
+      const { token, orderId } = await response.json();
+      setOrderId(orderId);
       window.snap.pay(token, {
         onSuccess: function (result) {
           // Handle success
@@ -551,6 +567,12 @@ export default function PaketTourDetail({ params }) {
         text: "Unable to process the payment. Please try again later.",
       });
     }
+  };
+
+  const formatDate = (dateString) => {
+    const createdDate = new Date(dateString);
+    const formattedDate = `${createdDate.getDate()}-${createdDate.getMonth() + 1}-${createdDate.getFullYear()}`;
+    return formattedDate;
   };
 
   return (
@@ -754,33 +776,37 @@ export default function PaketTourDetail({ params }) {
               Submit Review
             </button>
           </form>
-          <h3 className="text-2xl font-bold text-green-800 dark:text-gray-100 mt-10">
-            Reviews
-          </h3>
-          {reviews.length > 0 ? (
-            <ul className="space-y-4">
-              {reviews.map((review) => (
-                <li
-                  key={review.id_review}
-                  className="border border-gray-300 p-4 rounded-lg dark:border-gray-600"
-                >
-                  <div className="flex items-center">
-                    <RenderStars rating={review.rating} onRatingChange={() => {}} />
-                    <span className="ml-2 text-gray-700 dark:text-gray-300">
-                      {review.rating}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-gray-700 dark:text-gray-300">
-                    {review.deskripsi}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-gray-700 dark:text-gray-300">No reviews yet.</p>
-          )}
         </div>
       )}
+      {reviews?.length > 0 ? (
+        <div className="flex flex-col gap-3">
+          <h3 className="text-2xl font-bold text-green-800 dark:text-gray-100 mt-5">
+            Reviews
+          </h3>
+
+          <ul className="space-y-4">
+            {reviews.map((review) => (
+              <li
+                key={review.id_review}
+                className="border border-gray-300 p-4 rounded-lg dark:border-gray-600"
+              >
+                <div className="flex items-center gap-3">
+                  <h1 className="font-bold">{review.nama} ({formatDate(review._created_date)})</h1>
+                  <RenderStars rating={review.rating} onRatingChange={() => {}} />
+                  {/* <span className="ml-2 text-gray-700 dark:text-gray-300">
+                    {review.rating}
+                  </span> */}
+                </div>
+                <p className="mt-2 text-gray-700 dark:text-gray-300">
+                  {review.deskripsi}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+          ) : (
+            <p className="text-gray-700 dark:text-gray-300 mt-10">No reviews yet.</p>
+          )}
     </section>
   </div>
   );
