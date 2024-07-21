@@ -289,6 +289,28 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt, faUndoAlt } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import Image from 'next/image';
+import { FaStar } from 'react-icons/fa';
+
+const RenderStars = ({ rating, onRatingChange }) => {
+  const handleStarClick = (starIndex) => {
+    onRatingChange(starIndex + 1);
+  };
+
+  return (
+    <div className="flex">
+      {[...Array(5)].map((star, index) => (
+        <FaStar
+          key={index}
+          size={24}
+          color={index < rating ? "#ffc107" : "#e4e5e9"}
+          onClick={() => handleStarClick(index)}
+          style={{ cursor: "pointer" }}
+        />
+      ))}
+    </div>
+  );
+};
+
 
 export default function PaketTourDetail({ params }) {
   const { id } = params;
@@ -298,9 +320,11 @@ export default function PaketTourDetail({ params }) {
   const [removedDestinations, setRemovedDestinations] = useState([]);
   const [currentUser, setCurrentUser] = useContext(UserContext);
   const [hasOrdered, setHasOrdered] = useState(false);
-  const [rating, setRating] = useState("");
+  const [rating, setRating] = useState(0); // Initialize rating with a number
+  const [reviews, setReviews] = useState([]);
   const [deskripsi, setDeskripsi] = useState("");
   const router = useRouter();
+
 
   useEffect(() => {
     fetch(`/api/paket-tour?id=${id}`)
@@ -348,6 +372,16 @@ export default function PaketTourDetail({ params }) {
           console.error("Error fetching order status:", error);
         });
     }
+
+    fetch(`/api/reviews?id_tour=${id}`) // Fetch reviews
+      .then((res) => res.json())
+      .then((data) => {
+        setReviews(data.reviews);
+      })
+      .catch((error) => {
+        console.error("Error fetching reviews:", error);
+      });
+
   }, [currentUser, id]);
 
   // Jika data masih dimuat atau tourDetails belum ada, tampilkan pesan "Loading..."
@@ -406,6 +440,16 @@ export default function PaketTourDetail({ params }) {
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
+    const orderId = localStorage.getItem('order_id'); // Ambil orderId dari local storage
+
+    if (!orderId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Order ID Missing',
+        text: 'Order ID is missing. Please complete the payment first.',
+      });
+      return;
+    }
 
     const response = await fetch("/api/review", {
       method: "POST",
@@ -414,7 +458,7 @@ export default function PaketTourDetail({ params }) {
       },
       body: JSON.stringify({
         id_tour: id,
-        id_order: "", // Ambil id_order yang relevan dari hasil validasi
+        id_order: "orderId", // Ambil id_order yang relevan dari hasil validasi
         rating,
         deskripsi,
       }),
@@ -431,6 +475,7 @@ export default function PaketTourDetail({ params }) {
       setDeskripsi("");
     } else {
       // Tampilkan pesan kesalahan jika gagal
+      const error = await response.json();
       Swal.fire({
         icon: "error",
         title: "Failed to Submit Review",
@@ -450,11 +495,14 @@ export default function PaketTourDetail({ params }) {
     }
 
     const orderId = `ORDER-${Date.now()}`;
+    localStorage.setItem('order_id', orderId); // Simpan orderId di local storage
+
     const orderData = {
       id_user: currentUser.id_user,
       id_tour: id,
       amount: totalCost,
       email: currentUser.email,
+      order_id: orderId, // Kirim orderId ke server jika diperlukan
     };
 
     const response = await fetch("/api/payment", {
@@ -684,56 +732,56 @@ export default function PaketTourDetail({ params }) {
               Pesan Sekarang
             </button>
           )}
-        </div>
-      </section>
+          </div>
       {hasOrdered && (
-        <section className="w-full max-w-4xl mx-auto mt-10 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-            Tambah Review
+        <div className="mt-10">
+          <h2 className="text-2xl font-bold text-green-800 dark:text-gray-100 mb-4">
+            Submit Your Review
           </h2>
-          <form onSubmit={handleSubmitReview} className="mt-4">
-            <div className="mb-4">
-              <label
-                htmlFor="rating"
-                className="block text-gray-700 dark:text-gray-300"
-              >
-                Rating (1-5)
-              </label>
-              <input
-                type="number"
-                id="rating"
-                value={rating}
-                onChange={(e) => setRating(e.target.value)}
-                min="1"
-                max="5"
-                required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="deskripsi"
-                className="block text-gray-700 dark:text-gray-300"
-              >
-                Deskripsi
-              </label>
-              <textarea
-                id="deskripsi"
-                value={deskripsi}
-                onChange={(e) => setDeskripsi(e.target.value)}
-                required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-              />
-            </div>
+          <form onSubmit={handleSubmitReview} className="space-y-4">
+            <RenderStars rating={rating} onRatingChange={setRating} />
+            <textarea
+              value={deskripsi}
+              onChange={(e) => setDeskripsi(e.target.value)}
+              placeholder="Add a review"
+              rows="4"
+              className="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-gray-100"
+            />
             <button
               type="submit"
-              className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
             >
               Submit Review
             </button>
           </form>
-        </section>
+          <h3 className="text-2xl font-bold text-green-800 dark:text-gray-100 mt-10">
+            Reviews
+          </h3>
+          {reviews.length > 0 ? (
+            <ul className="space-y-4">
+              {reviews.map((review) => (
+                <li
+                  key={review.id_review}
+                  className="border border-gray-300 p-4 rounded-lg dark:border-gray-600"
+                >
+                  <div className="flex items-center">
+                    <RenderStars rating={review.rating} onRatingChange={() => {}} />
+                    <span className="ml-2 text-gray-700 dark:text-gray-300">
+                      {review.rating}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-gray-700 dark:text-gray-300">
+                    {review.deskripsi}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-700 dark:text-gray-300">No reviews yet.</p>
+          )}
+        </div>
       )}
-    </div>
+    </section>
+  </div>
   );
 }
