@@ -93,7 +93,7 @@ export async function POST(request) {
 
     const transaction = await snap.createTransaction(parameter);
     console.log('Transaction created:', transaction);
-    return NextResponse.json({ token: transaction.token });
+    return NextResponse.json({ token: transaction.token, orderId: orderId });
   } catch (error) {
     console.error('Transaction error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
