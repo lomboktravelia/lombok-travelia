@@ -12,21 +12,12 @@ import {
 import { UserContext } from "@/utils/userContext";
 import { useContext } from "react";
 import { usePathname } from "next/navigation";
+import { DropDownAvatar } from "./dropDownAvatar";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [currentUser, setCurrentUser] = useContext(UserContext);
   const pathname = usePathname();
-
-  const handleLogout = async (event) => {
-    event.preventDefault();
-    const response = await fetch(`/api/logout`, {
-      method: "POST",
-    });
-    if (response.ok) {
-      location.reload();
-    }
-  };
 
   const navItems = [
     { href: "/", label: "Home" },
@@ -36,7 +27,7 @@ const Header = () => {
     { href: "/contact-us", label: "Contact Us" },
   ];
 
-  if (currentUser?.role === 'admin') {
+  if (currentUser?.role === "admin") {
     navItems.push({ href: "/admin", label: "Admin" });
   }
 
@@ -81,12 +72,7 @@ const Header = () => {
         ))}
         <NavbarItem>
           {currentUser ? (
-            <button
-              className="bg-green-600 text-white px-4 py-2 rounded"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
+            <DropDownAvatar user={currentUser} />
           ) : (
             <Link href="/login" legacyBehavior>
               <a className="bg-green-600 text-white px-4 py-2 rounded">Login</a>
@@ -98,12 +84,7 @@ const Header = () => {
       <NavbarContent className="md:hidden" justify="end">
         <NavbarItem>
           {currentUser ? (
-            <button
-              className="bg-green-600 text-white px-4 py-2 rounded"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
+            <DropDownAvatar user={currentUser} />
           ) : (
             <Link href="/login" legacyBehavior>
               <a className="bg-green-600 text-white px-4 py-2 rounded">Login</a>

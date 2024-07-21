@@ -19,7 +19,7 @@ export async function GET(request) {
   const limit = parseInt(searchParams.get("limit")) || 10;
   const offset = (page - 1) * limit;
 
-  let query = `SELECT id_user, nama, email FROM public."user"`;
+  let query = `SELECT id_user, nama, email, picture_url FROM public."user"`;
   let conditions = [];
   let values = [];
 
