@@ -45,19 +45,32 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const id_tour = searchParams.get('id_tour');
 
-    if (!id_tour) {
-      return new Response(JSON.stringify({ error: 'Missing id_tour' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    let query;
+    let params = [];
+
+    if (id_tour) {
+      // Query untuk mendapatkan review berdasarkan id_tour
+      query = `
+        SELECT r.*, o.id_user, u.nama 
+        FROM review r 
+        LEFT JOIN orders o ON r.id_order = o.id_orders 
+        LEFT JOIN public."user" u ON o.id_user = u.id_user
+        WHERE r.id_tour = $1
+        ORDER BY _created_date DESC
+      `;
+      params = [id_tour];
+    } else {
+      // Query untuk mendapatkan semua review
+      query = `
+        SELECT r.*, o.id_user, u.nama 
+        FROM review r 
+        LEFT JOIN orders o ON r.id_order = o.id_orders 
+        LEFT JOIN public."user" u ON o.id_user = u.id_user
+        ORDER BY _created_date DESC
+      `;
     }
 
-    const query = `
-      SELECT r.*, o.id_user, u.nama FROM review r LEFT JOIN orders o ON r.id_order = o.id_orders LEFT JOIN public."user" u ON o.id_user = u.id_user
-      WHERE r.id_tour = $1
-      ORDER BY _created_date DESC
-    `;
-    const result = await pool.query(query, [id_tour]);
+    const result = await pool.query(query, params);
 
     return new Response(JSON.stringify({ reviews: result.rows }), {
       status: 200,
