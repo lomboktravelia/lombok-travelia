@@ -38,6 +38,7 @@ export async function POST(request) {
   }
 }
 */
+
 import { NextResponse } from 'next/server';
 import midtransClient from 'midtrans-client';
 import { v4 as uuidv4 } from 'uuid';
@@ -62,7 +63,7 @@ export async function POST(request) {
 
     // Insert order ke database
     const query = {
-      text: 'INSERT INTO orders (id_orders, id_user, id_tour, email, amount, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      text: 'INSERT INTO orders (id_orders, id_user, id_tour, email, amount, status, _created_date) VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP) RETURNING *',
       values: [orderId, id_user, id_tour, email, parsedAmount, 'pending'],
     };
 
@@ -99,4 +100,3 @@ export async function POST(request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-

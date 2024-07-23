@@ -51,6 +51,7 @@ const PesananPage = () => {
 };
 
 export default PesananPage; */
+
 'use client';
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../layout';
@@ -89,7 +90,7 @@ const PesananPage = () => {
 
   const handleDeleteOrder = async (id) => {
     try {
-      await fetch(`/api/orders/${id}`, {
+      await fetch(`/api/orders?id=${id}`, {
         method: 'DELETE',
       });
       fetchOrders(); // Refresh orders after deletion
@@ -110,18 +111,18 @@ const PesananPage = () => {
                 <th className="py-2 px-4 border-b">ID Pesanan</th>
                 <th className="py-2 px-4 border-b">Email Pelanggan</th>
                 <th className="py-2 px-4 border-b">Jumlah</th>
-                <th className="py-2 px-4 border-b">Tipe Pembayaran</th>
+                <th className="py-2 px-4 border-b">Status</th> {/* Menambahkan kolom Status */}
                 <th className="py-2 px-4 border-b">Aksi</th>
               </tr>
             </thead>
             <tbody>
               {orders.map((order, index) => (
                 <tr key={index}>
-                  <td className="py-2 px-4 border-b">{formatDate(order.tanggal_pesan)}</td>
+                  <td className="py-2 px-4 border-b">{formatDate(order._created_date)}</td>
                   <td className="py-2 px-4 border-b">{order.id_orders}</td>
                   <td className="py-2 px-4 border-b">{order.email}</td>
                   <td className="py-2 px-4 border-b">Rp. {order.amount.toLocaleString()}</td>
-                  <td className="py-2 px-4 border-b">{order.payment_type}</td>
+                  <td className="py-2 px-4 border-b">{order.status}</td> {/* Menambahkan status */}
                   <td className="py-2 px-4 border-b">
                     <button
                       onClick={() => handleDeleteOrder(order.id_orders)}
