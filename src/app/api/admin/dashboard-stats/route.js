@@ -17,8 +17,9 @@ async function getDashboardStats() {
     const totalPengguna = totalPenggunaResult.rows[0].count;
 
     // Query untuk mendapatkan total Saldo
-    const totalSaldoResult = await pool.query('SELECT SUM(balance_amount) FROM "admin"');
-    const totalSaldo = totalSaldoResult.rows[0].sum;
+    const totalSaldoResult = await pool.query('SELECT SUM(amount) AS total_saldo FROM orders');
+    const totalSaldo = totalSaldoResult.rows[0].total_saldo;
+
 
     // Query untuk mendapatkan total Pesanan
     const totalPesananResult = await pool.query('SELECT COUNT(*) FROM "orders"');

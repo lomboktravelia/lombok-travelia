@@ -9,7 +9,7 @@ const DashboardPage = () => {
     totalPaketTour: 0,
     totalDestinasi: 0,
     totalPengguna: 0,
-    totalSaldo: 0,
+    totalSaldo: "Rp 0",
     totalPesanan: 0,
   });
 
@@ -17,13 +17,21 @@ const DashboardPage = () => {
     // Fetch data dari API atau backend
     fetch('/api/admin/dashboard-stats')
       .then(response => response.json())
-      .then(data => setStats(data))
+      .then(data => {
+        setStats({
+          totalPaketTour: data.totalPaketTour,
+          totalDestinasi: data.totalDestinasi,
+          totalPengguna: data.totalPengguna,
+          totalSaldo: `Rp ${data.totalSaldo.toLocaleString()}`,
+          totalPesanan: data.totalPesanan,
+        });
+      })
       .catch(error => console.error('Error fetching stats:', error));
   }, []);
 
   return (
     <AdminLayout showSidebar={true}>
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4 text-green-900">Admin Dashboard</h1>
       <DashboardStats stats={stats} />
     </AdminLayout>
   );
