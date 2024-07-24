@@ -108,9 +108,10 @@ export async function GET() {
 
     // Mengambil paket tour yang paling sering diorder
     const popularPackageResult = await client.query(`
-      SELECT id_tour, COUNT(*) AS order_count
-      FROM orders
-      GROUP BY id_tour
+      SELECT pt.nama_paket, COUNT(*) AS order_count
+      FROM orders o
+      JOIN paket_tour pt ON o.id_tour = pt.id_tour
+      GROUP BY pt.nama_paket
       ORDER BY order_count DESC
       LIMIT 1
     `);

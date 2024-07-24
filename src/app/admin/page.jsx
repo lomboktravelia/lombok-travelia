@@ -49,6 +49,7 @@
 // };
 
 // export default AdminPage;
+
 "use client";
 import React, { useEffect, useState } from 'react';
 import AdminLayout from './layout';
@@ -74,7 +75,7 @@ const AdminPage = () => {
   }, []);
 
   const popularPackageData = {
-    labels: ['Most Ordered Package'],
+    labels: [stats.popularPackage?.nama_paket || 'No Data'],
     datasets: [
       {
         label: 'Orders',
@@ -98,6 +99,7 @@ const AdminPage = () => {
       },
     ],
   };
+
   const pieOptions = {
     responsive: true,
     plugins: {
@@ -115,7 +117,6 @@ const AdminPage = () => {
     },
     maintainAspectRatio: false, 
   };
-
 
   return (
     <AdminLayout showSidebar={true}>
@@ -158,7 +159,7 @@ const AdminPage = () => {
         </Link>
       </div>
       <div className="mb-4">
-        <h2 className="text-xl font-bold">Statistics</h2>
+        <h2 className="text-2xl font-bold">Statistics</h2>
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 bg-blue-100 text-blue-700 rounded shadow-md">
             <h3 className="text-lg font-semibold">Paket Tour Yang Paling Sering Di Order</h3>
@@ -167,8 +168,8 @@ const AdminPage = () => {
           <div className="p-4 bg-green-100 text-green-700 rounded shadow-md">
             <h3 className="text-lg font-semibold">Bulan dengan Transaksi Terbanyak</h3>
             <div style={{ height: '200px' }}>
-            <Pie data={transactionsByMonthData} options={pieOptions} />
-          </div>
+              <Pie data={transactionsByMonthData} options={pieOptions} />
+            </div>
           </div>
         </div>
       </div>
@@ -177,3 +178,4 @@ const AdminPage = () => {
 };
 
 export default AdminPage;
+
