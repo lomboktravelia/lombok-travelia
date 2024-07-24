@@ -36,6 +36,60 @@
 //   }
 // }
 
+// import pool from '@/utils/dbConfig';
+// import { NextResponse } from 'next/server';
+
+// // Fungsi untuk menangani GET request
+// export async function GET() {
+//   let client;
+//   try {
+//     client = await pool.connect();
+//     const result = await client.query(`
+//       SELECT o.id_orders, o._created_date, o.status, o.amount, u.email
+//       FROM orders o
+//       JOIN "user" u ON o.id_user = u.id_user
+//     `);
+//     return NextResponse.json({ orders: result.rows });
+//   } catch (error) {
+//     console.error('Error fetching orders:', error);
+//     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+//   } finally {
+//     // Ensure the client is released even if there's an error
+//     if (client) client.release();
+//   }
+// }
+
+// // Fungsi untuk menangani DELETE request
+// export async function DELETE(request) {
+//   let client;
+//   const { searchParams } = new URL(request.url);
+//   const id = searchParams.get('id');
+
+//   if (!id) {
+//     return NextResponse.json({ error: 'Order ID is required' }, { status: 400 });
+//   }
+
+//   try {
+//     const client = await pool.connect();
+//     const deleteQuery = `
+//       DELETE FROM orders
+//       WHERE id_orders = $1
+//     `;
+//     const result = await client.query(deleteQuery, [id]);
+
+//     if (result.rowCount === 0) {
+//       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+//     }
+
+//     return NextResponse.json({ message: 'Order deleted successfully' });
+//   } catch (error) {
+//     console.error('Error deleting order:', error);
+//     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+//   } finally {
+//     if (client) client.release();
+//   }
+// }
+
 import pool from '@/utils/dbConfig';
 import { NextResponse } from 'next/server';
 
@@ -44,17 +98,41 @@ export async function GET() {
   let client;
   try {
     client = await pool.connect();
-    const result = await client.query(`
+    
+    // Mengambil data pesanan
+    const ordersResult = await client.query(`
       SELECT o.id_orders, o._created_date, o.status, o.amount, u.email
       FROM orders o
       JOIN "user" u ON o.id_user = u.id_user
     `);
-    return NextResponse.json({ orders: result.rows });
+
+    // Mengambil paket tour yang paling sering diorder
+    const popularPackageResult = await client.query(`
+      SELECT id_tour, COUNT(*) AS order_count
+      FROM orders
+      GROUP BY id_tour
+      ORDER BY order_count DESC
+      LIMIT 1
+    `);
+
+    // Mengambil bulan dengan transaksi terbanyak
+    const transactionsByMonthResult = await client.query(`
+      SELECT TO_CHAR(_created_date, 'Month') AS month, COUNT(*) AS transaction_count
+      FROM orders
+      GROUP BY month
+      ORDER BY transaction_count DESC
+      LIMIT 1
+    `);
+
+    return NextResponse.json({ 
+      orders: ordersResult.rows,
+      popularPackage: popularPackageResult.rows[0],
+      transactionsByMonth: transactionsByMonthResult.rows[0]
+    });
   } catch (error) {
     console.error('Error fetching orders:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   } finally {
-    // Ensure the client is released even if there's an error
     if (client) client.release();
   }
 }
@@ -70,7 +148,7 @@ export async function DELETE(request) {
   }
 
   try {
-    const client = await pool.connect();
+    client = await pool.connect();
     const deleteQuery = `
       DELETE FROM orders
       WHERE id_orders = $1
@@ -89,3 +167,4 @@ export async function DELETE(request) {
     if (client) client.release();
   }
 }
+
