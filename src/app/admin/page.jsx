@@ -49,14 +49,16 @@
 // };
 
 // export default AdminPage;
-
 "use client";
 import React, { useEffect, useState } from 'react';
 import AdminLayout from './layout';
 import Link from 'next/link';
 import { FaTachometerAlt, FaSuitcase, FaMapMarkedAlt, FaImages, FaClipboardList, FaWallet, FaUsers } from 'react-icons/fa';
+import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import { Bar, Pie } from 'react-chartjs-2';
 
+//Register scales dan elements mungkin ini
+Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 const AdminPage = () => {
   const [stats, setStats] = useState({ popularPackage: {}, transactionsByMonth: {} });
@@ -178,4 +180,3 @@ const AdminPage = () => {
 };
 
 export default AdminPage;
-
