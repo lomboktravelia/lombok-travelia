@@ -1,7 +1,25 @@
+"use client";
 import Link from 'next/link';
+import { useRef } from 'react';
 import { FaFacebook, FaWhatsapp, FaInstagram, FaEnvelope, FaExclamationCircle } from 'react-icons/fa';
+import emailjs from 'emailjs-com';
 
 export default function ContactUs() {
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs.sendForm('service_umt41mo', 'template_3l8e47h', form.current, 'Jt-PMfVUvKZZU6Jde')
+      .then((result) => {
+          console.log(result.text);
+          alert('Pesan berhasil dikirim!');
+      }, (error) => {
+          console.log(error.text);
+          alert('Terjadi kesalahan, silakan coba lagi.');
+      });
+  };
+
   return (
     <div>
       <section className="text-center py-20 bg-gray-100 text-black">
@@ -80,6 +98,25 @@ export default function ContactUs() {
               allowFullScreen
               className="rounded-lg shadow-md"
             ></iframe>
+          </div>
+
+          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-2xl mx-auto">
+            <h3 className="text-2xl mb-4 text-green-600">Formulir Kontak</h3>
+            <form ref={form} onSubmit={sendEmail}>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Nama</label>
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="name" id="name" required />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">Email</label>
+                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="email" name="email" id="email" required />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="message">Pesan</label>
+                <textarea className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="message" id="message" rows="4" required></textarea>
+              </div>
+              <button className="bg-green-600 text-white px-6 py-3 rounded transition-colors hover:bg-green-700 hover:scale-105 transform" type="submit">Kirim Pesan</button>
+            </form>
           </div>
         </div>
       </section>
