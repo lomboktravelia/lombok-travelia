@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRef } from 'react';
 import { FaFacebook, FaWhatsapp, FaInstagram, FaEnvelope, FaExclamationCircle } from 'react-icons/fa';
 import emailjs from 'emailjs-com';
+import Swal from 'sweetalert2';
 
 export default function ContactUs() {
   const form = useRef();
@@ -13,10 +14,22 @@ export default function ContactUs() {
     emailjs.sendForm('service_umt41mo', 'template_3l8e47h', form.current, 'Jt-PMfVUvKZZU6Jde')
       .then((result) => {
           console.log(result.text);
-          alert('Pesan berhasil dikirim!');
+          Swal.fire({
+            icon: 'success',
+            title: 'Pesan berhasil dikirim!',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          form.current.reset();
       }, (error) => {
           console.log(error.text);
-          alert('Terjadi kesalahan, silakan coba lagi.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Terjadi kesalahan',
+            text: 'Silakan coba lagi.',
+            showConfirmButton: false,
+            timer: 1500
+          });
       });
   };
 
@@ -85,21 +98,6 @@ export default function ContactUs() {
               className="rounded-lg shadow-md"
             ></iframe>
           </div>
-          
-          <div className="flex flex-col items-center mb-8">
-            <p className="text-2xl font-semibold text-gray-800 mb-6">Video rekomendasi seputar destinasi wisata di Lombok:</p>
-            <iframe
-              width="560"
-              height="315"
-              src="https://www.youtube.com/embed/DKDde_jKaTM"
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="rounded-lg shadow-md"
-            ></iframe>
-          </div>
-
           <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-2xl mx-auto">
             <h3 className="text-2xl mb-4 text-green-600">Formulir Kontak</h3>
             <form ref={form} onSubmit={sendEmail}>
@@ -115,7 +113,9 @@ export default function ContactUs() {
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="message">Pesan</label>
                 <textarea className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="message" id="message" rows="4" required></textarea>
               </div>
-              <button className="bg-green-600 text-white px-6 py-3 rounded transition-colors hover:bg-green-700 hover:scale-105 transform" type="submit">Kirim Pesan</button>
+              <div className="flex items-center justify-between">
+                <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Kirim</button>
+              </div>
             </form>
           </div>
         </div>
