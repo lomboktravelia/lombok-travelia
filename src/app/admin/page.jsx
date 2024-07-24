@@ -56,7 +56,7 @@ import AdminLayout from './layout';
 import Link from 'next/link';
 import { FaTachometerAlt, FaSuitcase, FaMapMarkedAlt, FaImages, FaClipboardList, FaWallet, FaUsers } from 'react-icons/fa';
 import { Bar, Pie } from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
+
 
 const AdminPage = () => {
   const [stats, setStats] = useState({ popularPackage: {}, transactionsByMonth: {} });
