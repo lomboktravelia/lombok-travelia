@@ -86,10 +86,10 @@ export async function DELETE(request) {
 
 export async function PUT(request) {
   try {
-    const { id_user, name, email } = await request.json();
+    const { id_user, name, email, picture_url } = await request.json();
     const query =
-      'UPDATE public."user" SET nama = $1, email = $2 WHERE id_user = $3';
-    const values = [name, email, id_user];
+      'UPDATE public."user" SET nama = $1, email = $2, picture_url = $3 WHERE id_user = $4';
+    const values = [name, email, picture_url, id_user];
 
     const result = await pool.query(query, values);
 
