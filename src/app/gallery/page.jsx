@@ -9,7 +9,7 @@ const videos = [
   "https://www.youtube.com/embed/CW1CNpiVjUk",
   "https://www.youtube.com/embed/WpNDOuno0c0",
   "https://www.youtube.com/embed/ShXXioyHPPs",
-  "https://www.youtube.com/embed/xq8_LjEqocc"
+  "https://www.youtube.com/embed/nMkhZPGDQ24"
 ];
 
 function GalleryComponent() {
@@ -49,9 +49,12 @@ function GalleryComponent() {
     <div className="bg-gray-50 min-h-screen">
       <section className="text-center py-20">
         <div className="container mx-auto px-5 max-w-[1200px]">
-          <h2 className="text-5xl font-bold mb-8 text-green-600">Galeri</h2>
-          <h3 className="text-2xl mb-4 text-green-800">Lombok Travelia</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12">
+        <div className="text-center mb-8">
+            <h2 className="text-4xl font-bold text-green-600">Gallery</h2>
+            <div className="w-24 h-1 mx-auto mt-2 bg-green-600"></div>
+          </div>
+          <h3 className="text-2xl mb-4 font-semibold text-green-900">Lombok Travelia Photo Dump</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-12 px-6">
             {pictures.map((picture) => (
               <div key={picture.id_gallery} className="relative overflow-hidden rounded-lg shadow-lg group px-6">
                 <Image src={picture.image_url} alt={`Foto Wisata ${picture.id_gallery}`} width={400} height={300} className="w-full h-72 object-cover transition-transform duration-300 transform group-hover:scale-105" />
@@ -77,8 +80,8 @@ function GalleryComponent() {
               </button>
             )}
           </div>
-          <div className="mb-16">
-            <h3 className="text-3xl font-semibold text-green-900 mb-6">Video rekomendasi seputar destinasi wisata di Lombok</h3>
+          <div className="mb-16 px-6">
+            <h3 className="text-3xl font-semibold text-green-900 mb-6">Video Seputar Destinasi di Lombok</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6">
               {videos.map((video, index) => (
                 <div key={index} className="overflow-hidden rounded-lg shadow-lg">
