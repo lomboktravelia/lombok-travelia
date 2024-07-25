@@ -7,7 +7,10 @@ import { Button } from '@nextui-org/react';
 export default function Destinasi() {
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-8 mt-10 text-center text-green-600">Daftar Destinasi Tour Lengkap</h1>
+      <div className="text-center mb-8">
+            <h2 className="text-4xl font-bold mb-8 mt-10 text-center text-green-800 dark:text-green-100">Daftar Destinasi Tour</h2>
+            <div className="w-24 h-1 mx-auto mt-2 bg-green-600"></div>
+          </div>
 
       <section className="w-full max-w-4xl mx-auto mt-10 px-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">

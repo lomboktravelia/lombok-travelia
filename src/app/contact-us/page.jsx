@@ -37,36 +37,65 @@ export default function ContactUs() {
     <div>
       <section className="text-center py-20 bg-gray-100 text-black">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-8 text-green-600">Hubungi Kami</h2>
-          
-          <p className="text-left mb-8 mx-auto max-w-2xl">
-            <strong>Lombok Travelia</strong> adalah agen wisata dari Lombok yang berfokus pada Tour dan Travel yang dirancang untuk mendukung keinginan wisatawan yang berkunjung ke Lombok. Lombok Travelia berada di bawah naungan CV. Lombok Travelia yang berpusat di kota Mataram yang beralamat di Gg. Alor No.2, Rembiga, Kec. Selaparang, Kota Mataram, Nusa Tenggara Barat.
-          </p>
-          <p className="text-left mb-8 mx-auto max-w-2xl">
-            Untuk mendukung Transportasi dan Perjalanan Wisata anda, Lombok Travelia dengan cermat membentuk tim yang handal, enerjik, kreatif, dan bertanggung jawab pada profesi. Kami menjamin perjalanan Anda akan Aman dan nyaman agar memberikan pengalaman wisata yang berkesan selama di Lombok.
-          </p>
-          <p className="text-left mb-8 mx-auto max-w-2xl italic">
-            Salam Pariwisata,
-            <br />
-            Lombok Travelia
-          </p>
+        <div className="text-center mb-8">
+            <h2 className="text-4xl font-bold text-green-600">Hubungi Kami</h2>
+            <div className="w-24 h-1 mx-auto mt-2 bg-green-600"></div>
+          </div>
+        <div className="bg-gradient-to-r from-green-200 via-blue-200 to-purple-200 p-8 rounded-lg shadow-lg mb-8 mx-auto max-w-2xl">
+        <p className="text-left mb-8 mx-auto max-w-2xl">
+          <strong className="text-green-700">Lombok Travelia</strong> adalah agen wisata dari Lombok yang berfokus pada Tour dan Travel yang dirancang untuk mendukung keinginan wisatawan yang berkunjung ke Lombok. Lombok Travelia berada di bawah naungan CV. Lombok Travelia yang berpusat di kota Mataram yang beralamat di Gg. Alor No.2, Rembiga, Kec. Selaparang, Kota Mataram, Nusa Tenggara Barat.
+        </p>
+        <p className="text-left mb-8 mx-auto max-w-2xl">
+          Untuk mendukung Transportasi dan Perjalanan Wisata anda, Lombok Travelia dengan cermat membentuk tim yang handal, enerjik, kreatif, dan bertanggung jawab pada profesi. Kami menjamin perjalanan Anda akan Aman dan nyaman agar memberikan pengalaman wisata yang berkesan selama di Lombok.
+        </p>
+        <p className="text-left mb-8 mx-auto max-w-2xl italic text-gray-900 font-semibold">
+          Salam Pariwisata,
+          <br />
+          <strong className="font-bold text-green-800">Lombok Travelia</strong>
+        </p>
+      </div>
 
-          <h3 className="text-2xl mb-4">Sistem Pemesanan Dan Pembayaran</h3>
-          <ul className="text-left list-decimal list-inside mb-8 mx-auto max-w-2xl">
-            <li className="mb-2">Pemesanan dapat dilakukan melalui situs web kami atau melalui WhatsApp.</li>
-            <li className="mb-2">Pastikan untuk memberikan informasi yang akurat saat melakukan pemesanan.</li>
-            <li className="mb-2">Pembayaran dapat dilakukan melalui transfer bank atau metode lain yang tersedia.</li>
-            <li className="mb-2">Anda akan menerima konfirmasi pemesanan melalui email atau WhatsApp.</li>
-            <li className="mb-2">Jika ada pertanyaan, silakan hubungi layanan pelanggan kami.</li>
-            <li>Kebijakan pembatalan dan pengembalian dana berlaku sesuai dengan syarat dan ketentuan.</li>
-          </ul>
+
+          <h3 className="text-2xl mb-4 font-bold text-green-800">Sistem Pemesanan Dan Pembayaran</h3>
+          <div className="bg-gradient-to-r from-green-200 via-blue-200 to-purple-200 p-8 rounded-lg shadow-lg mb-8 mx-auto max-w-2xl text-white">
+            <ul className="text-left list-disc list-outside space-y-2">
+              <li className="flex items-start font-semibold text-black text-600">
+                <span className="mr-2">📝</span>
+                <span>Pemesanan dapat dilakukan melalui situs web kami atau melalui WhatsApp.</span>
+              </li>
+              <li className="flex items-start font-semibold text-black text-600">
+                <span className="mr-2">✅</span>
+                <span>Pastikan untuk memberikan informasi yang akurat saat melakukan pemesanan.</span>
+              </li>
+              <li className="flex items-start font-semibold text-black text-600">
+                <span className="mr-2">💳</span>
+                <span>Pembayaran dapat dilakukan melalui transfer bank atau metode lain yang tersedia.</span>
+              </li>
+              <li className="flex items-start font-semibold text-black text-600">
+                <span className="mr-2">📧</span>
+                <span>Anda akan menerima konfirmasi pemesanan melalui email atau WhatsApp.</span>
+              </li>
+              <li className="flex items-start font-semibold text-black text-600">
+                <span className="mr-2">📞</span>
+                <span>Jika ada pertanyaan, silakan hubungi layanan pelanggan kami.</span>
+              </li>
+              <li className="flex items-start font-semibold text-black text-600">
+                <span className="mr-2">⚠️</span>
+                <span>Kebijakan pembatalan dan pengembalian dana berlaku sesuai dengan syarat dan ketentuan.</span>
+              </li>
+            </ul>
+          </div>
 
           <div className="flex items-center text-left mb-4 mx-auto max-w-2xl text-yellow-600">
             <FaExclamationCircle className="mr-2" size={24} />
             <p>Catatan Penting: Mohon pastikan informasi yang diberikan sudah benar sebelum melakukan pembayaran.</p>
           </div>
 
-          <button className="bg-green-600 text-white px-6 py-3 rounded mb-8 transition-colors hover:bg-green-700 hover:scale-105 transform">Hubungi Kami</button>
+          <Link href="https://wa.me/83143052787" passHref>
+            <button className="bg-green-600 text-white px-6 py-3 rounded mb-8 transition-colors hover:bg-green-700 hover:scale-105 transform">
+              Hubungi Kami
+            </button>
+          </Link>
           
           <h3 className="text-2xl mb-4">Alamat</h3>
           <p className="text-left mb-4 mx-auto max-w-2xl">Gg. Alor No.2, Rembiga, Kec. Selaparang, Kota Mataram, Nusa Tenggara Barat. 83123</p>
@@ -81,7 +110,7 @@ export default function ContactUs() {
             <Link href="https://www.instagram.com/syahrul11_amri" legacyBehavior>
               <a className="text-pink-600 text-3xl hover:text-pink-700 transition-colors transform hover:scale-110"><FaInstagram /></a>
             </Link>
-            <Link href="mailto:lomboktravelial@gmail.com" legacyBehavior>
+            <Link href="mailto:lomboktravelia@gmail.com" legacyBehavior>
               <a className="text-red-600 text-3xl hover:text-red-700 transition-colors transform hover:scale-110"><FaEnvelope /></a>
             </Link>
           </div>

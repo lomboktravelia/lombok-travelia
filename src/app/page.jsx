@@ -191,7 +191,7 @@ export default function Home() {
                 >
                   <div className="flex items-center justify-center mb-4">
                     <Image
-                      src="/images/profileicon.png"
+                      src={review.picture_url || "/images/profileicon.png"}
                       alt="Profile Picture"
                       width={50}
                       height={50}
@@ -213,7 +213,77 @@ export default function Home() {
             )}
           </div>
         </div>
-      </section> 
+      </section>
+
+      <section className="py-20 bg-gray-100">
+        <div className="container mx-auto text-center">
+          <h2 className="text-4xl font-extrabold mb-8 text-green-700">
+            Galeri Video
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-8">
+            <div className="aspect-w-16 aspect-h-9 px-2">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/DKDde_jKaTM"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className="aspect-w-16 aspect-h-9 px-2">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/S3gwXSs59TQ"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className="aspect-w-16 aspect-h-9 px-2">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/CW1CNpiVjUk"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className="aspect-w-16 aspect-h-9 px-2">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/WpNDOuno0c0"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className="aspect-w-16 aspect-h-9 px-2">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/ShXXioyHPPs"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div className="aspect-w-16 aspect-h-9 px-2">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/nMkhZPGDQ24"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="py-20 bg-gray-100 text-black">
       <div className="container mx-auto">
