@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import AdminLayout from "../layout";
 import Swal from "sweetalert2";
+import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 
 const KelolaPengguna = () => {
   const [users, setUsers] = useState([]);
@@ -89,13 +90,15 @@ const KelolaPengguna = () => {
                       }}
                       passHref
                     >
-                      <button className="text-blue-500 mr-4">✏️ Edit</button>
+                      <button className="text-blue-500 mr-4">
+                        <AiOutlineEdit className="inline-block mr-1" /> Edit
+                      </button>
                     </Link>
                     <button
                       onClick={() => deleteUser(user.id_user, user.nama)}
                       className="text-red-500"
                     >
-                      🗑️ Hapus
+                      <AiOutlineDelete className="inline-block mr-1" /> Hapus
                     </button>
                   </div>
                 </td>
