@@ -99,7 +99,7 @@ export default function ContactUs() {
             ></iframe>
           </div>
           <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-2xl mx-auto">
-            <h3 className="text-2xl mb-4 text-green-600">Formulir Kontak</h3>
+            <h3 className="text-2xl mb-4 text-green-600">Formulir Kritik & Saran</h3>
             <form ref={form} onSubmit={sendEmail}>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Nama</label>

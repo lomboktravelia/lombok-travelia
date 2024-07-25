@@ -1,12 +1,15 @@
 "use client";
 
-import React from 'react';
+import React, { useContext } from "react";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FaHome, FaTachometerAlt, FaBox, FaMapMarkedAlt, FaImages, FaClipboardList, FaWallet, FaUsers } from 'react-icons/fa';
 import { FaArrowLeft } from "react-icons/fa";
+import { UserContext } from "@/utils/userContext";
+import Image from "next/image";
 const Sidebar = () => {
   const pathname = usePathname();
+  const [currentUser] = useContext(UserContext); // Mengambil data pengguna dari context
   
   // Fungsi untuk memeriksa apakah link aktif
   const isActive = (pathname, href) => pathname === href;
@@ -21,9 +24,14 @@ const Sidebar = () => {
         </div>
       </div>
       <div className="mb-8">
-        <img src="/images/profile.jpg" alt="Profile" className="rounded-full w-10 mx-auto" />
-        <h2 className="text-center mt-4">Kim S.Y</h2>
-        <p className="text-center">Admin</p>
+      <Image
+          src={currentUser?.picture_url || "/images/profile.jpg"}
+          alt="Profile"
+          className="rounded-full w-15 mx-auto"
+          width={60}
+          height={60}
+        />
+        <h2 className="text-center mt-4 text-xl font-semibold text-white">{currentUser?.nama || "Kim S.Y"}</h2>
       </div>
       <nav>
         <ul>
