@@ -16,6 +16,7 @@ function GalleryComponent() {
   const [pictures, setPictures] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 6;
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -27,13 +28,13 @@ function GalleryComponent() {
   useEffect(() => {
     const fetchPictures = async () => {
       try {
-        const response = await fetch(`/api/gallery?page=${currentPage}`);
+        const response = await fetch(`/api/gallery?page=${currentPage}&limit=${itemsPerPage}`);
         if (!response.ok) {
           throw new Error('Failed to fetch pictures');
         }
         const data = await response.json();
         setPictures(data.data);
-        setTotalPages(Math.ceil(data.total / 8)); // Assuming the API returns the total number of pictures
+        setTotalPages(Math.ceil(data.total / itemsPerPage)); // Assuming the API returns the total number of pictures
       } catch (error) {
         console.error('Error fetching pictures:', error);
       }
@@ -42,6 +43,7 @@ function GalleryComponent() {
   }, [currentPage]);
 
   const handlePageChange = (page) => {
+    setCurrentPage(page);
     router.push(`/gallery?page=${page}`);
   };
 
@@ -49,7 +51,7 @@ function GalleryComponent() {
     <div className="bg-gray-50 min-h-screen">
       <section className="text-center py-20">
         <div className="container mx-auto px-5 max-w-[1200px]">
-        <div className="text-center mb-8">
+          <div className="text-center mb-8">
             <h2 className="text-4xl font-bold text-green-600">Gallery</h2>
             <div className="w-24 h-1 mx-auto mt-2 bg-green-600"></div>
           </div>
@@ -65,13 +67,13 @@ function GalleryComponent() {
             ))}
           </div>
           <div className="flex justify-center mb-16">
-            {Array.from({ length: totalPages }, (_, i) => (
+            {Array.from({ length: totalPages }, (_, index) => (
               <button
-                key={i + 1}
-                onClick={() => handlePageChange(i + 1)}
-                className={`mx-1 px-4 py-2 rounded-lg ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-black'}`}
+                key={index}
+                onClick={() => handlePageChange(index + 1)}
+                className={`mx-1 px-3 py-1 border rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-white text-black'}`}
               >
-                {i + 1}
+                {index + 1}
               </button>
             ))}
             {currentPage < totalPages && (
