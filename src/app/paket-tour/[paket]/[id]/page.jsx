@@ -280,7 +280,6 @@ export default function PaketTourDetail({ params }) {
   );
 }
 */
-
 "use client";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "@/utils/userContext";
@@ -508,11 +507,6 @@ export default function PaketTourDetail({ params }) {
       return;
     }
 
-
-    // wtf is this
-    // const orderId = `ORDER-${Date.now()}`;
-    // localStorage.setItem('order_id', orderId); // Simpan orderId di local storage
-
     const orderData = {
       id_user: currentUser.id_user,
       id_tour: id,
@@ -532,7 +526,7 @@ export default function PaketTourDetail({ params }) {
       const { token, orderId } = await response.json();
       setOrderId(orderId);
       window.snap.pay(token, {
-        onSuccess: function (result) {
+        onSuccess: async function (result) {
           // Handle success
           console.log("Payment success:", result);
           Swal.fire({
@@ -541,6 +535,29 @@ export default function PaketTourDetail({ params }) {
             text: "Thank you for your order!",
           });
           setHasOrdered(true); // Setelah sukses order, ubah status `hasOrdered` menjadi true
+          
+          // Generate and send invoice
+          const invoiceResponse = await fetch('/api/invoice', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id_user: currentUser.id_user,
+              id_tour: id,
+              amount: totalCost,
+              email: currentUser.email,
+              orderId: orderId,
+              destinationNames: destinationNames,
+              tourDetails: tourDetails,
+            }),
+          });
+          if (invoiceResponse.ok) {
+            console.log('Invoice generated and sent successfully');
+          } else {
+            console.error('Failed to generate and send invoice');
+          }
+
         },
         onPending: function (result) {
           // Handle pending
@@ -552,19 +569,19 @@ export default function PaketTourDetail({ params }) {
           Swal.fire({
             icon: "error",
             title: "Payment Failed",
-            text: "Unable to process the payment. Please try again later.",
+            text: "An error occurred during payment. Please try again.",
           });
         },
         onClose: function () {
           // Handle close
-          console.log("Payment popup closed without finishing payment");
+          console.log("Payment popup closed");
         },
       });
     } else {
       Swal.fire({
         icon: "error",
-        title: "Payment Failed",
-        text: "Unable to process the payment. Please try again later.",
+        title: "Order Failed",
+        text: "An error occurred while placing your order. Please try again later.",
       });
     }
   };
