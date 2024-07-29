@@ -11,11 +11,10 @@ const transporter = nodemailer.createTransport({
 });
 
 export async function POST(req) {
-  const { id_order } = await req.json();
-  console.log('Request received:', req);
+  const { orderId } = await req.json();
 
   try {
-    const { rows: orderRows } = await pool.query('SELECT * FROM orders WHERE id_orders = $1', [id_order]);
+    const { rows: orderRows } = await pool.query('SELECT * FROM orders WHERE id_orders = $1', [orderId]);
 
     if (orderRows.length === 0) {
       return new Response(JSON.stringify({ error: 'Order not found' }), { status: 404 });
@@ -25,8 +24,10 @@ export async function POST(req) {
 
     const { rows: paketRows } = await pool.query('SELECT * FROM paket_tour WHERE id_tour = $1', [order.id_tour]);
     const { rows: userRows } = await pool.query('SELECT * FROM "user" WHERE id_user = $1', [order.id_user]);
-    const { rows: destinasiRows } = await pool.query('SELECT * FROM destinasi WHERE id_destinasi = $1', [order.id_destinasi]);
+    const { rows: destinasiRows } = await pool.query('SELECT * FROM paket_tour_destinasi WHERE id_tour = $1', [order.id_tour]);
     console.log('Order found:', orderRows[0]);
+    console.log('User found:', userRows[0]);
+    console.log('Dest found:', destinasiRows);
 
     if (paketRows.length === 0 || userRows.length === 0 || destinasiRows.length === 0) {
       return new Response(JSON.stringify({ error: 'Associated data not found' }), { status: 404 });
@@ -59,7 +60,7 @@ export async function POST(req) {
       [id_user_invoice, user.nama, user.email]
     );
 
-    const amount = order.total_price; // Ganti dengan field yang sesuai dari tabel orders
+    const amount = order.amount; // Ganti dengan field yang sesuai dari tabel orders
 
     await pool.query(
       `INSERT INTO invoice (id_invoice, _created_date, amount, id_destinasi_invoice, id_paket_invoice, id_user_invoice)
