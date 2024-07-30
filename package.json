@@ -25,6 +25,7 @@
     "midtrans-client": "^1.3.1",
     "nanoid": "^5.0.7",
     "next": "14.2.4",
+    "next-auth": "^4.24.7",
     "nodemailer": "^6.9.14",
     "pdfkit": "^0.15.0",
     "pg": "^8.12.0",
