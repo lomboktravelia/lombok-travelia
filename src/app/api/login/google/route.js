@@ -1,4 +1,4 @@
-import admin from "@/utils/firebaseAdmin";
+// import admin from "@/utils/firebaseAdmin";
 import bcrypt from "bcrypt";
 import pg from "pg";
 import { cookies } from "next/headers";
@@ -17,6 +17,7 @@ const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
 
 export async function POST(request) {
+  const admin = {};
   const { idToken } = await request.json();
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
