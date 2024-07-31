@@ -114,6 +114,13 @@ export function LoginForm() {
             type="button"
             onClick={handleSignInWithGoogle}
           >
+            <span className="mr-2">
+              <img
+                src="https://developers.google.com/identity/images/g-logo.png"
+                alt="Google"
+                className="w-5 inline"
+              />
+            </span>
             Login with Google
           </button>
         </div>
