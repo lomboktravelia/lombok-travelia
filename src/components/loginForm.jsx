@@ -2,24 +2,14 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import signInWithGoogle from "@/utils/firebaseSignIn";
 
 export function LoginForm() {
-  const { data: session, status } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setLoading] = useState(false);
   const router = useRouter();
-
-  if (status === "authenticated") {
-    router.push("/");
-  }
-
-  // if (session) {
-  //   router.push("/");
-  // }
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -126,7 +116,6 @@ export function LoginForm() {
           >
             <span className="mr-2">
               <img
-                src="https://developers.google.com/identity/images/g-logo.png"
                 src="https://developers.google.com/identity/images/g-logo.png"
                 alt="Google"
                 className="w-5 inline"
