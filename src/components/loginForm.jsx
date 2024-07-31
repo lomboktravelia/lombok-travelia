@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import signInWithGoogle from "@/utils/firebaseSignIn";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -34,6 +35,24 @@ export function LoginForm() {
         });
       })
       .finally(() => setLoading(false));
+  };
+
+  const handleSignInWithGoogle = async (event) => {
+    event.preventDefault();
+    const user = await signInWithGoogle();
+    user.getIdToken().then((idToken) => {
+      fetch(`/api/login/google`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken }),
+      }).then((response) => {
+        if (response.ok) router.push("/");
+        else
+          return response.json().then((data) => {
+            throw new Error(data.message || "Unknown error occurred");
+          });
+      });
+    });
   };
 
   return (
@@ -89,21 +108,15 @@ export function LoginForm() {
             </a>
           </Link>
         </div>
-        {/* <div className="mt-6">
+        <div className="mt-6">
           <button
             className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow w-full"
             type="button"
+            onClick={handleSignInWithGoogle}
           >
-            <span className="mr-2">
-              <img
-                src="/path-to-google-icon.png"
-                alt="Google"
-                className="w-5 inline"
-              />
-            </span>
             Login with Google
           </button>
-        </div> */}
+        </div>
       </form>
     </>
   );

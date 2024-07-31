@@ -107,8 +107,12 @@ const Account = () => {
 
               // Deleting user old picture
               if (currentUser.picture_url) {
-                const oldPicture = ref(storage, currentUser?.picture_url);
-                deleteObject(oldPicture);
+                const firebaseStoragePattern =
+                  /firebasestorage\.googleapis\.com/;
+                if (firebaseStoragePattern.test(currentUser.picture_url)) {
+                  const oldPicture = ref(storage, currentUser?.picture_url);
+                  deleteObject(oldPicture);
+                }
               }
             }
           });
