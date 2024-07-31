@@ -1,4 +1,4 @@
-var admin = require("firebase-admin");
+import admin from "firebase-admin";
 const { privateKey } = JSON.parse(process.env.PRIVATE_KEY);
 const serviceAccount = {
   type: process.env.TYPE,
