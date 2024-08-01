@@ -4,7 +4,6 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import "./globals.css";
 import { UserProvider } from "@/utils/userContext";
-import { SessionProvider } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import Script from 'next/script';
 
@@ -29,7 +28,6 @@ const Layout = ({ children }) => {
         />
       </head>
       <body>
-      <SessionProvider>
         <UserProvider>
           {showHeader && <Header />}
           <div className="container">
@@ -37,7 +35,6 @@ const Layout = ({ children }) => {
             <Footer />
           </div>
         </UserProvider>
-        </SessionProvider>
       </body>
     </html>
   );
