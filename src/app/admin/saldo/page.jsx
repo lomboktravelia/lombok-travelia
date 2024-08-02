@@ -5,6 +5,8 @@ import AdminLayout from '../layout';
 const SaldoPage = () => {
   const [saldo, setSaldo] = useState({});
   const [orders, setOrders] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   useEffect(() => {
     // Fetch saldo and withdrawals from API
@@ -18,8 +20,9 @@ const SaldoPage = () => {
         throw new Error('Failed to fetch saldo and orders');
       }
       const data = await response.json();
+      const sortedOrders = data.orders.sort((a, b) => new Date(b._created_date) - new Date(a._created_date));
       setSaldo(data.saldo);
-      setOrders(data.orders);
+      setOrders(sortedOrders);
     } catch (error) {
       console.error('Error fetching saldo and orders:', error);
     }
@@ -35,6 +38,12 @@ const SaldoPage = () => {
       minute: 'numeric',
     });
   };
+
+  const totalPages = Math.ceil(orders.length / itemsPerPage);
+  const currentItems = orders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <AdminLayout showSidebar={true}>
@@ -52,7 +61,7 @@ const SaldoPage = () => {
             <a href="https://dashboard.sandbox.midtrans.com/" target="_blank" rel="noopener noreferrer">
               <button className="mt-2 bg-blue-500 text-white px-4 py-2 rounded">Tarik dana</button>
             </a>
-            </div>
+          </div>
         </div>
         <h1 className="text-2xl font-bold mb-4">Riwayat Penarikan</h1>
         <div className="overflow-x-auto">
@@ -66,7 +75,7 @@ const SaldoPage = () => {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order, index) => (
+              {currentItems.map((order, index) => (
                 <tr key={index}>
                   <td className="py-2 px-4 border-b">{formatDate(order._created_date)}</td>
                   <td className="py-2 px-4 border-b">{order.id_orders}</td>
@@ -77,10 +86,21 @@ const SaldoPage = () => {
             </tbody>
           </table>
         </div>
+        {/* Pagination */}
+        <div className="flex justify-center mt-4">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentPage(index + 1)}
+              className={`mx-1 px-3 py-1 border rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-white text-black'}`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
       </div>
     </AdminLayout>
   );
 };
 
 export default SaldoPage;
-

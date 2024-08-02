@@ -120,7 +120,7 @@ const GalleryList = ({ galleries = [], onDelete, onPageChange, currentPage, tota
         >
           Sebelumnya
         </button>
-        <span>Halaman {currentPage} dari {totalPages}</span>
+        <span>Halaman {currentPage} Gallery {totalPages}</span>
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
