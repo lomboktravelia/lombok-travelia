@@ -40,12 +40,14 @@ export function LoginForm() {
   const handleSignInWithGoogle = async (event) => {
     event.preventDefault();
     const user = await signInWithGoogle();
+    setLoading(true);
     user.getIdToken().then((idToken) => {
       fetch(`/api/login/google`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idToken }),
       }).then((response) => {
+        setLoading(false);
         if (response.ok) router.push("/");
         else
           return response.json().then((data) => {

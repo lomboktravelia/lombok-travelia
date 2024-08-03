@@ -28,6 +28,7 @@ const Account = () => {
         name: name || currentUser?.nama,
         email: email || currentUser?.email,
         id_user: currentUser?.id_user,
+        picture_url: currentUser?.picture_url,
       }),
     })
       .then((res) => {
@@ -122,11 +123,11 @@ const Account = () => {
   };
   if (!currentUser)
     return (
-      <div className="min-h-screen bg-white dark:bg-black flex justify-center items-center">
+      <Card className="min-h-screen bg-white dark:bg-black flex justify-center items-center">
         <Spinner
           style={{ borderTopColor: "#35D235", borderRightColor: "#35D235" }}
         />
-      </div>
+      </Card>
     );
   return (
     <Card className="p-4 flex flex-col md:flex-row justify-center">
@@ -179,6 +180,7 @@ const Account = () => {
             setEmail(value);
             setIsChanged(true);
           }}
+          isDisabled={currentUser?.auth_provider === "google"}
         />
         <div className="flex justify-end gap-4">
           <Button

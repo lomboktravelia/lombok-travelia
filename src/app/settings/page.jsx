@@ -18,6 +18,16 @@ const Settings = () => {
           <FaPersonDrowning />
           <p>Account Settings</p>
         </Card>
+        <Card
+          className="min-h-40 p-4 flex justify-center items-center"
+          isPressable={true}
+          onPress={() => {
+            router.push("/settings/orders");
+          }}
+        >
+          <FaPersonDrowning />
+          <p>Order History</p>
+        </Card>
         <Card className="min-h-40 p-4 flex justify-center items-center">
           <FaPersonDrowning />
           <p>Other Settings</p>

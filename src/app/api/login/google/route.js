@@ -23,11 +23,11 @@ export async function POST(request) {
     const { email, name, picture } = decodedToken;
 
     const query = `
-        INSERT INTO public."user" (email, nama, role, picture_url)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO public."user" (email, nama, role, picture_url, auth_provider)
+        VALUES ($1, $2, $3, $4, $5)
         ON CONFLICT (email) DO NOTHING
       `;
-    const values = [email, name, "user", picture];
+    const values = [email, name, "user", picture, "google"];
     const result = await pool.query(query, values);
 
     const { rows } = await pool.query(
