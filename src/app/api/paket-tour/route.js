@@ -114,6 +114,7 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
     const jenis_paket = searchParams.get("jenis_paket");
+    const custom = searchParams.get("custom");
 
     if (id) {
       const query = "SELECT * FROM paket_tour WHERE id_tour = $1";
@@ -134,8 +135,8 @@ export async function GET(request) {
           data: {
             ...paket[0],
             picture: picture.length>0? picture[0].image_url : null,
-            nama_destinasi: destinasi.map(d => d.id_destinasi),
-            itinerary: itinerary.map(i => i.deskripsi),
+            nama_destinasi: destinasi?.map(d => d.id_destinasi),
+            itinerary: itinerary?.map(i => i.deskripsi),
             inclusion: inclusion.map(i => i.deskripsi),
             exclusion: exclusion.map(e => e.deskripsi),
           },
@@ -164,13 +165,43 @@ export async function GET(request) {
         },
         { status: 200 }
       );
-    } else {
-      const query = "SELECT * FROM paket_tour";
+    } else if(custom === "true"){
+      const query = "SELECT * FROM paket_tour WHERE created_by IS NOT NULL";
       const { rows: paket } = await pool.query(query);
+      const paketIds = paket.map((p) => p.id_tour);
+      const pictureQuery =
+        "SELECT * FROM picture WHERE id_tour = ANY($1::text[])";
+      const { rows: pictures } = await pool.query(pictureQuery, [paketIds]);
+
+      const paketWithPictures = paket.map((p) => ({
+        ...p,
+        picture:
+          pictures.find((pic) => pic.id_tour === p.id_tour)?.image_url || null,
+      }));
       return NextResponse.json(
         {
           status: 200,
-          data: paket,
+          data: paketWithPictures,
+        },
+        { status: 200 }
+      );
+    }else {
+      const query = "SELECT * FROM paket_tour WHERE created_by IS NULL";
+      const { rows: paket } = await pool.query(query);
+      const paketIds = paket.map((p) => p.id_tour);
+      const pictureQuery =
+        "SELECT * FROM picture WHERE id_tour = ANY($1::text[])";
+      const { rows: pictures } = await pool.query(pictureQuery, [paketIds]);
+
+      const paketWithPictures = paket.map((p) => ({
+        ...p,
+        picture:
+          pictures.find((pic) => pic.id_tour === p.id_tour)?.image_url || null,
+      }));
+      return NextResponse.json(
+        {
+          status: 200,
+          data: paketWithPictures,
         },
         { status: 200 }
       );
