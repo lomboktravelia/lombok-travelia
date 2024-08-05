@@ -323,6 +323,9 @@ export default function PaketTourDetail({ params }) {
   const [reviews, setReviews] = useState([]);
   const [deskripsi, setDeskripsi] = useState("");
   const [orderId, setOrderId] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [availableDestinations, setAvailableDestinations] = useState([]);
+  const [selectedCustomDestinations, setSelectedCustomDestinations] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -392,6 +395,59 @@ export default function PaketTourDetail({ params }) {
 
   }, [currentUser, id]);
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSelectDestination = (destinationId) => {
+    setSelectedCustomDestinations((prevSelected) =>
+      prevSelected.includes(destinationId)
+        ? prevSelected.filter((id) => id !== destinationId)
+        : [...prevSelected, destinationId]
+    );
+  };
+
+  const handleSubmitCustomDestinations = async () => {
+    const response = await fetch(`/api/paket-tour/${id}/custom`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ nama_destinasi: selectedCustomDestinations }),
+    });
+
+    if (response.ok) {
+      Swal.fire({
+        icon: "success",
+        title: "Custom Destinations Added",
+        text: "Your custom destinations have been added successfully.",
+      });
+      setSelectedDestinations(selectedCustomDestinations);
+      setSelectedCustomDestinations([]);
+      handleCloseModal();
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Failed to Add Custom Destinations",
+        text: "An error occurred while adding your custom destinations. Please try again.",
+      });
+    }
+  };
+
+  const calculateTotalPrice = () => {
+    if (selectedCustomDestinations.length === 0) {
+      return tourDetails?.harga || 0;
+    }
+    const selectedDestPrices = destinations
+      .filter((dest) => selectedCustomDestinations.includes(dest.id_destinasi))
+      .map((dest) => dest.harga_destinasi);
+    return selectedDestPrices.reduce((acc, price) => acc + price, 0);
+  };
+
   // Jika data masih dimuat atau tourDetails belum ada, tampilkan pesan "Loading..."
   if (!id || !tourDetails) {
     return (
@@ -414,15 +470,8 @@ export default function PaketTourDetail({ params }) {
   console.log("Selected Destinations:", selectedDestinations);
   console.log("Destination Names:", destinationNames);
 
-  const handleRemoveDestination = (destinationName) => {
-    const destinationToRemove = selectedDestinations.find(
-      (dest) => dest.nama_destinasi === destinationName
-    );
-    const updatedDestinations = selectedDestinations.filter(
-      (dest) => dest.nama_destinasi !== destinationName
-    );
-    setSelectedDestinations(updatedDestinations);
-    setRemovedDestinations([...removedDestinations, destinationToRemove]);
+  const handleRemoveDestination = (destinationId) => {
+    setSelectedDestinations(selectedDestinations.filter(id => id !== destinationId));
   };
 
   const handleRestoreDestination = (destinationName) => {
@@ -648,12 +697,56 @@ export default function PaketTourDetail({ params }) {
           )}
         </ul>
         </div>
+        <div className="mt-6 flex justify-center">
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+          onClick={handleOpenModal}
+        >
+          Add Custom Destinations
+        </button>
+      </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-lg">
+            <h2 className="text-2xl font-bold mb-4">Select Destinations</h2>
+            <ul className="mb-4">
+              {destinations.map((destination) => (
+                <li key={destination.id_destinasi} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    id={destination.id_destinasi}
+                    checked={selectedCustomDestinations.includes(destination.id_destinasi)}
+                    onChange={() => handleSelectDestination(destination.id_destinasi)}
+                    className="mr-2"
+                  />
+                  <label htmlFor={destination.id_destinasi}>{destination.nama_destinasi}</label>
+                </li>
+              ))}
+            </ul>
+            <div className="flex justify-end space-x-4">
+              <button
+                className="bg-gray-500 text-white px-4 py-2 rounded"
+                onClick={handleCloseModal}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+                onClick={handleSubmitCustomDestinations}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
         <div className="mt-6">
           <h2 className="text-2xl font-bold text-blue-800 dark:text-gray-100 mb-4">
             Total Harga
           </h2>
           <p className="mt-2 text-xl font-bold text-green-800 dark:text-green-300">
-            {formatRupiah(tourDetails?.harga)}
+            {formatRupiah(calculateTotalPrice())}
           </p>
         </div>
         <div className="mt-6">
