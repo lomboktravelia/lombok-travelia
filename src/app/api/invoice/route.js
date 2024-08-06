@@ -95,7 +95,7 @@ export async function POST(req) {
       <h1>Invoice</h1>
       <p>Invoice ID: ${id_invoice}</p>
       <p>Nama Paket: ${paket.nama_paket}</p>
-      <p>Harga: ${paket.harga}</p>
+      <p>Harga Paket: ${paket.harga}</p>
       <p>Durasi: ${paket.durasi} hari</p>
       <p>Jenis Paket: ${paket.jenis_paket}</p>
       <div>
@@ -106,7 +106,7 @@ export async function POST(req) {
       </div>
       <p>Nama User: ${user.nama}</p>
       <p>Email User: ${user.email}</p>
-      <p>Total Harga: ${amount}</p>
+      <h3>Total Harga: ${amount}</h3>
       <p>Tanggal Pembelian: ${new Date().toLocaleDateString()}</p>
     `;
 
