@@ -326,15 +326,8 @@ export default function PaketTourDetail({ params }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [availableDestinations, setAvailableDestinations] = useState([]);
   const [selectedCustomDestinations, setSelectedCustomDestinations] = useState([]);
+  const [hargaTotal, setHargaTotal] = useState(0);
   const router = useRouter();
-
-  useEffect(() => {
-    console.log(reviews)
-  },[reviews])
-
-  useEffect(() => {
-    console.log(currentUser);
-  }, [currentUser]);
 
 
   useEffect(() => {
@@ -403,6 +396,16 @@ export default function PaketTourDetail({ params }) {
     setIsModalOpen(false);
   };
 
+  useEffect(() => {
+    calculateHargaTotal();
+  }, [tourDetails]);
+
+  const calculateHargaTotal = () => {
+    const paketPrice = parseInt(tourDetails?.harga) || 0;
+    const destinationTotalPrice = destinations.filter(dest => tourDetails.nama_destinasi.includes(dest.id_destinasi)).reduce((acc, curr)=>acc+parseInt(curr.harga), 0);
+    setHargaTotal(paketPrice + destinationTotalPrice);
+  }
+
   const handleSelectDestination = (destinationId) => {
     setSelectedCustomDestinations((prevSelected) =>
       prevSelected.includes(destinationId)
@@ -420,15 +423,18 @@ export default function PaketTourDetail({ params }) {
       body: JSON.stringify({ nama_destinasi: selectedCustomDestinations }),
     });
 
+    const res = await response.json();
+    const { id_tour } = res.data;
+
     if (response.ok) {
       Swal.fire({
         icon: "success",
         title: "Custom Destinations Added",
         text: "Your custom destinations have been added successfully.",
       });
-      setSelectedDestinations(selectedCustomDestinations);
-      setSelectedCustomDestinations([]);
+
       handleCloseModal();
+      router.push(`/paket-tour/paket/${id_tour}`);
     } else {
       Swal.fire({
         icon: "error",
@@ -436,16 +442,6 @@ export default function PaketTourDetail({ params }) {
         text: "An error occurred while adding your custom destinations. Please try again.",
       });
     }
-  };
-
-  const calculateTotalPrice = () => {
-    if (selectedCustomDestinations.length === 0) {
-      return tourDetails?.harga || 0;
-    }
-    const selectedDestPrices = destinations
-      .filter((dest) => selectedCustomDestinations.includes(dest.id_destinasi))
-      .map((dest) => dest.harga_destinasi);
-    return selectedDestPrices.reduce((acc, price) => acc + price, 0);
   };
 
   // Jika data masih dimuat atau tourDetails belum ada, tampilkan pesan "Loading..."
@@ -464,7 +460,7 @@ export default function PaketTourDetail({ params }) {
     const destinationNames = selectedDestinations.map((destId) => {
     const destination = destinations.find((d) => d.id_destinasi === destId);
     console.log("Mapping ID:", destId, "to destination:", destination);
-    return destination ? destination.nama_destinasi : "Unknown";
+    return destination ? {nama: destination.nama_destinasi, harga: destination.harga} : "Unknown";
   });
 
   console.log("Selected Destinations:", selectedDestinations);
@@ -484,8 +480,6 @@ export default function PaketTourDetail({ params }) {
     setSelectedDestinations([...selectedDestinations, destinationToRestore]);
     setRemovedDestinations(updatedRemovedDestinations);
   };
-
-  const totalCost = tourDetails.harga;
 
   const formatRupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -559,7 +553,7 @@ export default function PaketTourDetail({ params }) {
     const orderData = {
       id_user: currentUser.id_user,
       id_tour: id,
-      amount: totalCost,
+      amount: hargaTotal,
       email: currentUser.email,
     };
 
@@ -594,7 +588,7 @@ export default function PaketTourDetail({ params }) {
             body: JSON.stringify({
               id_user: currentUser.id_user,
               id_tour: id,
-              amount: totalCost,
+              amount: hargaTotal,
               email: currentUser.email,
               orderId: orderId,
               destinationNames: destinationNames,
@@ -665,10 +659,18 @@ export default function PaketTourDetail({ params }) {
           </p>
         </div>
         <div className="mt-6">
+          <h2 className="text-2xl font-bold text-blue-800 dark:text-gray-100 mb-4">
+            Harga Paket
+          </h2>
+          <p className="mt-2 text-gray-700 dark:text-gray-400">
+            {formatRupiah(tourDetails.harga)}
+          </p>
+        </div>
+        <div className="mt-6">
         <h2 className="text-2xl font-bold text-blue-800 dark:text-gray-100 mb-4">
           Destinasi
         </h2>
-        <ul className="list-none ml-6 mt-2">
+        <ul className="list-none ml-3 mt-2 flex flex-col gap-3">
           {destinationNames.length === 0 ? (
             <li className="text-gray-900 dark:text-gray-300">Tidak ada destinasi.</li>
           ) : (
@@ -677,21 +679,29 @@ export default function PaketTourDetail({ params }) {
                 key={index}
                 className="flex items-center space-x-2 text-gray-900 dark:text-gray-300 my-2"
               >
-                <svg
-                  className="h-5 w-5 text-blue-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 2C8.134 2 5 5.134 5 9c0 6.627 7 13 7 13s7-6.373 7-13c0-3.866-3.134-7-7-7zM12 11a2 2 0 100-4 2 2 0 000 4z"
-                  />
-                </svg>
-                <span>{destination}</span>
+                <div className="flex flex-row justify-between items-center w-full mr-4">
+                  <div className="flex flex-row gap-1 justify-center items-center">
+                    <svg
+                      className="h-5 w-5 text-blue-500"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 2C8.134 2 5 5.134 5 9c0 6.627 7 13 7 13s7-6.373 7-13c0-3.866-3.134-7-7-7zM12 11a2 2 0 100-4 2 2 0 000 4z"
+                      />
+                    </svg>
+                    <span>{destination.nama}</span>
+                  </div>
+                  
+                  <div>
+                    <h1 className="font-semibold">{formatRupiah(parseInt(destination.harga))}</h1>
+                  </div>
+                </div>
               </li>
             ))
           )}
@@ -711,7 +721,7 @@ export default function PaketTourDetail({ params }) {
           <div className="bg-white rounded-lg p-6 w-full max-w-lg">
             <h2 className="text-2xl font-bold mb-4">Select Destinations</h2>
             <ul className="mb-4">
-              {destinations.map((destination) => (
+              {destinations.filter(dest => tourDetails.nama_destinasi.includes(dest.id_destinasi)).map((destination) => (
                 <li key={destination.id_destinasi} className="flex items-center mb-2">
                   <input
                     type="checkbox"
@@ -746,7 +756,7 @@ export default function PaketTourDetail({ params }) {
             Total Harga
           </h2>
           <p className="mt-2 text-xl font-bold text-green-800 dark:text-green-300">
-            {formatRupiah(calculateTotalPrice())}
+            {formatRupiah(hargaTotal)}
           </p>
         </div>
         <div className="mt-6">
