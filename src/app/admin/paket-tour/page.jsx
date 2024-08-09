@@ -35,7 +35,7 @@ export default function PackageTour() {
   return (
     <AdminLayout showSidebar={true}>
       <div className="container mx-auto p-6">
-        <PackageList packages={packages} onDelete={handleDelete} onEdit={handleEdit} />
+      <PackageList packages={packages} onDelete={handleDelete} onEdit={handleEdit} />
       </div>
     </AdminLayout>
   );

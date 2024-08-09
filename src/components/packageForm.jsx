@@ -4,7 +4,7 @@ import { Button, Spinner, Select, SelectItem, Input, Textarea, Modal, ModalConte
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { FiUpload } from 'react-icons/fi';
+import { FiUpload, FiTrash2 } from 'react-icons/fi';
 import Swal from 'sweetalert2';
 
 export default function PackageForm({ onSubmit, initialData = {} }) {
@@ -204,6 +204,7 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
   };
 
   return (
+    <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-lg">
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block mb-2">Nama Paket Tour</label>
@@ -351,11 +352,11 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
         {formData.inclusion.length>0 && (
           <div className='w-full flex flex-col gap-3 mt-3'>
             {formData.inclusion && formData.inclusion.map((item, index) => (
-              <div key={index} className="flex justify-between items-center border border-gray-300 rounded-xl py-2 px-3 w-full">
+              <div key={index} className="flex justify-between items-center border border-green-300 rounded-xl py-2 px-3 w-10/12 mx-auto">
                 <div className='w-full'>
                   <h1 className='truncate w-[1150px]'>{item}</h1>
                 </div>
-                <Button onClick={() => handleRemoveInclusion(index)} className="ml-2" color="error">Hapus</Button>
+                <Button onClick={() => handleRemoveInclusion(index)} className="ml-2 px-4 py-2" style={{ backgroundColor: 'transparent', boxShadow: 'none' }}><FiTrash2 className="text-red-500 text-xl"/></Button>
               </div>
             ))}
           </div>
@@ -378,11 +379,11 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
         {formData.exclusion.length>0 && (
           <div className='w-full flex flex-col gap-3 mt-3'>
             {formData.exclusion && formData.exclusion.map((item, index) => (
-              <div key={index} className="flex justify-between items-center border border-gray-300 rounded-xl py-2 px-3 w-full">
+              <div key={index} className="flex justify-between items-center border border-green-300 rounded-xl py-2 px-3 w-10/12 mx-auto">
                 <div className='w-full'>
                   <h1 className='truncate w-[1150px]'>{item}</h1>
                 </div>
-                <Button onClick={() => handleRemoveExclusion(index)} className="ml-2" color="error">Hapus</Button>
+                <Button onClick={() => handleRemoveExclusion(index)} className="ml-2 px-4 py-2" style={{ backgroundColor: 'transparent', boxShadow: 'none' }}><FiTrash2 className="text-red-500 text-xl"/></Button>
               </div>
             ))}
           </div>     
@@ -392,5 +393,6 @@ export default function PackageForm({ onSubmit, initialData = {} }) {
         {initialData.id_tour ? 'Edit' : 'Tambah'}
       </button>
     </form>
+    </div>
   );
 }
