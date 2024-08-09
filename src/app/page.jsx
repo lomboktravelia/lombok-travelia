@@ -20,7 +20,7 @@ export default function Home() {
   const [faq4Open, setFaq4Open] = useState(false);
 
   useEffect(() => {
-    fetch("/api/data?table=paket_tour")
+    fetch("/api/data?table=paket_tour_top3")
       .then((res) => res.json())
       .then(({ data }) => {
         setData(data);
