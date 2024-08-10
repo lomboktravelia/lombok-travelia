@@ -6,6 +6,10 @@ import { UserContext } from "@/utils/userContext";
 import { useContext } from "react";
 import Image from "next/image";
 import { FaChevronDown, FaChevronUp, FaStar } from 'react-icons/fa';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper/modules';
 
 export default function Home() {
   const [currentUser, setCurrentUser] = useContext(UserContext);
@@ -180,40 +184,56 @@ export default function Home() {
       </section>
 
       <section className="py-20 bg-gradient-to-r from-blue-50 to-gray-100 text-black">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-extrabold mb-8 text-green-700">Apa Kata Mereka?</h2>
-          <div className="flex flex-wrap justify-center space-x-8 px-5 gap-5">
-            {reviews && reviews.length > 0 ? (
-              reviews.map((review, index) => (
-                <div
-                  key={index}
-                  className="bg-white p-6 rounded-lg shadow-lg text-center max-w-sm w-full mx-4 transition-transform transform hover:scale-105 hover:shadow-xl"
-                >
-                  <div className="flex items-center justify-center mb-4">
-                    <Image
-                      src={review.picture_url || "/images/profileicon.png"}
-                      alt="Profile Picture"
-                      width={50}
-                      height={50}
-                      className="rounded-full border border-gray-300"
-                    />
+      <div className="container mx-auto text-center px-4 lg:px-8 max-w-screen-lg">
+        <h2 className="text-4xl font-extrabold mb-8 text-green-700">Apa Kata Mereka?</h2>
+        <Swiper
+          spaceBetween={30}
+          pagination={{
+            clickable: true,
+          }}
+          modules={[Pagination]}
+          breakpoints={{
+            640: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+          className="mySwiper"
+        >
+          {reviews && reviews.length > 0 ? (
+            reviews.map((review, index) => (
+              <SwiperSlide key={index}>
+                <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-sm w-full mx-auto transition-all transform hover:scale-105 hover:shadow-xl flex flex-col justify-between min-h-[300px]">
+                  <div>
+                    <div className="flex items-center justify-center mb-4">
+                      <Image
+                        src={review.picture_url || "/images/profileicon.png"}
+                        alt="Profile Picture"
+                        width={60}
+                        height={60}
+                        className="rounded-full border-4 border-blue-200 shadow-lg"
+                      />
+                    </div>
+                    <h3 className="text-2xl font-semibold mb-2 text-indigo-800">{review.nama}</h3>
+                    <p className="italic text-gray-700 mb-4 line-clamp-4">{`"${review.deskripsi}"`}</p>
                   </div>
-                  <h3 className="text-2xl font-bold mb-2 text-blue-900">{review.nama}</h3>
-                  <p className="text-gray-900 mb-4">{review.deskripsi}</p>
-                  <p className="text-base text-gray-600 mb-2">
-                    {Array.from({ length: parseInt(review.rating) }).map((_, i) => (
-                      <FaStar key={i} className="text-yellow-600 inline" />
-                    ))}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-2">{new Date(review._created_date).toLocaleDateString()}</p>
+                  <div>
+                    <div className="flex justify-center mb-4">
+                      {Array.from({ length: parseInt(review.rating) }).map((_, i) => (
+                        <FaStar key={i} className="text-yellow-500 text-xl mx-1" />
+                      ))}
+                    </div>
+                    <p className="text-xs text-gray-500">{new Date(review._created_date).toLocaleDateString()}</p>
+                  </div>
+                  <div className="absolute bottom-0 left-0 w-full h-2 rounded-b-lg bg-gradient-to-r from-indigo-500 to-green-500"></div>
                 </div>
-              ))
-            ) : (
-              <p className="text-gray-600">Belum ada review</p>
-            )}
-          </div>
-        </div>
-      </section>
+              </SwiperSlide>
+            ))
+          ) : (
+            <p className="text-gray-600">Belum ada review</p>
+          )}
+        </Swiper>
+      </div>
+    </section>
 
       <section className="py-20 bg-gray-100">
         <div className="container mx-auto text-center">
