@@ -36,6 +36,7 @@
     "react-icons": "^5.2.1",
     "react-share": "^5.1.0",
     "sweetalert2": "^11.12.2",
+    "swiper": "^11.1.9",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
