@@ -58,7 +58,7 @@ const GalleryList = ({ galleries = [], onDelete }) => {
 export default GalleryList; */
 
 import React, { useEffect, useState } from 'react';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import {FaTrash } from 'react-icons/fa';
 import Link from 'next/link';
 
 const GalleryList = ({ galleries = [], onDelete, onPageChange, currentPage, totalPages }) => {
@@ -95,9 +95,6 @@ const GalleryList = ({ galleries = [], onDelete, onPageChange, currentPage, tota
               </td>
               <td className="py-2 px-4 border-b">
                 <div className='flex gap-3 justify-center items-center'>
-                  <Link href={`/admin/gallery/edit/${gallery.id_gallery}`}>
-                    <FaEdit className="text-blue-500 cursor-pointer mr-4" />
-                  </Link>
                   <FaTrash
                     onClick={() => {
                       if (confirm('Yakin Hapus Data?')) {

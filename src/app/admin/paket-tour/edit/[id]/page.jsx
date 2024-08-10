@@ -61,7 +61,7 @@ export default function EditPackageTour({params}) {
   return (
     <AdminLayout showSidebar={true}>
       <div className="container mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Edit Package Tour</h1>
+        <h1 className="text-2xl font-bold mb-4 ml-10">Edit Paket Tour</h1>
         <PackageForm onSubmit={handleSubmit} initialData={packageData} />
       </div>
     </AdminLayout>
