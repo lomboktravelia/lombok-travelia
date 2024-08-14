@@ -218,9 +218,9 @@ export default function Home() {
                   </div>
                   <div>
                     <div className="flex justify-center mb-4">
-                      {Array.from({ length: parseInt(review.rating) }).map((_, i) => (
-                        <FaStar key={i} className="text-yellow-500 text-xl mx-1" />
-                      ))}
+                    {[...Array(parseInt(review.rating))].map((_, i) => (
+                      <FaStar key={i} className="text-yellow-500 text-xl mx-1" />
+                    ))}
                     </div>
                     <p className="text-xs text-gray-500">{new Date(review._created_date).toLocaleDateString()}</p>
                   </div>
