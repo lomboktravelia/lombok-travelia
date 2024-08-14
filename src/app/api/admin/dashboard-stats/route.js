@@ -4,33 +4,26 @@ import pool from '../../../../utils/dbConfig'; // Menggunakan path yang benar un
 // Fungsi untuk mendapatkan statistik dashboard
 async function getDashboardStats() {
   try {
-    // Query untuk mendapatkan total Paket Tour
-    const totalPaketTourResult = await pool.query('SELECT COUNT(*) FROM "paket_tour"');
-    const totalPaketTour = totalPaketTourResult.rows[0].count;
-
-    // Query untuk mendapatkan total Destinasi
-    const totalDestinasiResult = await pool.query('SELECT COUNT(*) FROM "destinasi"');
-    const totalDestinasi = totalDestinasiResult.rows[0].count;
-
-    // Query untuk mendapatkan total Pengguna
-    const totalPenggunaResult = await pool.query('SELECT COUNT(*) FROM "user"');
-    const totalPengguna = totalPenggunaResult.rows[0].count;
-
-    // Query untuk mendapatkan total Saldo
-    const totalSaldoResult = await pool.query('SELECT SUM(amount) AS total_saldo FROM orders');
-    const totalSaldo = totalSaldoResult.rows[0].total_saldo;
-
-
-    // Query untuk mendapatkan total Pesanan
-    const totalPesananResult = await pool.query('SELECT COUNT(*) FROM "orders"');
-    const totalPesanan = totalPesananResult.rows[0].count;
+    const [
+      totalPaketTourResult,
+      totalDestinasiResult,
+      totalPenggunaResult,
+      totalSaldoResult,
+      totalPesananResult,
+    ] = await Promise.all([
+      pool.query('SELECT COUNT(*) FROM "paket_tour"'),
+      pool.query('SELECT COUNT(*) FROM "destinasi"'),
+      pool.query('SELECT COUNT(*) FROM "user"'),
+      pool.query('SELECT SUM(amount) AS total_saldo FROM orders'),
+      pool.query('SELECT COUNT(*) FROM "orders"'),
+    ]);
 
     return {
-      totalPaketTour,
-      totalDestinasi,
-      totalPengguna,
-      totalSaldo,
-      totalPesanan,
+      totalPaketTour: totalPaketTourResult.rows[0].count,
+      totalDestinasi: totalDestinasiResult.rows[0].count,
+      totalPengguna: totalPenggunaResult.rows[0].count,
+      totalSaldo: totalSaldoResult.rows[0].total_saldo,
+      totalPesanan: totalPesananResult.rows[0].count,
     };
   } catch (error) {
     console.error('Error getting dashboard stats:', error);

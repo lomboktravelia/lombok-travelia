@@ -43,9 +43,11 @@ function GalleryComponent() {
   }, [currentPage]);
 
   const handlePageChange = (page) => {
-    setCurrentPage(page);
-    router.push(`/gallery?page=${page}`);
-  };
+    if (page !== currentPage) {
+      setCurrentPage(page);
+      router.push(`/gallery?page=${page}`);
+    }
+  };  
 
   return (
     <div className="bg-gray-50 min-h-screen">
