@@ -20,9 +20,9 @@ const Layout = ({ children }) => {
             <ListboxItem key="account" href="/settings/account">
               Account
             </ListboxItem>
-            <ListboxItem key="copy">Orders</ListboxItem>
+            {/* <ListboxItem key="copy">Orders</ListboxItem>
             <ListboxItem key="copy">Favorites</ListboxItem>
-            <ListboxItem key="copy">Reviews</ListboxItem>
+            <ListboxItem key="copy">Reviews</ListboxItem> */}
             <ListboxItem
               key="logout"
               className="text-danger"

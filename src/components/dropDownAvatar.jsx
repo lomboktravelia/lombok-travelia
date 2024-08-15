@@ -35,7 +35,6 @@ export const DropDownAvatar = ({ user }) => {
         <DropdownItem key="settings" href="/settings">
           Settings
         </DropdownItem>
-        <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
         <DropdownItem key="logout" color="danger" onClick={handleLogout}>
           Log Out
         </DropdownItem>
