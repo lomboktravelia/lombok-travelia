@@ -27,7 +27,7 @@ export default function GalleryForm({ onSubmit, initialData = {} }) {
 
   const handleImgUpload = () => {
     if (file) {
-      if (!file.name.match(/\.(jpg|jpeg|png|gif|webp)$/)) {
+      if (!file.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',

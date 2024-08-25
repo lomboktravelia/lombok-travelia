@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 const videos = [
-  "https://www.youtube.com/embed/DKDde_jKaTM",
-  "https://www.youtube.com/embed/S3gwXSs59TQ",
+  "https://www.youtube.com/embed/4VGUZj_wCrE",
+  "https://www.youtube.com/embed/XpaT4uGaBco",
   "https://www.youtube.com/embed/CW1CNpiVjUk",
   "https://www.youtube.com/embed/WpNDOuno0c0",
   "https://www.youtube.com/embed/ShXXioyHPPs",
