@@ -92,8 +92,6 @@
 //   );
 // }
 
-
-
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -101,7 +99,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { FacebookShareButton, WhatsappShareButton, TwitterShareButton, FacebookIcon, WhatsappIcon, TwitterIcon } from 'react-share';
-
+import { FaMapMarkerAlt } from 'react-icons/fa';
 
 export default function DestinasiDetailPage({ params }) {
   const searchParams = useSearchParams();
@@ -153,23 +151,32 @@ export default function DestinasiDetailPage({ params }) {
       <header className="text-center py-10">
         <h1 className="text-4xl font-bold text-green-500">{destinationDetails.nama_destinasi}</h1>
       </header>
-      <section className="w-full max-w-6xl mx-auto mt-10 px-5">
+      <section className="w-full max-w-3xl mx-auto mt-10 px-5"> {/* Max width adjusted to 3xl */}
         <div className="flex flex-col lg:flex-row gap-6">
-          <div className="lg:w-2/3">
+          <div className="lg:w-full">
             <div className="grid grid-cols-1 sm:grid-cols-1 gap-8">
               <div className="relative w-full h-64">
                 <Image src={destinationDetails.picture} alt={`Image 1`} layout="fill" objectFit="cover" className="rounded-lg shadow-lg" />
               </div>
             </div>
             <div className="mt-6">
-              <h2 className="text-2xl font-bold text-blue-500">{destinationDetails.nama_destinasi}</h2>
-              <p className="mt-2">{destinationDetails.harga}</p>
-              <h3 className="text-2xl font-bold text-blue-500">Deskripsi</h3>
-              <p className="mt-2 whitespace-pre-wrap">{destinationDetails.deskripsi}</p>
+            <h2 className="text-2xl font-bold text-yellow-500 flex items-center">
+                <FaMapMarkerAlt className="mr-2" />
+                {destinationDetails.nama_destinasi}
+            </h2>
+            
+            <h3 className="text-2xl font-bold text-blue-500 font-serif">Deskripsi</h3>
+            <div className="bg-gray-100 p-4 rounded-md mt-4 shadow-md">
+              <p className="text-lg text-gray-800 leading-relaxed font-sans whitespace-pre-wrap">
+                <span className="text-gray-800 font-extrabold text-xl">{destinationDetails.deskripsi.charAt(0)}</span>
+                {destinationDetails.deskripsi.slice(1)}
+              </p>
+            </div>
+
             </div>
             <div className="mt-6">
               <h3 className="text-xl font-bold text-green-500 hover:underline">
-              <Link href={`/destinasi`}>
+                <Link href={`/destinasi`}>
                   Lihat juga destinasi lainnya
                 </Link>
               </h3>
@@ -188,31 +195,20 @@ export default function DestinasiDetailPage({ params }) {
               </div>
             </div>
           </div>
-          <div className="lg:w-1/3">
-            <div className="bg-white shadow-lg rounded-lg p-6">
-              <p className="text-xl font-bold">Start From</p>
-              <p className="text-3xl font-bold text-green-500">{destinationDetails.harga}</p>
-              <a
-                href="https://wa.me/85338717747"
-                className="mt-4 block text-center text-white bg-green-500 hover:bg-green-600 rounded-lg py-3 font-bold"
-              >
-                Chat Whatsapp
-              </a>
-              <p className="mt-2 text-center">Tanya-tanya dulu juga boleh, wa aja</p>
-            </div>
-            <p className="mt-2 text-center text-blue bg-blue-10 hover:bg-blue-100">Bagikan Juga Ke Media Sosial Kalian:</p>
-            <div className="mt-6 flex space-x-4 justify-center">
-              <FacebookShareButton url={shareUrl} quote={destinationDetails.nama_destinasi}>
-                <FacebookIcon size={32} round />
-              </FacebookShareButton>
-              <WhatsappShareButton url={shareUrl} title={destinationDetails.nama_destinasi}>
-                <WhatsappIcon size={32} round />
-              </WhatsappShareButton>
-              <TwitterShareButton url={shareUrl} title={destinationDetails.nama_destinasi}>
-                <TwitterIcon size={32} round />
-              </TwitterShareButton>
-            </div>
-          </div>
+        </div>
+      </section>
+      <section className="mt-8 text-center">
+        <p className="text-blue-500">Bagikan Juga Ke Media Sosial Kalian:</p>
+        <div className="mt-4 flex justify-center space-x-4">
+          <FacebookShareButton url={shareUrl} quote={destinationDetails.nama_destinasi}>
+            <FacebookIcon size={32} round />
+          </FacebookShareButton>
+          <WhatsappShareButton url={shareUrl} title={destinationDetails.nama_destinasi}>
+            <WhatsappIcon size={32} round />
+          </WhatsappShareButton>
+          <TwitterShareButton url={shareUrl} title={destinationDetails.nama_destinasi}>
+            <TwitterIcon size={32} round />
+          </TwitterShareButton>
         </div>
       </section>
     </div>
