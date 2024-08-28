@@ -106,29 +106,29 @@ export async function GET() {
       JOIN "user" u ON o.id_user = u.id_user
     `);
 
-    // Mengambil paket tour yang paling sering diorder
-    const popularPackageResult = await client.query(`
-      SELECT pt.nama_paket, COUNT(*) AS order_count
+    // Mengambil 3 paket tour yang paling sering diorder
+    const popularPackagesResult = await client.query(`
+     SELECT pt.nama_paket, COUNT(*) AS order_count
       FROM orders o
       JOIN paket_tour pt ON o.id_tour = pt.id_tour
       GROUP BY pt.nama_paket
       ORDER BY order_count DESC
-      LIMIT 1
+      LIMIT 3
     `);
 
-    // Mengambil bulan dengan transaksi terbanyak
-    const transactionsByMonthResult = await client.query(`
-      SELECT TO_CHAR(_created_date, 'Month') AS month, COUNT(*) AS transaction_count
+    // Mengambil jumlah transaksi 6 bulan terakhir
+    const transactionsLastSixMonthsResult = await client.query(`
+      SELECT TO_CHAR(_created_date, 'Month YYYY') AS month, COUNT(*) AS transaction_count
       FROM orders
-      GROUP BY month
-      ORDER BY transaction_count DESC
-      LIMIT 1
+      WHERE _created_date >= NOW() - INTERVAL '6 months'
+      GROUP BY TO_CHAR(_created_date, 'Month YYYY')
+      ORDER BY MIN(_created_date) -- Menyortir berdasarkan tanggal awal
     `);
 
     return NextResponse.json({ 
       orders: ordersResult.rows,
-      popularPackage: popularPackageResult.rows[0],
-      transactionsByMonth: transactionsByMonthResult.rows[0]
+      popularPackages: popularPackagesResult.rows,
+      transactionsLastSixMonths: transactionsLastSixMonthsResult.rows
     });
   } catch (error) {
     console.error('Error fetching orders:', error);
