@@ -28,7 +28,7 @@ const Header = () => {
   ];
 
   if (currentUser?.role === "admin") {
-    navItems.push({ href: "/admin", label: "Admin" });
+    navItems.push({ href: "/admin/dashboard", label: "Admin" });
   }
 
   return (

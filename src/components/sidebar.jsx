@@ -3,8 +3,7 @@
 import React, { useContext } from "react";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaHome, FaTachometerAlt, FaBox, FaMapMarkedAlt, FaImages, FaClipboardList, FaWallet, FaUsers } from 'react-icons/fa';
-import { FaArrowLeft } from "react-icons/fa";
+import { FaTachometerAlt, FaBox, FaMapMarkedAlt, FaImages, FaClipboardList, FaWallet, FaUsers, FaArrowLeft } from 'react-icons/fa';
 import { UserContext } from "@/utils/userContext";
 import Image from "next/image";
 const Sidebar = () => {
@@ -18,13 +17,13 @@ const Sidebar = () => {
   return (
     <div className="flex flex-col bg-gradient-to-r from-gray-800 to-green-900 p-4 text-white h-full rounded">
       <div className='p-1 mb-3 flex justify-start items-center'>
-        <div className='flex justify-start items-center gap-2 hover:underline cursor-pointer' onMouseEnter={()=>setIsHover(true)} onMouseLeave={()=>setIsHover(false)}>
-          <FaArrowLeft className={`h-3 w-3 ${isHover ? 'rotate-0' : 'rotate-45'} transition-all duration-300`}/>
+        <div className='flex justify-start items-center gap-2 hover:underline cursor-pointer' onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
+          <FaArrowLeft className={`h-3 w-3 ${isHover ? 'rotate-0' : 'rotate-45'} transition-all duration-300`} />
           <Link href="/" className=''>Back</Link>
         </div>
       </div>
       <div className="mb-8">
-      <Image
+        <Image
           src={currentUser?.picture_url || "/images/profile.jpg"}
           alt="Profile"
           className="rounded-full w-15 mx-auto"
@@ -35,13 +34,6 @@ const Sidebar = () => {
       </div>
       <nav>
         <ul>
-          <li className={`mb-4 ${isActive(pathname, '/admin') ? 'text-blue-500' : ''}`}>
-            <Link href="/admin">
-              <div className="flex items-center cursor-pointer">
-                <FaHome className="mr-2" /> Home
-              </div>
-            </Link>
-          </li>
           <li className={`mb-4 ${isActive(pathname, '/admin/dashboard') ? 'text-blue-500' : ''}`}>
             <Link href="/admin/dashboard">
               <div className="flex items-center cursor-pointer">
