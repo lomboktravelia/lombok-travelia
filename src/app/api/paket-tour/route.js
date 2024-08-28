@@ -144,7 +144,7 @@ export async function GET(request) {
         { status: 200 }
       );
     } else if (jenis_paket) {
-      const query = "SELECT * FROM paket_tour WHERE jenis_paket = $1";
+      const query = "SELECT * FROM paket_tour WHERE jenis_paket = $1 AND created_by IS NULL";
       const { rows: paket } = await pool.query(query, [jenis_paket]);
 
       const paketIds = paket.map((p) => p.id_tour);

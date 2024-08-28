@@ -426,9 +426,9 @@ export default function PaketTourDetail({ params }) {
     });
 
     const res = await response.json();
-    const { id_tour } = res.data;
-
+    
     if (response.ok) {
+      const { id_tour } = res.data;
       Swal.fire({
         icon: "success",
         title: "Custom Destinations Added",
@@ -440,6 +440,14 @@ export default function PaketTourDetail({ params }) {
       setId(id_tour);
       // router.push(`/paket-tour/paket/${id_tour}`);
     } else {
+      if(res.status === 401) {
+        Swal.fire({
+          icon: "error",
+          title: "Unauthorized",
+          text: "Harap Login terlebih dahulu.",
+        });
+        return;
+      }
       Swal.fire({
         icon: "error",
         title: "Failed to Add Custom Destinations",

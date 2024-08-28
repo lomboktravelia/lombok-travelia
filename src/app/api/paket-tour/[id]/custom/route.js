@@ -9,7 +9,7 @@ const key = new TextEncoder().encode(secretKey);
 export async function POST(request, {params}){
     try {
         const { id } = params;
-        const token = request.cookies.get("session").value;
+        const token = request.cookies.get("session")?.value;
         if(!token){
             return NextResponse.json({ status: 401, message: "Unauthorized" }, { status: 401 });
         }
