@@ -60,11 +60,34 @@ export default GalleryList; */
 import React, { useEffect, useState } from 'react';
 import {FaTrash } from 'react-icons/fa';
 import Link from 'next/link';
+import Swal from 'sweetalert2';
 
 const GalleryList = ({ galleries = [], onDelete, onPageChange, currentPage, totalPages }) => {
   if (!Array.isArray(galleries)) {
     return <div>Tidak ada data galeri yang tersedia.</div>;
   }
+
+  const handleDelete = (id_gallery) => {
+    Swal.fire({
+      title: 'Yakin Hapus Data?',
+      text: "Data yang dihapus tidak bisa dikembalikan!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, Hapus!',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        onDelete(id_gallery);
+        Swal.fire(
+          'Dihapus!',
+          'Data galeri telah dihapus.',
+          'success'
+        );
+      }
+    });
+  };
 
   return (
     <div className="container mx-auto">
@@ -78,6 +101,7 @@ const GalleryList = ({ galleries = [], onDelete, onPageChange, currentPage, tota
         <thead>
           <tr>
             <th className="py-2 px-4 border-b">ID Gallery</th>
+            <th className="py-2 px-4 border-b">Nama Gallery</th>
             <th className="py-2 px-4 border-b">Gambar</th>
             <th className="py-2 px-4 border-b">Aksi</th>
           </tr>
@@ -86,6 +110,7 @@ const GalleryList = ({ galleries = [], onDelete, onPageChange, currentPage, tota
           {galleries.map((gallery) => (
             <tr key={gallery.id_gallery}>
               <td className="py-2 px-4 border-b">{gallery.id_gallery}</td>
+              <td className="py-2 px-4 border-b">{gallery.nama_gallery}</td>
               <td className="py-2 px-4 border-b justify-center items-center flex">
                 <img
                   src={gallery.image_url}
@@ -93,14 +118,10 @@ const GalleryList = ({ galleries = [], onDelete, onPageChange, currentPage, tota
                   className="h-16 w-16 object-cover rounded-full"
                 />
               </td>
-              <td className="py-2 px-4 border-b">
+             <td className="py-2 px-4 border-b">
                 <div className='flex gap-3 justify-center items-center'>
                   <FaTrash
-                    onClick={() => {
-                      if (confirm('Yakin Hapus Data?')) {
-                        onDelete(gallery.id_gallery);
-                      }
-                    }}
+                    onClick={() => handleDelete(gallery.id_gallery)}
                     className="text-red-500 cursor-pointer"
                   />
                 </div>

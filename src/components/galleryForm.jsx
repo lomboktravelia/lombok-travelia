@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 export default function GalleryForm({ onSubmit, initialData = {} }) {
   const [formData, setFormData] = useState({
     id_gallery: initialData.id_gallery || '',
+    nama_gallery: initialData.nama_gallery || '',  // Tambahkan ini
     image_url: initialData.image_url || '/images/gili-air.jpg',
   });
 
@@ -64,25 +65,22 @@ export default function GalleryForm({ onSubmit, initialData = {} }) {
     e.preventDefault();
 
     try {
-      // Kirim data ke fungsi onSubmit (pastikan fungsi ini sudah terdefinisi dengan benar)
       await onSubmit(formData);
 
-      // Notifikasi galeri berhasil ditambahkan
       Swal.fire({
         icon: 'success',
         title: 'Sukses!',
         text: 'Galeri berhasil ditambahkan.',
       });
 
-      // Atur ulang form setelah berhasil submit
       setFormData({
         id_gallery: '',
+        nama_gallery: '',  // Reset nilai ini juga
         image_url: '/images/gili-air.jpg',
       });
       setFile(null);
     } catch (error) {
       console.error('Error submitting form:', error);
-      // Tambahkan logika notifikasi atau tindakan lain jika ada kesalahan dalam pengiriman data
     }
   };
 
@@ -94,6 +92,16 @@ export default function GalleryForm({ onSubmit, initialData = {} }) {
           type="text"
           name="id_gallery"
           value={formData.id_gallery}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div>
+        <label className="block mb-2">Nama Gallery</label>
+        <input
+          type="text"
+          name="nama_gallery"
+          value={formData.nama_gallery}  // Binding input ke state
           onChange={handleChange}
           className="w-full p-2 border border-gray-300 rounded"
         />
