@@ -2,6 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../layout';
 
+// Fungsi untuk memformat rupiah
+const formatRupiah = (angka) => {
+  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(angka);
+};
+
 const SaldoPage = () => {
   const [saldo, setSaldo] = useState({});
   const [orders, setOrders] = useState([]);
@@ -9,7 +14,6 @@ const SaldoPage = () => {
   const itemsPerPage = 6;
 
   useEffect(() => {
-    // Fetch saldo and withdrawals from API
     fetchSaldoAndOrders();
   }, []);
 
@@ -52,11 +56,11 @@ const SaldoPage = () => {
         <div className="flex justify-between mb-8">
           <div className="p-4 border rounded-lg shadow-lg">
             <h2 className="text-lg font-semibold">Saldo Tersedia</h2>
-            <p className="text-xl font-bold">Rp {saldo.available_balance ? saldo.available_balance.toLocaleString() : '0'}</p>
+            <p className="text-xl font-bold">{formatRupiah(saldo.available_balance || 0)}</p>
           </div>
           <div className="p-4 border rounded-lg shadow-lg">
             <h2 className="text-lg font-semibold">Saldo dapat ditarik</h2>
-            <p className="text-xl font-bold">Rp {saldo.available_balance ? saldo.available_balance.toLocaleString() : '0'}</p>
+            <p className="text-xl font-bold">{formatRupiah(saldo.available_balance || 0)}</p>
             <p className="text-sm">Min. Penarikan dana 10.000</p>
             <a href="https://dashboard.sandbox.midtrans.com/" target="_blank" rel="noopener noreferrer">
               <button className="mt-2 bg-blue-500 text-white px-4 py-2 rounded">Tarik dana</button>
@@ -80,13 +84,12 @@ const SaldoPage = () => {
                   <td className="py-2 px-4 border-b">{formatDate(order._created_date)}</td>
                   <td className="py-2 px-4 border-b">{order.id_orders}</td>
                   <td className="py-2 px-4 border-b">{order.email}</td>
-                  <td className="py-2 px-4 border-b">Rp. {order.amount.toLocaleString()}</td>
+                  <td className="py-2 px-4 border-b">{formatRupiah(order.amount)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {/* Pagination */}
         <div className="flex justify-center mt-4">
           {Array.from({ length: totalPages }, (_, index) => (
             <button
