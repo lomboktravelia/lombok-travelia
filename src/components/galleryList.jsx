@@ -56,9 +56,8 @@ const GalleryList = ({ galleries = [], onDelete }) => {
 };
 
 export default GalleryList; */
-
 import React, { useEffect, useState } from 'react';
-import {FaTrash } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
 
@@ -100,7 +99,6 @@ const GalleryList = ({ galleries = [], onDelete, onPageChange, currentPage, tota
       <table className="min-w-full bg-white rounded-lg border border-gray-200">
         <thead>
           <tr>
-            <th className="py-2 px-4 border-b">ID Gallery</th>
             <th className="py-2 px-4 border-b">Nama Gallery</th>
             <th className="py-2 px-4 border-b">Gambar</th>
             <th className="py-2 px-4 border-b">Aksi</th>
@@ -109,16 +107,15 @@ const GalleryList = ({ galleries = [], onDelete, onPageChange, currentPage, tota
         <tbody>
           {galleries.map((gallery) => (
             <tr key={gallery.id_gallery}>
-              <td className="py-2 px-4 border-b">{gallery.id_gallery}</td>
               <td className="py-2 px-4 border-b">{gallery.nama_gallery}</td>
               <td className="py-2 px-4 border-b justify-center items-center flex">
                 <img
                   src={gallery.image_url}
-                  alt={`Gallery ${gallery.id_gallery}`}
+                  alt={`Gallery ${gallery.nama_gallery}`}
                   className="h-16 w-16 object-cover rounded-full"
                 />
               </td>
-             <td className="py-2 px-4 border-b">
+              <td className="py-2 px-4 border-b">
                 <div className='flex gap-3 justify-center items-center'>
                   <FaTrash
                     onClick={() => handleDelete(gallery.id_gallery)}
@@ -138,7 +135,7 @@ const GalleryList = ({ galleries = [], onDelete, onPageChange, currentPage, tota
         >
           Sebelumnya
         </button>
-        <span>Halaman {currentPage} Gallery {totalPages}</span>
+        <span>Halaman {currentPage} dari {totalPages}</span>
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
