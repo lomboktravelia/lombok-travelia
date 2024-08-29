@@ -42,6 +42,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@nextui-org/react';
 
+function formatRupiah(amount) {
+  return `Rp ${amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+}
+
 export default function PaketPage({ params }) {
   const [packages, setPackages] = useState([]);
   const router = useRouter();
@@ -80,20 +84,20 @@ export default function PaketPage({ params }) {
           {packages.map((pkg) => (
             <Link href={`/paket-tour/${paket}/${pkg.id_tour}`} key={pkg.id_tour}>
               <div className="border rounded-md overflow-hidden hover:shadow-lg transition-shadow duration-300 bg-white flex flex-col h-full">
-              <Image src={pkg.picture} alt={pkg.nama_paket} width={400} height={192} className="w-full h-48 object-cover" />
-              <div className="flex flex-col justify-between p-4">
-                <div className="flex-grow">
-                  <h2 className="text-xl font-semibold text-green-900">{pkg.nama_paket}</h2>
-                  <p className="text-green-800">{pkg.nama_destinasi}</p>
-                  <p className="text-blue-800 font-bold">Rp {pkg.harga}</p>
+                <Image src={pkg.picture} alt={pkg.nama_paket} width={400} height={192} className="w-full h-48 object-cover" />
+                <div className="flex flex-col justify-between p-4">
+                  <div className="flex-grow">
+                    <h2 className="text-xl font-semibold text-green-900">{pkg.nama_paket}</h2>
+                    <p className="text-green-800">{pkg.nama_destinasi}</p>
+                    <p className="text-xl font-bold text-blue-800 dark:text-gray-100 mt-2">{formatRupiah(pkg.harga)}</p>
+                  </div>
+                  <Link href={`/paket-tour/${paket}/${pkg.id_tour}`} passHref>
+                    <Button radius="full" className="mt-4 bg-gradient-to-tr from-green-500 to-yellow-500 text-white shadow-lg hover:from-green-400 hover:to-yellow-400">
+                      Read more
+                    </Button>
+                  </Link>
                 </div>
-                <Link href={`/paket-tour/${paket}/${pkg.id_tour}`} passHref>
-                  <Button radius="full" className="mt-4 bg-gradient-to-tr from-green-500 to-yellow-500 text-white shadow-lg hover:from-green-400 hover:to-yellow-400">
-                    Read more
-                  </Button>
-                </Link>
               </div>
-            </div>
             </Link>
           ))}
         </div>

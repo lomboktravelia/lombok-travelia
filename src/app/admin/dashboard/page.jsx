@@ -19,6 +19,11 @@ const DashboardPage = () => {
     totalPesanan: 0,
   });
 
+    // Fungsi untuk memformat rupiah
+    const formatRupiah = (angka) => {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(angka);
+    };  
+
   useEffect(() => {
     const fetchStats = async () => {
       const response = await fetch('/api/admin/dashboard-stats');
@@ -33,7 +38,7 @@ const DashboardPage = () => {
         totalPaketTour: data.totalPaketTour,
         totalDestinasi: data.totalDestinasi,
         totalPengguna: data.totalPengguna,
-        totalSaldo: `Rp ${data.totalSaldo.toLocaleString()}`,
+        totalSaldo: formatRupiah(data.totalSaldo),
         totalPesanan: data.totalPesanan,
       });
     };
@@ -49,7 +54,7 @@ const DashboardPage = () => {
     labels: stats.popularPackages.length > 0 ? stats.popularPackages.map(pkg => shortenLabel(pkg.nama_paket)) : ['No Data'],
     datasets: [
       {
-        label: 'Orders',
+        // label: 'Orders',
         data: stats.popularPackages.length > 0 ? stats.popularPackages.map(pkg => pkg.order_count) : [0],
         backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)'],
         borderColor: ['rgba(75, 192, 192, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
@@ -75,7 +80,8 @@ const DashboardPage = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        // position: 'top',
+        display: false, // Menyembunyikan legenda sepenuhnya
       },
       tooltip: {
         callbacks: {
