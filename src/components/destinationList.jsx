@@ -3,6 +3,11 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
 
+// Fungsi untuk memformat rupiah
+const formatRupiah = (angka) => {
+  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(angka);
+};
+
 const DestinationList = ({ destinations, onDelete }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -69,7 +74,7 @@ const DestinationList = ({ destinations, onDelete }) => {
             <tr key={dest.id_destinasi}>
               <td className="py-2 px-4 border-b">{dest.nama_destinasi}</td>
               <td className="py-2 px-4 border-b text-justify">{truncateDescription(dest.deskripsi)}</td>
-              <td className="py-2 px-4 border-b">{dest.harga}</td>
+              <td className="py-2 px-4 border-b">{formatRupiah(dest.harga)}</td>
               <td className="py-2 px-4 border-b">{dest.jenis_destinasi}</td>
               <td className="py-2 px-4 border-b">
                 <div className="flex gap-3 justify-center items-center">
